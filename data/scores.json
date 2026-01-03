@@ -1,0 +1,587 @@
+{
+  "teams": {
+    "897ade2b-204b-42fa-9e95-0e18d2f1dc31": {
+      "name": "3",
+      "score": 2655,
+      "status": "active",
+      "eliminated": false,
+      "join_code": "N54W",
+      "color": 1,
+      "players": {
+        "02bc2e05-716f-4e3f-844b-ad94aaf9e8af": {
+          "name": "nick",
+          "joined_at": 1767234312.722848
+        },
+        "e792fa59-dc78-474b-9050-311b30ee58ac": {
+          "name": "syd",
+          "joined_at": 1767234400.150029
+        },
+        "57f320b1-a64d-4efa-a009-47a571ab2d54": {
+          "name": "Justin",
+          "joined_at": 1767234400.884816
+        },
+        "13a7d071-c77b-4b8a-bc8c-c4d24907849b": {
+          "name": "joe",
+          "joined_at": 1767240925.180243
+        }
+      }
+    },
+    "56658955-a998-4e8f-bf30-b3d82e637b2a": {
+      "name": "Four Horsemen",
+      "score": 2655,
+      "status": "active",
+      "eliminated": false,
+      "join_code": "5WXP",
+      "color": 2,
+      "players": {
+        "443ed6dd-73ec-4a6d-8828-d00d3d6e99e3": {
+          "name": "Sean",
+          "joined_at": 1767234354.512078
+        },
+        "38f27594-423b-4cc4-b0fb-6b92c893d601": {
+          "name": "Bobby V",
+          "joined_at": 1767234363.503826
+        },
+        "8ecb9deb-c563-43f5-bd60-e4c9241828f4": {
+          "name": "coe",
+          "joined_at": 1767234369.654925
+        }
+      },
+      "avatar": "satellite"
+    },
+    "ffa814d8-d83d-4a2a-9007-337a097256af": {
+      "name": "The Power Puff Girls",
+      "score": 2710,
+      "status": "active",
+      "eliminated": false,
+      "join_code": "VSQZ",
+      "color": 3,
+      "players": {
+        "655499b5-fa0d-41c6-81f8-4faeb7a80b59": {
+          "name": "ruthie",
+          "joined_at": 1767234360.556583
+        },
+        "189e869e-5738-4be3-bd13-33c449bf8432": {
+          "name": "Ashley",
+          "joined_at": 1767234373.427725
+        },
+        "003f19ce-754c-4662-9a28-59710ab7e702": {
+          "name": "Amanda",
+          "joined_at": 1767234382.620281
+        }
+      },
+      "avatar": "alien"
+    },
+    "a5d0d292-0a32-4ee6-b9d0-9c60b169672e": {
+      "name": "Luke still smells",
+      "score": 23075,
+      "status": "active",
+      "eliminated": false,
+      "join_code": "JRZ8",
+      "color": 4,
+      "players": {
+        "f6c206c2-66c6-4d04-a020-bad64b4b7421": {
+          "name": "rey",
+          "joined_at": 1767234375.25764
+        },
+        "c1e21e5e-97a0-4d51-b8bc-f5e3e7b267dc": {
+          "name": "Andy",
+          "joined_at": 1767234393.274142
+        },
+        "2083a60d-281a-4159-a4b0-42e0617245dc": {
+          "name": "Dranna",
+          "joined_at": 1767234397.2530198
+        },
+        "84029e0a-5948-45e7-bff5-d85920b95222": {
+          "name": "kelly",
+          "joined_at": 1767234405.174046
+        }
+      },
+      "avatar": "skull"
+    }
+  },
+  "current_state": "BUZZER",
+  "state_data": {},
+  "sessions": {
+    "TtDbsq8JND7LmUnFAAAz": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "02bc2e05-716f-4e3f-844b-ad94aaf9e8af"
+    },
+    "fd0A_vnwUYIpjIMBAABL": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "02bc2e05-716f-4e3f-844b-ad94aaf9e8af"
+    },
+    "-bK0LwquyYDYFu9OAAA_": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "443ed6dd-73ec-4a6d-8828-d00d3d6e99e3"
+    },
+    "b4O10bTk_pjg7BlcAAA9": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "655499b5-fa0d-41c6-81f8-4faeb7a80b59"
+    },
+    "ejoyf-98FiM2s9IgAABR": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "02bc2e05-716f-4e3f-844b-ad94aaf9e8af"
+    },
+    "mBJaCt7_uDZc0pD6AABF": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "38f27594-423b-4cc4-b0fb-6b92c893d601"
+    },
+    "Cjt-fLh_Y_f5mr3YAABT": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "8ecb9deb-c563-43f5-bd60-e4c9241828f4"
+    },
+    "bVArUDNCPO-NvdUOAABN": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "189e869e-5738-4be3-bd13-33c449bf8432"
+    },
+    "3HG4y5DcVMaQRuWBAABP": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "jftQ8o0hKqHPDI4SAABH": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "8Ebr2MBV5cGBPqptAABV": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "c1e21e5e-97a0-4d51-b8bc-f5e3e7b267dc"
+    },
+    "qF0SaD1g4nZubSR0AABB": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "YgbzQQCklvGbxhQmAABJ": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "e792fa59-dc78-474b-9050-311b30ee58ac"
+    },
+    "9q40z88exq7TkkWtAABD": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "AcPruhTrG0IoYZT8AABX": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "84029e0a-5948-45e7-bff5-d85920b95222"
+    },
+    "o9uFlCQfmQYJXAtwAABb": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "4fQjeF0GX5GQqUiPAAB5": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "u2ERrn8iKggpE155AAB7": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "8ecb9deb-c563-43f5-bd60-e4c9241828f4"
+    },
+    "jmcGa7OgUE85ZEwJAAB9": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "e792fa59-dc78-474b-9050-311b30ee58ac"
+    },
+    "1tMKAFlNK0yEiTIkAACB": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "c1e21e5e-97a0-4d51-b8bc-f5e3e7b267dc"
+    },
+    "TyGQ22ouyH70f6pEAACD": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "EPAK3F-yEek3SRNMAACP": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "D_pGaPRvGCIveSbhAACV": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "ULSYCkKxR2RzGpF9AACb": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "8ecb9deb-c563-43f5-bd60-e4c9241828f4"
+    },
+    "ChNSaPvfAjS_CRjtAACt": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "enkDMRsLDlqnfDFnAACv": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "4vqRL0eKBbYp6KbhAADO": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "UbfiPcWG1QtvhwSMAADQ": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "awoM-cdfg_e00j31AADS": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "443ed6dd-73ec-4a6d-8828-d00d3d6e99e3"
+    },
+    "BKy_JtTTuvuPtewDAADU": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "c1e21e5e-97a0-4d51-b8bc-f5e3e7b267dc"
+    },
+    "k5vdZ_0D99F7rUDlAADW": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "_iigww1Pm0nuBbesAADY": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "1LdHz503xnt3Z0YaAADc": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "02bc2e05-716f-4e3f-844b-ad94aaf9e8af"
+    },
+    "9ZkEyNPfta3v_VWXAADb": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "e792fa59-dc78-474b-9050-311b30ee58ac"
+    },
+    "FyaeWI7K4LrL-CudAADe": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "8ecb9deb-c563-43f5-bd60-e4c9241828f4"
+    },
+    "u5LDoLYi326yeVA1AADg": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "38f27594-423b-4cc4-b0fb-6b92c893d601"
+    },
+    "eBtkSsaZ40gu6uoKAADi": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "84029e0a-5948-45e7-bff5-d85920b95222"
+    },
+    "1KgurmXgbqi8Wui0AADk": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "189e869e-5738-4be3-bd13-33c449bf8432"
+    },
+    "JOOQFIRtkWt-1_QcAADo": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "655499b5-fa0d-41c6-81f8-4faeb7a80b59"
+    },
+    "ecD1dT2jSL4URdYXAADq": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "d1w9lRjKHsKQHBQAAADs": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "Qe6C0g6QeGbcPg83AAEU": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "c1e21e5e-97a0-4d51-b8bc-f5e3e7b267dc"
+    },
+    "ivQTZWUH5IERo-tTAAEc": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "8ecb9deb-c563-43f5-bd60-e4c9241828f4"
+    },
+    "bsIsAL0P7wWFluJBAAEg": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "STt2foaHpzCwXCySAAE5": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "4CBFFzxXYeCbyg9sAAFb": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "-E9cpMbOUPmW5lF_AAFd": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "189e869e-5738-4be3-bd13-33c449bf8432"
+    },
+    "iJ_vUyd7v0trl4s4AAFf": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "38f27594-423b-4cc4-b0fb-6b92c893d601"
+    },
+    "eAJkpBP_Fn6DuDeCAAFh": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "02bc2e05-716f-4e3f-844b-ad94aaf9e8af"
+    },
+    "ibLSfUMlpVPEy6TqAAFj": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "84029e0a-5948-45e7-bff5-d85920b95222"
+    },
+    "fGF_Vw6075ZLf_mJAAFl": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "tpVuSyjk08tTHr5EAAFn": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "655499b5-fa0d-41c6-81f8-4faeb7a80b59"
+    },
+    "i6JCqg_PE8IErv0JAAFp": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "mSAO7v4UVUYnrsA6AAFr": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "8ecb9deb-c563-43f5-bd60-e4c9241828f4"
+    },
+    "FBIKHdB79m0hVSm0AAFt": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "c1e21e5e-97a0-4d51-b8bc-f5e3e7b267dc"
+    },
+    "_WbD9d9eVKS3Jq-lAAFx": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "cTTvkc-twfMl9CkWAAFz": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "7mQBQDAE7T5QI5BXAAF7": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "8ecb9deb-c563-43f5-bd60-e4c9241828f4"
+    },
+    "YdcyehRz7t4XO2-JAAF9": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "PZomCc97HfkLRANqAAAZ": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "fm4NXiDW9gbBkaiAAAAf": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "8ecb9deb-c563-43f5-bd60-e4c9241828f4"
+    },
+    "ptouUbPyR98fhMeEAAAn": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "WrQ4OWKlf_NEl1cpAAAt": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "BavOSkBWo41Z1_jBAAA7": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "8ecb9deb-c563-43f5-bd60-e4c9241828f4"
+    },
+    "YWElf87V82n6ytZ8AABB": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "nLz1YPLyVGthmVWsAABD": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "1x0Vjh9OgOlyz2qeAABN": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "e792fa59-dc78-474b-9050-311b30ee58ac"
+    },
+    "KRuRXide9eUNQQeSAABP": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "MgeIqGFxKDybrDHFAABT": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "2Mrddr3EahjpRR45AABX": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "qNKr9CKXH_P_6jrOAABd": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "zejGdIIFmQ3tbk2WAABk": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "ASKT0Xo64AGHESfZAABq": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "zeLpSDvca56ipz2NAABu": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "c1e21e5e-97a0-4d51-b8bc-f5e3e7b267dc"
+    },
+    "pR7tB3Smfh97C_sIAABw": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "Nk9GBKqcNr8o1DpuAABy": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "CUGu52pqwOls65KPAAB8": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "e792fa59-dc78-474b-9050-311b30ee58ac"
+    },
+    "1cqfoSKTDcKZuo7SAACA": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "rmuOmcMZklN6NRueAACE": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "88E1-pe8CG2P6Eq-AACK": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "gncXnNx_y_n-J88UAACO": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "z2g0ib3bEbGI7i7iAACQ": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "6rR-H7nLfv6AqqIkAACW": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "189e869e-5738-4be3-bd13-33c449bf8432"
+    },
+    "0KFhGXqVUrsu9VrtAACY": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "IHr4DR_JUdag3TBeAACe": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "Penq7JRkblPKXiudAACg": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "e792fa59-dc78-474b-9050-311b30ee58ac"
+    },
+    "NBG29Xpo-HTSq0EKAAAb": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "PPTvUR8zcwHL05I2AAAl": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "e792fa59-dc78-474b-9050-311b30ee58ac"
+    },
+    "--3QobNy-cFMpFyYAAAn": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "qg9ED_cEvRmxW7AKAAAr": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "CiwOBkpLLin7DvimAAAt": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "yJO6aN2XlfGq0kvKAAAz": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "lqyNz0zi-D7ZzXdVAAA3": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "Hfy9T95FPHNlfN_8AAA5": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "Y7SuZXHBzv7Qbk2VAAA7": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "m9d40bDeV7sH5UDJAAA9": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "CwFeoB_R2EUd_u0TAABB": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "8ecb9deb-c563-43f5-bd60-e4c9241828f4"
+    },
+    "rSOe1kipvI9G62zzAABF": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "e792fa59-dc78-474b-9050-311b30ee58ac"
+    },
+    "4z8-kPNUBve60DvAAABJ": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "57f320b1-a64d-4efa-a009-47a571ab2d54"
+    },
+    "FSqZskF3iZHrZC2uAABX": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "13a7d071-c77b-4b8a-bc8c-c4d24907849b"
+    },
+    "7rZkFUswPvYb5C2fAABl": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "e792fa59-dc78-474b-9050-311b30ee58ac"
+    },
+    "GMpFb6YHstGZ1KuLAABp": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "8ecb9deb-c563-43f5-bd60-e4c9241828f4"
+    },
+    "T6Z5QmDsZTo9fxoHAABt": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "T46NAat-vZ6uhx11AABx": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "c1e21e5e-97a0-4d51-b8bc-f5e3e7b267dc"
+    },
+    "DxU3eGo_zPb1b3FjAAB3": {
+      "team_id": "897ade2b-204b-42fa-9e95-0e18d2f1dc31",
+      "player_id": "e792fa59-dc78-474b-9050-311b30ee58ac"
+    },
+    "FVUHIJhq2zueimLzAAB9": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "443ed6dd-73ec-4a6d-8828-d00d3d6e99e3"
+    },
+    "URdZlXreNzZHMvUQAAB_": {
+      "team_id": "56658955-a998-4e8f-bf30-b3d82e637b2a",
+      "player_id": "38f27594-423b-4cc4-b0fb-6b92c893d601"
+    },
+    "KLv44AHvkY5e8ruBAACB": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "mzIELZ-WTB5frddrAACF": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "189e869e-5738-4be3-bd13-33c449bf8432"
+    },
+    "TpEdqWCciJX5aCr-AACN": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "C1jbzg73lILNApL-AACP": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "f6c206c2-66c6-4d04-a020-bad64b4b7421"
+    },
+    "lhC4HfOHkIXbJKbsAACT": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "TpedoWnJf0U0l9zqAACV": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "txcnc9FV1VZri2QEAACX": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "wyG3iR5BLm4VLSUnAACd": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    },
+    "15ka0izbUdnyx2WFAACf": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "3J8RpNzCTte8Lq8eAACt": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "Yy-Zqs5bpkAdyMxnAACv": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "GN3VSnvLSunmjVHHAAC3": {
+      "team_id": "a5d0d292-0a32-4ee6-b9d0-9c60b169672e",
+      "player_id": "2083a60d-281a-4159-a4b0-42e0617245dc"
+    },
+    "rhvjk7DZqP2Smq3fAADM": {
+      "team_id": "ffa814d8-d83d-4a2a-9007-337a097256af",
+      "player_id": "003f19ce-754c-4662-9a28-59710ab7e702"
+    }
+  }
+}
