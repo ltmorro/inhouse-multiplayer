@@ -1,0 +1,16 @@
+---
+import ViewContainer from '../shared/ViewContainer.astro';
+---
+<ViewContainer id="view-buzzer">
+    <div class="flex-grow flex-center flex-column text-center">
+        <h2 class="glow">Y2K DATA CORRUPTION</h2>
+        <p style="color: var(--terminal-amber); font-size: 0.9rem;">AUDIO ARCHIVES DAMAGED</p>
+        <p id="buzzer-hint" class="mt-1" style="color: var(--terminal-green-dim);">Signal degrading... identify before total data loss!</p>
+
+        <button id="buzzer-button" class="buzzer-btn buzzer-btn--active mt-3">
+            <span id="buzzer-text">EXECUTE</span>
+        </button>
+
+        <p id="buzzer-status" class="mt-2"></p>
+    </div>
+</ViewContainer>

@@ -1,0 +1,25 @@
+---
+---
+<div>
+     <section id="music-controller-section">
+        <h3 class="glow">LULLABY DJ</h3>
+        <p style="color: var(--terminal-green-dim); font-size: 0.85rem; margin-bottom: 0.5rem;">Background Music Control</p>
+        
+        <div id="spotify-status" class="mb-2" style="display: flex; align-items: center; gap: 1rem;">
+            <span id="spotify-status-text" style="color: var(--terminal-green-dim);">Checking Spotify...</span>
+            <a id="spotify-login-btn" href="/spotify/login" class="terminal-btn hidden" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">CONNECT</a>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <button id="music-prev-btn" class="terminal-btn" title="Previous Track">⏮</button>
+            <button id="music-toggle-btn" class="terminal-btn terminal-btn--primary" title="Play/Pause">⏯</button>
+            <button id="music-next-btn" class="terminal-btn" title="Next Track">⏭</button>
+        </div>
+    </section>
+
+    <section class="mt-3">
+        <button id="reset-btn" class="terminal-btn" style="background: var(--terminal-red); color: white; width: 100%;">
+            ⚠️ FACTORY RESET SYSTEM
+        </button>
+    </section>
+</div>

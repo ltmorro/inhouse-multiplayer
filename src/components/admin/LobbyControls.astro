@@ -1,0 +1,25 @@
+---
+---
+<div>
+    <section id="lobby-section">
+        <h3 class="glow">LOBBY SETTINGS</h3>
+        <div class="mt-1" style="display: flex; gap: 0.5rem; align-items: center;">
+            <button id="toggle-qr-btn" class="terminal-btn">SHOW QR CODE</button>
+            <span id="qr-status" style="color: var(--terminal-green-dim);">QR hidden</span>
+        </div>
+    </section>
+
+    <section class="mt-3">
+        <h3 class="glow">FAMILIES (TEAMS)</h3>
+        <ul id="team-list" class="mt-1" style="list-style: none; padding: 0; border: 1px solid #333; padding: 10px; min-height: 100px;"></ul>
+    </section>
+
+    <section class="mt-3">
+        <h3 class="glow">AWARD POINTS</h3>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;" class="mt-1">
+            <select id="point-team" class="terminal-input" style="width: auto; flex-grow: 1;"></select>
+            <input type="number" id="point-amount" class="terminal-input" value="50" style="width: 80px;">
+            <button id="add-points-btn" class="terminal-btn terminal-btn--primary">ADD</button>
+        </div>
+    </section>
+</div>

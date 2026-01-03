@@ -1,0 +1,58 @@
+---
+---
+<div class="game-progress" id="game-progress">
+    <div class="game-progress__round" id="progress-round">Round 1 of 7</div>
+    <div class="game-progress__bar">
+        <div class="game-progress__fill" id="progress-fill" style="width: 0%;"></div>
+    </div>
+</div>
+
+<style>
+.game-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
+    padding: 12px 20px 20px;
+    display: none;
+}
+.game-progress.visible {
+    display: block;
+}
+.game-progress__round {
+    color: var(--terminal-green);
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px var(--terminal-green-glow);
+}
+.game-progress__bar {
+    height: 6px;
+    background: rgba(0, 255, 0, 0.15);
+    border: 1px solid var(--terminal-green-dim);
+    border-radius: 0;
+    overflow: hidden;
+    position: relative;
+}
+.game-progress__fill {
+    height: 100%;
+    background: var(--terminal-green);
+    box-shadow: 0 0 10px var(--terminal-green), 0 0 20px var(--terminal-green-glow);
+    transition: width 0.5s ease-out;
+    position: relative;
+}
+.game-progress__fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
+}
+</style>

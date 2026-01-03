@@ -69,16 +69,16 @@ const AppState = {
 
 const BootSequence = {
     asciiArt: `
- Y2K PARTY
- ═════════
+ BABY SHOWER
+ ═══════════
     `,
 
     bootLines: [
-        { text: 'MOBILE TERMINAL v1.0', class: 'boot-line--header', delay: 80 },
-        { text: 'Initializing secure uplink...', delay: 100 },
-        { text: 'Y2K compliance check: WARNING', class: 'boot-line--warning', delay: 120 },
-        { text: 'Loading emergency protocols...', delay: 100 },
-        { text: 'SYSTEM READY', class: 'boot-line--success', delay: 150 },
+        { text: 'BABY MONITOR OS v1.0', class: 'boot-line--header', delay: 80 },
+        { text: 'Initializing cuteness sensors...', delay: 100 },
+        { text: 'Diaper Status: CLEAN', class: 'boot-line--success', delay: 120 },
+        { text: 'Sleep Mode: NOT FOUND', class: 'boot-line--warning', delay: 100 },
+        { text: 'READY FOR BABY', class: 'boot-line--success', delay: 150 },
     ],
 
     hasPlayed: false,
@@ -279,8 +279,8 @@ const Win98Dialog = {
 
         if (!overlay) return;
 
-        title.textContent = options.title || 'Y2K Error';
-        message.innerHTML = options.message || '<strong>An error has occurred.</strong>';
+        title.textContent = options.title || 'Baby Monitor Alert';
+        message.innerHTML = options.message || '<strong>An event has occurred.</strong>';
         icon.textContent = options.icon || '⚠️';
 
         overlay.classList.remove('hidden');
@@ -302,10 +302,10 @@ const Win98Dialog = {
 
     showWrongAnswer(context) {
         this.show({
-            title: 'ANSWER_ERROR.EXE',
+            title: 'OOPS.EXE',
             message: `<strong>Incorrect Response</strong>
                 ${context || 'The submitted answer is invalid.'}
-                <br><br>Error code: 0x1999Y2K`,
+                <br><br>Error code: 0xBABY`,
             icon: '❌',
             duration: 2500
         });
@@ -323,7 +323,7 @@ const Win98Dialog = {
 
     showFreeze(seconds) {
         this.show({
-            title: 'LOCKOUT.EXE',
+            title: 'TIMEOUT.EXE',
             message: `<strong>Wrong Answer Penalty</strong>
                 Buzzer frozen for ${seconds} seconds.`,
             icon: '🥶',
@@ -462,14 +462,14 @@ const TimerEffects = {
 // ============================================================
 
 const AVATARS = [
-    { id: 'robot', emoji: '🤖', name: 'Y2K-BOT' },
-    { id: 'computer', emoji: '💻', name: 'MAINFRAME' },
-    { id: 'floppy', emoji: '💾', name: 'SAVE_FILE' },
-    { id: 'bug', emoji: '🐛', name: 'MILLENNIUM_BUG' },
-    { id: 'rocket', emoji: '🚀', name: 'LAUNCH_CODE' },
-    { id: 'satellite', emoji: '📡', name: 'UPLINK' },
-    { id: 'alien', emoji: '👽', name: 'AREA_51' },
-    { id: 'skull', emoji: '💀', name: 'SYSTEM_CRASH' }
+    { id: 'bottle', emoji: '🍼', name: 'BOTTLE' },
+    { id: 'pacifier', emoji: '👶', name: 'BABY' },
+    { id: 'bear', emoji: '🧸', name: 'TEDDY' },
+    { id: 'duck', emoji: '🦆', name: 'DUCKY' },
+    { id: 'rattle', emoji: '🪇', name: 'RATTLE' },
+    { id: 'stroller', emoji: '🛒', name: 'STROLLER' },
+    { id: 'footprint', emoji: '👣', name: 'FEET' },
+    { id: 'angel', emoji: '👼', name: 'ANGEL' }
 ];
 
 // ============================================================
@@ -1010,7 +1010,7 @@ const UI = {
 // ============================================================
 
 const SessionStorage = {
-    STORAGE_KEY: 'y2k_session',
+    STORAGE_KEY: 'baby_shower_session',
 
     /**
      * Save session data to localStorage
@@ -1804,7 +1804,7 @@ function initMockModeTestControls() {
 const MockTestHelper = {
     showTrivia() {
         ViewManager.showForState('TRIVIA');
-        UI.updateTriviaQuestion('What year did the first iPhone release?');
+        UI.updateTriviaQuestion('How many diapers does a newborn use per day?');
     },
 
     showTimer() {
@@ -1826,16 +1826,16 @@ const MockTestHelper = {
     showTimeline() {
         ViewManager.showForState('TIMELINE');
         UI.initTimeline([
-            'The Wright Brothers First Flight',
-            'Moon Landing',
-            'World Wide Web Invented',
-            'iPhone Released'
+            'Conception',
+            'First Ultrasound',
+            'Gender Reveal',
+            'Baby Shower'
         ]);
     },
 
     showPictureGuess() {
         ViewManager.showForState('PICTUREGUESS');
-        UI.updatePictureGuessHint('This was the must-have gadget of 1999...');
+        UI.updatePictureGuessHint('This item is essential for feeding...');
     }
 };
 

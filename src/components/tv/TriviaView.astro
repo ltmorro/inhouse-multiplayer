@@ -1,0 +1,36 @@
+---
+import ViewContainer from '../shared/ViewContainer.astro';
+---
+<ViewContainer id="view-trivia">
+    <div class="tv-layout">
+        <div class="tv-header">
+            <h1 class="tv-title glow-strong">ALL SEARCH ENGINES OFFLINE</h1>
+            <p class="tv-subtitle">PROTOCOL 2 - GOOGLE IS DOWN</p>
+        </div>
+        <div class="tv-content">
+            <div class="text-center" style="max-width: 85%;">
+                <p id="trivia-question" class="tv-main-message glow-strong">
+                    Waiting for question...
+                </p>
+                <div id="trivia-submission-status" class="tv-status mt-3">
+                    <!-- "3/4 teams submitted" -->
+                </div>
+                <div id="trivia-answer-reveal" class="tv-label mt-3 hidden">
+                    <!-- Revealed answer -->
+                </div>
+                <div id="trivia-team-answers" class="tv-table-container mt-3 hidden">
+                    <!-- Team answers table injected here -->
+                </div>
+            </div>
+        </div>
+        <div class="tv-instructions" id="trivia-instructions">
+            <div class="tv-instructions-box">
+                <p class="instruction-title">THE INTERNET HAS COLLAPSED</p>
+                <p class="instruction-text">No lifelines. No connections. Just what's left in your head. <strong>TRANSMIT your answer</strong> before timeout. Wrong answers cannot be un-sent.</p>
+            </div>
+        </div>
+        <div class="tv-footer">
+            <div id="trivia-scoreboard"></div>
+        </div>
+    </div>
+</ViewContainer>

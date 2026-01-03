@@ -1,0 +1,30 @@
+---
+import ViewContainer from '../shared/ViewContainer.astro';
+---
+<ViewContainer id="view-team-created">
+    <div class="flex-grow flex-center flex-column text-center">
+        <h2 class="glow">FAMILY CREATED</h2>
+        <p class="mt-2">Share this code with your family:</p>
+
+        <div id="join-code-display" class="mt-3" style="font-size: 3rem; letter-spacing: 0.3em; font-weight: bold; padding: 1rem 2rem; border: 2px solid var(--terminal-green); background: rgba(0, 255, 65, 0.1);">
+            ----
+        </div>
+
+        <div class="mt-3" style="width: 100%; max-width: 320px;">
+            <p style="color: var(--terminal-amber); font-size: 0.85rem; margin-bottom: 0.5rem;">SELECT FAMILY AVATAR:</p>
+            <div class="avatar-grid" id="avatar-grid">
+                <!-- Avatars populated by client.js -->
+            </div>
+        </div>
+
+        <p class="mt-2" style="color: var(--terminal-green-dim);">Waiting for family members...</p>
+
+        <div id="players-list" class="mt-2" style="text-align: left;">
+            <!-- Player list will be injected here -->
+        </div>
+
+        <button id="start-game-btn" class="terminal-btn terminal-btn--primary mt-3" style="display: none;" onclick="proceedToLobby()">
+            PROCEED TO LOBBY
+        </button>
+    </div>
+</ViewContainer>

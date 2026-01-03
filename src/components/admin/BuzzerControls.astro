@@ -1,0 +1,26 @@
+---
+---
+<section id="buzzer-section" class="mt-3" style="display: none;">
+    <h3 class="glow">LULLABY GUESS CONTROLS</h3>
+    <div class="mt-1">
+        <label>Select Track:</label>
+        <select id="audio-track-select" class="terminal-input" style="width: 100%;">
+            <option value="">-- Select a track --</option>
+        </select>
+    </div>
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" class="mt-1">
+        <button id="play-audio-btn" class="terminal-btn terminal-btn--primary">PLAY AUDIO</button>
+        <button id="stop-audio-btn" class="terminal-btn">STOP AUDIO</button>
+        <button id="reveal-audio-btn" class="terminal-btn">REVEAL ANSWER</button>
+    </div>
+    <div id="spotify-warning" class="mt-1 hidden" style="color: var(--terminal-amber); font-size: 0.85rem;">
+        Note: Spotify not connected. Manual play required.
+    </div>
+    <hr style="border-color: var(--terminal-green-dim); margin-top: 1rem;">
+    <p class="mt-1">Locked by: <span id="buzzer-locker" class="glow">---</span></p>
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" class="mt-1">
+        <button id="buzzer-correct-full" class="terminal-btn" style="background: var(--terminal-green-dim);">ARTIST+SONG +60</button>
+        <button id="buzzer-correct-song" class="terminal-btn" style="background: var(--terminal-green);">SONG ONLY +30</button>
+        <button id="buzzer-wrong" class="terminal-btn" style="background: var(--terminal-red);">WRONG</button>
+    </div>
+</section>

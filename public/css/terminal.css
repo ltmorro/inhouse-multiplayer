@@ -1,32 +1,40 @@
 /* =============================================================
-   TERMINAL.CSS - CRT Terminal Styling
-   Retro terminal aesthetic with scanlines and green phosphor glow
+   GLOBAL.CSS - Base Styles for Astro App
+   Ported from terminal.css - CRT Terminal Styling
    ============================================================= */
 
 /* ---------- CSS Variables ---------- */
 :root {
-    --terminal-green: #00FF00;
-    --terminal-green-dim: #00AA00;
-    --terminal-green-glow: rgba(0, 255, 0, 0.3);
-    --terminal-black: #0a0a0a;
-    --terminal-dark: #111111;
-    --terminal-red: #FF0000;
-    --terminal-blue: #00AAFF;
-    --terminal-amber: #FFAA00;
+    /* Main Theme Colors: Baby Blue Terminal */
+    --terminal-green: #4CC9F0;       /* Bright Cyan/Baby Blue */
+    --terminal-green-dim: #4895EF;   /* Darker Blue */
+    --terminal-green-glow: rgba(76, 201, 240, 0.45); /* Blue Glow */
+    
+    /* Background: Deep Navy instead of stark Black */
+    --terminal-black: #051923;       
+    --terminal-dark: #003554;
+    
+    /* Accents */
+    --terminal-red: #F72585;         /* Hot Pink (for contrast/heartbeat) */
+    --terminal-blue: #4361EE;        /* Deep Blue */
+    --terminal-amber: #F7D06B;       /* Soft Yellow */
 
+    /* Keep the font, it fits the "Hospital Monitor" look */
     --font-mono: 'Courier New', 'Lucida Console', Monaco, monospace;
-    --scanline-opacity: 0.08;
-    --flicker-intensity: 0.02;
-
-    /* Team Colors */
-    --team-color-1: #FF6B6B;  /* Coral Red */
-    --team-color-2: #4ECDC4;  /* Teal */
-    --team-color-3: #FFE66D;  /* Yellow */
-    --team-color-4: #95E1D3;  /* Mint */
-    --team-color-5: #DDA0DD;  /* Plum */
-    --team-color-6: #87CEEB;  /* Sky Blue */
-    --team-color-7: #F4A460;  /* Sandy Brown */
-    --team-color-8: #98D8C8;  /* Seafoam */
+    
+    /* Soften the CRT effects so it's less "Broken Computer" */
+    --scanline-opacity: 0.04;        /* Reduced from 0.08 */
+    --flicker-intensity: 0.01;       /* Reduced from 0.02 */
+    
+    /* Update Team Colors to Pastel Baby Shower Tones */
+    --team-color-1: #FFB5A7;  /* Soft Peach */
+    --team-color-2: #B0E0E6;  /* Powder Blue */
+    --team-color-3: #FDFCDC;  /* Cream */
+    --team-color-4: #BDE0FE;  /* Light Sky */
+    --team-color-5: #CDB4DB;  /* Lavender */
+    --team-color-6: #A2D2FF;  /* Baby Blue */
+    --team-color-7: #FFC8DD;  /* Soft Pink */
+    --team-color-8: #98F5E1;  /* Mint */
 }
 
 /* ---------- Reset & Base ---------- */
@@ -111,7 +119,7 @@ body {
     background: radial-gradient(
         ellipse at center,
         transparent 60%,
-        rgba(0, 0, 0, 0.4) 100%
+        rgba(5, 25, 35, 0.3) 100% /* Lighter, bluer vignette */
     );
     pointer-events: none;
     z-index: 998;
@@ -264,80 +272,6 @@ h3 { font-size: 1.25rem; }
     box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
 }
 
-/* ---------- Big Buzzer Button ---------- */
-.buzzer-btn {
-    width: 80vmin;
-    height: 80vmin;
-    max-width: 400px;
-    max-height: 400px;
-    border-radius: 50%;
-    border: 4px solid var(--terminal-green);
-    background: transparent;
-    color: var(--terminal-green);
-    font-family: var(--font-mono);
-    font-size: 2rem;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.1s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.buzzer-btn:hover {
-    box-shadow:
-        0 0 30px var(--terminal-green-glow),
-        inset 0 0 30px var(--terminal-green-glow);
-}
-
-.buzzer-btn:active {
-    transform: scale(0.95);
-    background: var(--terminal-green);
-    color: var(--terminal-black);
-}
-
-/* Buzzer States */
-.buzzer-btn--active {
-    border-color: var(--terminal-green);
-    color: var(--terminal-green);
-    animation: buzzer-pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes buzzer-pulse {
-    0%, 100% { box-shadow: 0 0 20px var(--terminal-green-glow); }
-    50% { box-shadow: 0 0 40px var(--terminal-green), 0 0 60px var(--terminal-green-glow); }
-}
-
-.buzzer-btn--locked-self {
-    border-color: var(--terminal-blue);
-    color: var(--terminal-blue);
-    background: rgba(0, 170, 255, 0.1);
-    cursor: default;
-    animation: none;
-}
-
-.buzzer-btn--locked-other {
-    border-color: var(--terminal-red);
-    color: var(--terminal-red);
-    opacity: 0.6;
-    cursor: not-allowed;
-    animation: none;
-}
-
-.buzzer-btn--frozen {
-    border-color: var(--terminal-amber);
-    color: var(--terminal-amber);
-    background: rgba(255, 170, 0, 0.1);
-    cursor: not-allowed;
-    animation: buzzer-freeze-pulse 0.5s ease-in-out infinite;
-}
-
-@keyframes buzzer-freeze-pulse {
-    0%, 100% { box-shadow: 0 0 20px rgba(255, 170, 0, 0.3); }
-    50% { box-shadow: 0 0 40px rgba(255, 170, 0, 0.6); }
-}
-
 /* ---------- Status Messages ---------- */
 .status-bar {
     position: fixed;
@@ -446,6 +380,98 @@ h3 { font-size: 1.25rem; }
     background: var(--terminal-red);
 }
 
+/* ---------- ASCII Art / Logo ---------- */
+.ascii-art {
+    font-family: var(--font-mono);
+    white-space: pre;
+    font-size: 0.6rem;
+    line-height: 1.2;
+    color: var(--terminal-green);
+    text-align: center;
+    margin: 20px 0;
+}
+
+@media (min-width: 768px) {
+    .ascii-art {
+        font-size: 0.8rem;
+    }
+}
+
+
+/* ---------- Big Buzzer Button ---------- */
+.buzzer-btn {
+    width: 80vmin;
+    height: 80vmin;
+    max-width: 400px;
+    max-height: 400px;
+    border-radius: 50%;
+    border: 4px solid var(--terminal-green);
+    background: transparent;
+    color: var(--terminal-green);
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.buzzer-btn:hover {
+    box-shadow:
+        0 0 30px var(--terminal-green-glow),
+        inset 0 0 30px var(--terminal-green-glow);
+}
+
+.buzzer-btn:active {
+    transform: scale(0.95);
+    background: var(--terminal-green);
+    color: var(--terminal-black);
+}
+
+/* Buzzer States */
+.buzzer-btn--active {
+    border-color: var(--terminal-green);
+    color: var(--terminal-green);
+    animation: buzzer-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes buzzer-pulse {
+    0%, 100% { box-shadow: 0 0 20px var(--terminal-green-glow); }
+    50% { box-shadow: 0 0 40px var(--terminal-green), 0 0 60px var(--terminal-green-glow); }
+}
+
+.buzzer-btn--locked-self {
+    border-color: var(--terminal-blue);
+    color: var(--terminal-blue);
+    background: rgba(67, 97, 238, 0.1);
+    cursor: default;
+    animation: none;
+}
+
+.buzzer-btn--locked-other {
+    border-color: var(--terminal-red);
+    color: var(--terminal-red);
+    opacity: 0.6;
+    cursor: not-allowed;
+    animation: none;
+}
+
+.buzzer-btn--frozen {
+    border-color: var(--terminal-amber);
+    color: var(--terminal-amber);
+    background: rgba(255, 208, 107, 0.1);
+    cursor: not-allowed;
+    animation: buzzer-freeze-pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes buzzer-freeze-pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 208, 107, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(255, 208, 107, 0.6); }
+}
+
 /* ---------- Timeline/Sortable List ---------- */
 .timeline-list {
     list-style: none;
@@ -485,7 +511,7 @@ h3 { font-size: 1.25rem; }
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(5, 25, 35, 0.9);
     display: none;
     align-items: center;
     justify-content: center;
@@ -506,24 +532,6 @@ h3 { font-size: 1.25rem; }
     text-align: center;
 }
 
-/* ---------- ASCII Art / Logo ---------- */
-.ascii-art {
-    font-family: var(--font-mono);
-    white-space: pre;
-    font-size: 0.6rem;
-    line-height: 1.2;
-    color: var(--terminal-green);
-    text-align: center;
-    margin: 20px 0;
-}
-
-@media (min-width: 768px) {
-    .ascii-art {
-        font-size: 0.8rem;
-    }
-}
-
-/* ---------- Utility Classes ---------- */
 .text-center { text-align: center; }
 .text-left { text-align: left; }
 .text-right { text-align: right; }
@@ -545,6 +553,7 @@ h3 { font-size: 1.25rem; }
 .flex-grow { flex-grow: 1; }
 
 .hidden { display: none !important; }
+
 
 /* =============================================================
    TV DISPLAY SPECIFIC
@@ -593,7 +602,7 @@ h3 { font-size: 1.25rem; }
 
 .tv-instructions-box {
     padding: 1.5rem 4rem;
-    background: rgba(0, 255, 65, 0.03);
+    background: rgba(76, 201, 240, 0.03);
     border: 2px solid var(--terminal-green-dim);
     text-align: center;
     max-width: 90%;
@@ -840,144 +849,6 @@ h3 { font-size: 1.25rem; }
 }
 
 /* =============================================================
-   ENHANCED CRT EFFECTS
-   Glitches, screen shake, static noise for dramatic moments
-   ============================================================= */
-
-/* RGB color separation glitch */
-@keyframes glitch-color {
-    0%, 100% {
-        text-shadow:
-            0 0 5px var(--terminal-green),
-            0 0 10px var(--terminal-green-glow);
-    }
-    25% {
-        text-shadow:
-            -2px 0 #ff0000,
-            2px 0 #00ffff,
-            0 0 10px var(--terminal-green-glow);
-    }
-    50% {
-        text-shadow:
-            2px 0 #ff0000,
-            -2px 0 #00ffff,
-            0 0 10px var(--terminal-green-glow);
-    }
-    75% {
-        text-shadow:
-            0 -1px #ff0000,
-            0 1px #00ffff,
-            0 0 10px var(--terminal-green-glow);
-    }
-}
-
-/* Horizontal scan line glitch */
-@keyframes glitch-scan {
-    0%, 100% {
-        clip-path: inset(0 0 100% 0);
-        transform: translate(0);
-    }
-    10% {
-        clip-path: inset(20% 0 60% 0);
-        transform: translate(-5px);
-    }
-    20% {
-        clip-path: inset(40% 0 40% 0);
-        transform: translate(5px);
-    }
-    30% {
-        clip-path: inset(60% 0 20% 0);
-        transform: translate(-3px);
-    }
-    40% {
-        clip-path: inset(80% 0 0% 0);
-        transform: translate(2px);
-    }
-    50% {
-        clip-path: inset(0 0 100% 0);
-    }
-}
-
-/* Screen tear effect */
-@keyframes screen-tear {
-    0%, 100% { transform: translateX(0); }
-    5% { transform: translateX(-2px); }
-    10% { transform: translateX(3px); }
-    15% { transform: translateX(0); }
-}
-
-/* Static noise movement */
-@keyframes static-noise {
-    0%, 100% { background-position: 0 0; }
-    10% { background-position: -5% -5%; }
-    20% { background-position: 10% 5%; }
-    30% { background-position: -5% 10%; }
-    40% { background-position: 5% -5%; }
-    50% { background-position: -10% 5%; }
-    60% { background-position: 10% -5%; }
-    70% { background-position: -5% 0; }
-    80% { background-position: 0 10%; }
-    90% { background-position: 5% 5%; }
-}
-
-/* Screen shake */
-@keyframes screen-shake {
-    0%, 100% { transform: translate(0, 0); }
-    10% { transform: translate(-3px, 2px); }
-    20% { transform: translate(3px, -2px); }
-    30% { transform: translate(-2px, 3px); }
-    40% { transform: translate(2px, -3px); }
-    50% { transform: translate(-3px, -2px); }
-    60% { transform: translate(3px, 2px); }
-    70% { transform: translate(-2px, -3px); }
-    80% { transform: translate(2px, 3px); }
-    90% { transform: translate(-1px, 1px); }
-}
-
-/* Glitch effect classes */
-.glitch-active {
-    animation: glitch-color 0.3s steps(3) infinite;
-}
-
-.glitch-active * {
-    animation: glitch-color 0.3s steps(3) infinite;
-}
-
-/* Major screen distortion */
-.screen-distort {
-    animation: screen-tear 0.1s linear infinite;
-}
-
-/* Static noise overlay */
-.static-overlay {
-    position: relative;
-}
-
-.static-overlay::after {
-    content: '';
-    position: fixed;
-    top: -50%;
-    left: -50%;
-    right: -50%;
-    bottom: -50%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
-    animation: static-noise 0.5s steps(8) infinite;
-    pointer-events: none;
-    z-index: 2500;
-    opacity: 0;
-    transition: opacity 0.1s;
-}
-
-.static-overlay.static-active::after {
-    opacity: 1;
-}
-
-/* Screen shake class */
-.screen-shake {
-    animation: screen-shake 0.4s ease-out;
-}
-
-/* =============================================================
    NEWS TICKER
    Scrolling Y2K headlines at bottom of screen
    ============================================================= */
@@ -988,7 +859,7 @@ h3 { font-size: 1.25rem; }
     left: 0;
     right: 0;
     height: 55px;
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(5, 25, 35, 0.95);
     border-top: 3px solid var(--terminal-green);
     overflow: hidden;
     z-index: 500;
@@ -1035,7 +906,7 @@ h3 { font-size: 1.25rem; }
     position: fixed;
     top: 25px;
     right: 25px;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(5, 25, 35, 0.9);
     border: 2px solid var(--terminal-green);
     padding: 20px 25px;
     font-size: 1.1rem;
@@ -1268,7 +1139,7 @@ h3 { font-size: 1.25rem; }
 }
 
 .chat-message {
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(5, 25, 35, 0.85);
     border: 2px solid var(--terminal-green-dim);
     border-left: 4px solid var(--terminal-green);
     padding: 12px 18px;
@@ -1328,7 +1199,7 @@ h3 { font-size: 1.25rem; }
 }
 
 .avatar-option:hover {
-    background: rgba(0, 255, 0, 0.2);
+    background: rgba(76, 201, 240, 0.2);
     transform: scale(1.05);
 }
 
@@ -1392,7 +1263,7 @@ h3 { font-size: 1.25rem; }
     justify-content: center;
     gap: 8px;
     z-index: 200;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(5, 25, 35, 0.8);
     padding: 8px 15px;
     border-radius: 25px;
     border: 1px solid var(--terminal-green-dim);
@@ -1413,7 +1284,7 @@ h3 { font-size: 1.25rem; }
 }
 
 .reaction-btn:hover {
-    background: rgba(0, 255, 0, 0.2);
+    background: rgba(76, 201, 240, 0.2);
     transform: scale(1.1);
 }
 
@@ -1446,7 +1317,7 @@ h3 { font-size: 1.25rem; }
     align-items: center;
     gap: 8px;
     z-index: 200;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(5, 25, 35, 0.9);
     padding: 8px 12px;
     border-radius: 25px;
     border: 1px solid var(--terminal-green-dim);
@@ -1497,7 +1368,7 @@ h3 { font-size: 1.25rem; }
 }
 
 .chat-send-btn:hover {
-    background: rgba(0, 255, 0, 0.2);
+    background: rgba(76, 201, 240, 0.2);
 }
 
 .chat-send-btn:active {
@@ -1513,101 +1384,6 @@ h3 { font-size: 1.25rem; }
 
 .chat-send-icon {
     font-weight: bold;
-}
-
-/* =============================================================
-   BOOT SEQUENCE
-   Fake BIOS/DOS startup animation
-   ============================================================= */
-
-.boot-sequence {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #000;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    padding: 40px;
-    font-family: var(--font-mono);
-    font-size: 1rem;
-    color: #aaa;
-    overflow: hidden;
-}
-
-.boot-sequence.hidden {
-    display: none;
-}
-
-.boot-line {
-    opacity: 0;
-    margin: 2px 0;
-    white-space: pre;
-}
-
-.boot-line.visible {
-    opacity: 1;
-}
-
-.boot-line--success {
-    color: var(--terminal-green);
-}
-
-.boot-line--warning {
-    color: var(--terminal-amber);
-}
-
-.boot-line--error {
-    color: var(--terminal-red);
-}
-
-.boot-line--header {
-    color: #fff;
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-}
-
-.boot-progress {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.boot-progress__bar {
-    width: 300px;
-    height: 20px;
-    border: 2px solid #666;
-    background: #111;
-    position: relative;
-}
-
-.boot-progress__fill {
-    height: 100%;
-    background: var(--terminal-green);
-    width: 0%;
-    transition: width 0.1s linear;
-}
-
-.boot-progress__text {
-    color: var(--terminal-green);
-}
-
-/* ASCII Art for boot */
-.boot-ascii {
-    color: var(--terminal-green);
-    font-size: 0.6rem;
-    line-height: 1.1;
-    margin: 20px 0;
-    white-space: pre;
-}
-
-@media (min-width: 768px) {
-    .boot-ascii {
-        font-size: 0.8rem;
-    }
 }
 
 /* =============================================================
@@ -1823,6 +1599,322 @@ h3 { font-size: 1.25rem; }
     50% { opacity: 0; }
 }
 
+/* Horizontal line sweep transition */
+.scanline-sweep {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--terminal-green);
+    box-shadow: 0 0 20px var(--terminal-green), 0 0 40px var(--terminal-green);
+    z-index: 8001;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.scanline-sweep.active {
+    animation: scanline-sweep 0.5s ease-in-out forwards;
+}
+
+@keyframes scanline-sweep {
+    0% {
+        top: 0;
+        opacity: 1;
+    }
+    100% {
+        top: 100%;
+        opacity: 0;
+    }
+}
+
+/* =============================================================
+   ENHANCED TIMER EFFECTS
+   More dramatic effects as time runs out
+   ============================================================= */
+
+.timer-critical-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 700;
+    opacity: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(247, 37, 133, 0.3) 100%);
+    transition: opacity 0.5s ease;
+}
+
+.timer-critical-overlay.active {
+    opacity: 1;
+    animation: danger-pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes danger-pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+/* Heartbeat effect for final seconds */
+.heartbeat {
+    animation: heartbeat 0.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.05); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.03); }
+}
+
+/* =============================================================
+   NOW PLAYING INDICATOR
+   Shows currently playing Spotify track
+   ============================================================= */
+
+.now-playing {
+    position: fixed;
+    bottom: 75px;
+    left: 30px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background: rgba(5, 25, 35, 0.9);
+    border: 2px solid var(--terminal-green-dim);
+    padding: 20px 30px;
+    z-index: 550;
+    max-width: 550px;
+}
+
+.now-playing.hidden {
+    display: none;
+}
+
+.now-playing__icon {
+    display: flex;
+    align-items: flex-end;
+    gap: 5px;
+    height: 45px;
+}
+
+.now-playing__bar {
+    width: 8px;
+    background: var(--terminal-green);
+    animation: now-playing-bar 0.5s ease-in-out infinite alternate;
+}
+
+.now-playing__bar:nth-child(1) { height: 18px; animation-delay: 0s; }
+.now-playing__bar:nth-child(2) { height: 35px; animation-delay: 0.2s; }
+.now-playing__bar:nth-child(3) { height: 25px; animation-delay: 0.4s; }
+
+@keyframes now-playing-bar {
+    0% { height: 10px; }
+    100% { height: 45px; }
+}
+
+
+/* RGB color separation glitch */
+@keyframes glitch-color {
+    0%, 100% {
+        text-shadow:
+            0 0 5px var(--terminal-green),
+            0 0 10px var(--terminal-green-glow);
+    }
+    25% {
+        text-shadow:
+            -2px 0 #ff0000,
+            2px 0 #00ffff,
+            0 0 10px var(--terminal-green-glow);
+    }
+    50% {
+        text-shadow:
+            2px 0 #ff0000,
+            -2px 0 #00ffff,
+            0 0 10px var(--terminal-green-glow);
+    }
+    75% {
+        text-shadow:
+            0 -1px #ff0000,
+            0 1px #00ffff,
+            0 0 10px var(--terminal-green-glow);
+    }
+}
+
+/* Screen tear effect */
+@keyframes screen-tear {
+    0%, 100% { transform: translateX(0); }
+    5% { transform: translateX(-2px); }
+    10% { transform: translateX(3px); }
+    15% { transform: translateX(0); }
+}
+
+/* Static noise movement */
+@keyframes static-noise {
+    0%, 100% { background-position: 0 0; }
+    10% { background-position: -5% -5%; }
+    20% { background-position: 10% 5%; }
+    30% { background-position: -5% 10%; }
+    40% { background-position: 5% -5%; }
+    50% { background-position: -10% 5%; }
+    60% { background-position: 10% -5%; }
+    70% { background-position: -5% 0; }
+    80% { background-position: 0 10%; }
+    90% { background-position: 5% 5%; }
+}
+
+/* Screen shake */
+@keyframes screen-shake {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-3px, 2px); }
+    20% { transform: translate(3px, -2px); }
+    30% { transform: translate(-2px, 3px); }
+    40% { transform: translate(2px, -3px); }
+    50% { transform: translate(-3px, -2px); }
+    60% { transform: translate(3px, 2px); }
+    70% { transform: translate(-2px, -3px); }
+    80% { transform: translate(2px, 3px); }
+    90% { transform: translate(-1px, 1px); }
+}
+
+/* Glitch effect classes */
+.glitch-active {
+    animation: glitch-color 0.3s steps(3) infinite;
+}
+
+.glitch-active * {
+    animation: glitch-color 0.3s steps(3) infinite;
+}
+
+/* Major screen distortion */
+.screen-distort {
+    animation: screen-tear 0.1s linear infinite;
+}
+
+/* Static noise overlay */
+.static-overlay {
+    position: relative;
+}
+
+.static-overlay::after {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
+    animation: static-noise 0.5s steps(8) infinite;
+    pointer-events: none;
+    z-index: 2500;
+    opacity: 0;
+    transition: opacity 0.1s;
+}
+
+.static-overlay.static-active::after {
+    opacity: 1;
+}
+
+/* Screen shake class */
+.screen-shake {
+    animation: screen-shake 0.4s ease-out;
+}
+
+/* =============================================================
+   BOOT SEQUENCE
+   Fake BIOS/DOS startup animation
+   ============================================================= */
+
+.boot-sequence {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: #aaa;
+    overflow: hidden;
+}
+
+.boot-sequence.hidden {
+    display: none;
+}
+
+.boot-line {
+    opacity: 0;
+    margin: 2px 0;
+    white-space: pre;
+}
+
+.boot-line.visible {
+    opacity: 1;
+}
+
+.boot-line--success {
+    color: var(--terminal-green);
+}
+
+.boot-line--warning {
+    color: var(--terminal-amber);
+}
+
+.boot-line--error {
+    color: var(--terminal-red);
+}
+
+.boot-line--header {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.boot-progress {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.boot-progress__bar {
+    width: 300px;
+    height: 20px;
+    border: 2px solid #666;
+    background: #111;
+    position: relative;
+}
+
+.boot-progress__fill {
+    height: 100%;
+    background: var(--terminal-green);
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.boot-progress__text {
+    color: var(--terminal-green);
+}
+
+/* ASCII Art for boot */
+.boot-ascii {
+    color: var(--terminal-green);
+    font-size: 0.6rem;
+    line-height: 1.1;
+    margin: 20px 0;
+    white-space: pre;
+}
+
+@media (min-width: 768px) {
+    .boot-ascii {
+        font-size: 0.8rem;
+    }
+}
+
 /* =============================================================
    VHS / CHANNEL CHANGE TRANSITIONS
    Retro TV transitions between views
@@ -1886,619 +1978,38 @@ h3 { font-size: 1.25rem; }
     100% { opacity: 0; }
 }
 
-/* Horizontal line sweep transition */
-.scanline-sweep {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--terminal-green);
-    box-shadow: 0 0 20px var(--terminal-green), 0 0 40px var(--terminal-green);
-    z-index: 8001;
-    opacity: 0;
-    pointer-events: none;
+/* =============================================================
+   VIEW TRANSITIONS CUSTOMIZATION
+   Custom animations for Astro View Transitions
+   ============================================================= */
+
+/* Customize the default fade animation for view transitions */
+::view-transition-old(root) {
+    animation: vhs-out 0.3s ease-out forwards;
 }
 
-.scanline-sweep.active {
-    animation: scanline-sweep 0.5s ease-in-out forwards;
+::view-transition-new(root) {
+    animation: vhs-in 0.3s ease-in forwards;
 }
 
-@keyframes scanline-sweep {
+@keyframes vhs-out {
     0% {
-        top: 0;
         opacity: 1;
+        transform: scaleY(1);
     }
     100% {
-        top: 100%;
         opacity: 0;
+        transform: scaleY(1);
     }
 }
 
-/* =============================================================
-   ENHANCED TIMER EFFECTS
-   More dramatic effects as time runs out
-   ============================================================= */
-
-.timer-critical-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    z-index: 700;
-    opacity: 0;
-    background: radial-gradient(ellipse at center, transparent 40%, rgba(255, 0, 0, 0.3) 100%);
-    transition: opacity 0.5s ease;
-}
-
-.timer-critical-overlay.active {
-    opacity: 1;
-    animation: danger-pulse 0.5s ease-in-out infinite;
-}
-
-@keyframes danger-pulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.6; }
-}
-
-/* Heartbeat effect for final seconds */
-.heartbeat {
-    animation: heartbeat 0.5s ease-in-out infinite;
-}
-
-@keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    25% { transform: scale(1.05); }
-    50% { transform: scale(1); }
-    75% { transform: scale(1.03); }
-}
-
-/* =============================================================
-   NOW PLAYING INDICATOR
-   Shows currently playing Spotify track
-   ============================================================= */
-
-.now-playing {
-    position: fixed;
-    bottom: 75px;
-    left: 30px;
-    display: flex;
-    align-items: center;
-    gap: 25px;
-    background: rgba(0, 0, 0, 0.9);
-    border: 2px solid var(--terminal-green-dim);
-    padding: 20px 30px;
-    z-index: 550;
-    max-width: 550px;
-}
-
-.now-playing.hidden {
-    display: none;
-}
-
-.now-playing__icon {
-    display: flex;
-    align-items: flex-end;
-    gap: 5px;
-    height: 45px;
-}
-
-.now-playing__bar {
-    width: 8px;
-    background: var(--terminal-green);
-    animation: now-playing-bar 0.5s ease-in-out infinite alternate;
-}
-
-.now-playing__bar:nth-child(1) { height: 18px; animation-delay: 0s; }
-.now-playing__bar:nth-child(2) { height: 35px; animation-delay: 0.2s; }
-.now-playing__bar:nth-child(3) { height: 25px; animation-delay: 0.4s; }
-
-@keyframes now-playing-bar {
-    0% { height: 10px; }
-    100% { height: 45px; }
-}
-
-.now-playing__info {
-    overflow: hidden;
-}
-
-.now-playing__title {
-    font-size: 1.9rem;
-    color: var(--terminal-green);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.now-playing__artist {
-    font-size: 1.5rem;
-    color: var(--terminal-green-dim);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* =============================================================
-   COUNTDOWN TO MIDNIGHT
-   Y2K countdown clock
-   ============================================================= */
-
-.midnight-countdown {
-    position: fixed;
-    top: 30px;
-    left: 30px;
-    background: rgba(0, 0, 0, 0.9);
-    border: 3px solid var(--terminal-amber);
-    padding: 18px 30px;
-    z-index: 600;
-    text-align: center;
-}
-
-.midnight-countdown__label {
-    font-size: 1.5rem;
-    color: var(--terminal-amber);
-    letter-spacing: 4px;
-    margin-bottom: 10px;
-}
-
-.midnight-countdown__time {
-    font-size: 3rem;
-    color: var(--terminal-green);
-    font-family: var(--font-mono);
-    letter-spacing: 5px;
-}
-
-.midnight-countdown--imminent .midnight-countdown__time {
-    color: var(--terminal-amber);
-    animation: countdown-pulse 0.5s ease-in-out infinite;
-}
-
-.midnight-countdown--final .midnight-countdown__time {
-    color: var(--terminal-red);
-    animation: countdown-pulse 0.25s ease-in-out infinite;
-    font-size: 4rem;
-}
-
-@keyframes countdown-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.05); }
-}
-
-/* =============================================================
-   TEAM COLORS
-   Distinct colors for each team
-   ============================================================= */
-
-.team-color-1 { color: var(--team-color-1); }
-.team-color-2 { color: var(--team-color-2); }
-.team-color-3 { color: var(--team-color-3); }
-.team-color-4 { color: var(--team-color-4); }
-.team-color-5 { color: var(--team-color-5); }
-.team-color-6 { color: var(--team-color-6); }
-.team-color-7 { color: var(--team-color-7); }
-.team-color-8 { color: var(--team-color-8); }
-
-.team-bg-1 { background-color: var(--team-color-1); }
-.team-bg-2 { background-color: var(--team-color-2); }
-.team-bg-3 { background-color: var(--team-color-3); }
-.team-bg-4 { background-color: var(--team-color-4); }
-.team-bg-5 { background-color: var(--team-color-5); }
-.team-bg-6 { background-color: var(--team-color-6); }
-.team-bg-7 { background-color: var(--team-color-7); }
-.team-bg-8 { background-color: var(--team-color-8); }
-
-.team-border-1 { border-color: var(--team-color-1); }
-.team-border-2 { border-color: var(--team-color-2); }
-.team-border-3 { border-color: var(--team-color-3); }
-.team-border-4 { border-color: var(--team-color-4); }
-.team-border-5 { border-color: var(--team-color-5); }
-.team-border-6 { border-color: var(--team-color-6); }
-.team-border-7 { border-color: var(--team-color-7); }
-.team-border-8 { border-color: var(--team-color-8); }
-
-/* Team indicator with color dot */
-.team-color-dot {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 8px;
-    vertical-align: middle;
-}
-
-/* Lobby team cards with color accent */
-.lobby-team-card {
-    border-left-width: 4px;
-    border-left-style: solid;
-}
-
-/* Scoreboard row with team color */
-.scoreboard tr[data-team-color] td:first-child {
-    position: relative;
-    padding-left: 25px;
-}
-
-.scoreboard tr[data-team-color] td:first-child::before {
-    content: '';
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: currentColor;
-}
-
-/* =============================================================
-   TEAM COLOR ACCENTS
-   Applied to mobile status bar and other team-identified elements
-   ============================================================= */
-
-/* Status bar team accent (left border highlight) */
-.status-bar.team-accent-1 { border-bottom-color: var(--team-color-1); box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3); }
-.status-bar.team-accent-2 { border-bottom-color: var(--team-color-2); box-shadow: 0 2px 10px rgba(78, 205, 196, 0.3); }
-.status-bar.team-accent-3 { border-bottom-color: var(--team-color-3); box-shadow: 0 2px 10px rgba(255, 230, 109, 0.3); }
-.status-bar.team-accent-4 { border-bottom-color: var(--team-color-4); box-shadow: 0 2px 10px rgba(149, 225, 211, 0.3); }
-.status-bar.team-accent-5 { border-bottom-color: var(--team-color-5); box-shadow: 0 2px 10px rgba(221, 160, 221, 0.3); }
-.status-bar.team-accent-6 { border-bottom-color: var(--team-color-6); box-shadow: 0 2px 10px rgba(135, 206, 235, 0.3); }
-.status-bar.team-accent-7 { border-bottom-color: var(--team-color-7); box-shadow: 0 2px 10px rgba(244, 164, 96, 0.3); }
-.status-bar.team-accent-8 { border-bottom-color: var(--team-color-8); box-shadow: 0 2px 10px rgba(152, 216, 200, 0.3); }
-
-/* Team-colored glow text */
-.team-glow-1 { text-shadow: 0 0 10px var(--team-color-1), 0 0 20px rgba(255, 107, 107, 0.5); }
-.team-glow-2 { text-shadow: 0 0 10px var(--team-color-2), 0 0 20px rgba(78, 205, 196, 0.5); }
-.team-glow-3 { text-shadow: 0 0 10px var(--team-color-3), 0 0 20px rgba(255, 230, 109, 0.5); }
-.team-glow-4 { text-shadow: 0 0 10px var(--team-color-4), 0 0 20px rgba(149, 225, 211, 0.5); }
-.team-glow-5 { text-shadow: 0 0 10px var(--team-color-5), 0 0 20px rgba(221, 160, 221, 0.5); }
-.team-glow-6 { text-shadow: 0 0 10px var(--team-color-6), 0 0 20px rgba(135, 206, 235, 0.5); }
-.team-glow-7 { text-shadow: 0 0 10px var(--team-color-7), 0 0 20px rgba(244, 164, 96, 0.5); }
-.team-glow-8 { text-shadow: 0 0 10px var(--team-color-8), 0 0 20px rgba(152, 216, 200, 0.5); }
-
-/* Lobby team cards with team color */
-.lobby-team-card.team-card-1 { border-left-color: var(--team-color-1); }
-.lobby-team-card.team-card-2 { border-left-color: var(--team-color-2); }
-.lobby-team-card.team-card-3 { border-left-color: var(--team-color-3); }
-.lobby-team-card.team-card-4 { border-left-color: var(--team-color-4); }
-.lobby-team-card.team-card-5 { border-left-color: var(--team-color-5); }
-.lobby-team-card.team-card-6 { border-left-color: var(--team-color-6); }
-.lobby-team-card.team-card-7 { border-left-color: var(--team-color-7); }
-.lobby-team-card.team-card-8 { border-left-color: var(--team-color-8); }
-
-/* Chat message team color accent */
-.chat-message.team-chat-1 { border-left-color: var(--team-color-1); }
-.chat-message.team-chat-2 { border-left-color: var(--team-color-2); }
-.chat-message.team-chat-3 { border-left-color: var(--team-color-3); }
-.chat-message.team-chat-4 { border-left-color: var(--team-color-4); }
-.chat-message.team-chat-5 { border-left-color: var(--team-color-5); }
-.chat-message.team-chat-6 { border-left-color: var(--team-color-6); }
-.chat-message.team-chat-7 { border-left-color: var(--team-color-7); }
-.chat-message.team-chat-8 { border-left-color: var(--team-color-8); }
-
-.chat-message.team-chat-1 .chat-message__sender { color: var(--team-color-1); }
-.chat-message.team-chat-2 .chat-message__sender { color: var(--team-color-2); }
-.chat-message.team-chat-3 .chat-message__sender { color: var(--team-color-3); }
-.chat-message.team-chat-4 .chat-message__sender { color: var(--team-color-4); }
-.chat-message.team-chat-5 .chat-message__sender { color: var(--team-color-5); }
-.chat-message.team-chat-6 .chat-message__sender { color: var(--team-color-6); }
-.chat-message.team-chat-7 .chat-message__sender { color: var(--team-color-7); }
-.chat-message.team-chat-8 .chat-message__sender { color: var(--team-color-8); }
-
-/* Floating reaction with team color name */
-.floating-reaction.team-reaction-1 .floating-reaction__name { color: var(--team-color-1); }
-.floating-reaction.team-reaction-2 .floating-reaction__name { color: var(--team-color-2); }
-.floating-reaction.team-reaction-3 .floating-reaction__name { color: var(--team-color-3); }
-.floating-reaction.team-reaction-4 .floating-reaction__name { color: var(--team-color-4); }
-.floating-reaction.team-reaction-5 .floating-reaction__name { color: var(--team-color-5); }
-.floating-reaction.team-reaction-6 .floating-reaction__name { color: var(--team-color-6); }
-.floating-reaction.team-reaction-7 .floating-reaction__name { color: var(--team-color-7); }
-.floating-reaction.team-reaction-8 .floating-reaction__name { color: var(--team-color-8); }
-
-/* Scoreboard row team colors */
-.scoreboard tr.team-row-1 td:first-child { color: var(--team-color-1); }
-.scoreboard tr.team-row-2 td:first-child { color: var(--team-color-2); }
-.scoreboard tr.team-row-3 td:first-child { color: var(--team-color-3); }
-.scoreboard tr.team-row-4 td:first-child { color: var(--team-color-4); }
-.scoreboard tr.team-row-5 td:first-child { color: var(--team-color-5); }
-.scoreboard tr.team-row-6 td:first-child { color: var(--team-color-6); }
-.scoreboard tr.team-row-7 td:first-child { color: var(--team-color-7); }
-.scoreboard tr.team-row-8 td:first-child { color: var(--team-color-8); }
-
-/* Team indicator pulses with team color */
-.team-indicator.team-ind-1 .team-indicator__pulse { background: var(--team-color-1); }
-.team-indicator.team-ind-2 .team-indicator__pulse { background: var(--team-color-2); }
-.team-indicator.team-ind-3 .team-indicator__pulse { background: var(--team-color-3); }
-.team-indicator.team-ind-4 .team-indicator__pulse { background: var(--team-color-4); }
-.team-indicator.team-ind-5 .team-indicator__pulse { background: var(--team-color-5); }
-.team-indicator.team-ind-6 .team-indicator__pulse { background: var(--team-color-6); }
-.team-indicator.team-ind-7 .team-indicator__pulse { background: var(--team-color-7); }
-.team-indicator.team-ind-8 .team-indicator__pulse { background: var(--team-color-8); }
-
-.team-indicator.team-ind-1 .team-indicator__name { color: var(--team-color-1); }
-.team-indicator.team-ind-2 .team-indicator__name { color: var(--team-color-2); }
-.team-indicator.team-ind-3 .team-indicator__name { color: var(--team-color-3); }
-.team-indicator.team-ind-4 .team-indicator__name { color: var(--team-color-4); }
-.team-indicator.team-ind-5 .team-indicator__name { color: var(--team-color-5); }
-.team-indicator.team-ind-6 .team-indicator__name { color: var(--team-color-6); }
-.team-indicator.team-ind-7 .team-indicator__name { color: var(--team-color-7); }
-.team-indicator.team-ind-8 .team-indicator__name { color: var(--team-color-8); }
-
-/* =============================================================
-   INLINE SCOREBOARD (with team colors)
-   ============================================================= */
-
-.scoreboard-inline {
-    display: flex;
-    gap: 30px;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 10px 0;
-}
-
-.scoreboard-team {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 12px 20px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    min-width: 120px;
-}
-
-.scoreboard-team__header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.scoreboard-team__members {
-    font-size: 1rem;
-    color: var(--terminal-green-dim);
-    text-align: center;
-    max-width: 180px;
-    line-height: 1.3;
-}
-
-.scoreboard-team--leading {
-    transform: scale(1.1);
-    background: rgba(0, 50, 0, 0.5);
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-}
-
-.scoreboard-team__score {
-    font-family: 'VT323', monospace;
-    font-size: 1.5rem;
-    color: var(--terminal-green);
-    margin-left: 5px;
-}
-
-.scoreboard-team__score::before {
-    content: '[ ';
-    opacity: 0.5;
-}
-
-.scoreboard-team__score::after {
-    content: ' ]';
-    opacity: 0.5;
-}
-
-/* Mobile team name in status bar with color */
-#team-name-display.team-color-1 { color: var(--team-color-1); }
-#team-name-display.team-color-2 { color: var(--team-color-2); }
-#team-name-display.team-color-3 { color: var(--team-color-3); }
-#team-name-display.team-color-4 { color: var(--team-color-4); }
-#team-name-display.team-color-5 { color: var(--team-color-5); }
-#team-name-display.team-color-6 { color: var(--team-color-6); }
-#team-name-display.team-color-7 { color: var(--team-color-7); }
-#team-name-display.team-color-8 { color: var(--team-color-8); }
-
-/* =============================================================
-   TOP HEADER BAR
-   Centered countdown and status lights above content
-   ============================================================= */
-
-.top-header-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 650;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 100%);
-    border-bottom: 2px solid var(--terminal-green-dim);
-    padding: 12px 30px;
-}
-
-.top-header-bar__content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.top-header-bar__status {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.top-header-bar__status .status-light {
-    width: 12px;
-    height: 12px;
-    cursor: help;
-}
-
-.top-header-bar__countdown {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.top-header-bar__label {
-    font-size: 1.2rem;
-    color: var(--terminal-amber);
-    letter-spacing: 3px;
-    font-weight: bold;
-}
-
-.top-header-bar__time {
-    font-size: 2rem;
-    color: var(--terminal-green);
-    font-family: var(--font-mono);
-    letter-spacing: 4px;
-    text-shadow: 0 0 10px var(--terminal-green-glow);
-}
-
-.top-header-bar__teams-count {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.top-header-bar__teams-label {
-    font-size: 0.9rem;
-    color: var(--terminal-green-dim);
-    letter-spacing: 2px;
-}
-
-.top-header-bar__teams-value {
-    font-size: 1.4rem;
-    color: var(--terminal-green);
-    font-weight: bold;
-}
-
-/* Imminent countdown state (within 1 hour) */
-.top-header-bar--imminent .top-header-bar__time {
-    color: var(--terminal-amber);
-    animation: countdown-pulse 0.5s ease-in-out infinite;
-}
-
-/* Final countdown state (within 1 minute) */
-.top-header-bar--final .top-header-bar__time {
-    color: var(--terminal-red);
-    animation: countdown-pulse 0.25s ease-in-out infinite;
-    font-size: 2.5rem;
-}
-
-/* =============================================================
-   TEAMS PANEL
-   Side panel showing all teams and their members
-   ============================================================= */
-
-.teams-panel {
-    position: fixed;
-    top: 70px;
-    right: 20px;
-    z-index: 600;
-    background: rgba(0, 0, 0, 0.85);
-    border: 2px solid var(--terminal-green-dim);
-    border-radius: 4px;
-    padding: 15px 20px;
-    max-width: 280px;
-    max-height: calc(100vh - 180px);
-    overflow-y: auto;
-}
-
-.teams-panel__title {
-    font-size: 0.85rem;
-    color: var(--terminal-amber);
-    letter-spacing: 2px;
-    margin-bottom: 12px;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--terminal-green-dim);
-    padding-bottom: 8px;
-}
-
-.teams-panel__list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* Individual team card in the panel */
-.team-panel-card {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 10px 12px;
-    background: rgba(0, 255, 0, 0.05);
-    border-left: 3px solid var(--terminal-green);
-    border-radius: 2px;
-}
-
-.team-panel-card__header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.team-panel-card__pulse {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--terminal-green);
-    animation: pulse-active 1.5s ease-in-out infinite;
-    flex-shrink: 0;
-}
-
-.team-panel-card__pulse--inactive {
-    background: var(--terminal-green-dim);
-    animation: none;
-}
-
-.team-panel-card__name {
-    font-size: 1.1rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.team-panel-card__members {
-    font-size: 0.85rem;
-    color: var(--terminal-green-dim);
-    padding-left: 16px;
-    line-height: 1.4;
-}
-
-.team-panel-card__member {
-    display: block;
-}
-
-/* Team color borders for panel cards */
-.team-panel-card.team-border-1 { border-left-color: var(--team-color-1); }
-.team-panel-card.team-border-2 { border-left-color: var(--team-color-2); }
-.team-panel-card.team-border-3 { border-left-color: var(--team-color-3); }
-.team-panel-card.team-border-4 { border-left-color: var(--team-color-4); }
-.team-panel-card.team-border-5 { border-left-color: var(--team-color-5); }
-.team-panel-card.team-border-6 { border-left-color: var(--team-color-6); }
-.team-panel-card.team-border-7 { border-left-color: var(--team-color-7); }
-.team-panel-card.team-border-8 { border-left-color: var(--team-color-8); }
-
-/* Empty state */
-.teams-panel__empty {
-    font-size: 0.9rem;
-    color: var(--terminal-green-dim);
-    font-style: italic;
-}
-
-/* Scrollbar styling for teams panel */
-.teams-panel::-webkit-scrollbar {
-    width: 6px;
-}
-
-.teams-panel::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.3);
-}
-
-.teams-panel::-webkit-scrollbar-thumb {
-    background: var(--terminal-green-dim);
-    border-radius: 3px;
-}
-
-.teams-panel::-webkit-scrollbar-thumb:hover {
-    background: var(--terminal-green);
+@keyframes vhs-in {
+    0% {
+        opacity: 0;
+        transform: scaleY(1);
+    }
+    100% {
+        opacity: 1;
+        transform: scaleY(1);
+    }
 }

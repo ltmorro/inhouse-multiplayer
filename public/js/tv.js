@@ -177,14 +177,14 @@ const UI = {
 
         // Avatar emoji lookup
         const avatarEmojis = {
-            'robot': '🤖', 'computer': '💻', 'floppy': '💾', 'bug': '🐛',
-            'rocket': '🚀', 'satellite': '📡', 'alien': '👽', 'skull': '💀'
+            'bottle': '🍼', 'pacifier': '👶', 'bear': '🧸', 'duck': '🦆',
+            'rattle': '🪇', 'stroller': '🛒', 'footprint': '👣', 'angel': '👼'
         };
 
         let html = '<div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center;">';
         teamIds.forEach(id => {
             const team = AppState.teams[id];
-            const avatarEmoji = team.avatar ? (avatarEmojis[team.avatar] || '🤖') : '🤖';
+            const avatarEmoji = team.avatar ? (avatarEmojis[team.avatar] || '👶') : '👶';
             const borderClass = TeamColors.getBorderClass(id);
             const colorClass = TeamColors.getColorClass(id);
             const players = team.players || [];
@@ -1282,20 +1282,20 @@ const MockTestHelper = {
 
     showMacgyver() {
         ViewManager.showForState('MACGYVER');
-        document.getElementById('macgyver-message').textContent = 'Build something amazing with the materials provided!';
+        document.getElementById('macgyver-message').textContent = 'Construct a diaper out of these napkins!';
         UI.updateScoreboard('macgyver-scoreboard');
     },
 
     showTrivia() {
         ViewManager.showForState('TRIVIA');
-        UI.updateTriviaQuestion('In what year was the first programmable computer built?');
+        UI.updateTriviaQuestion('How many hours a day does a newborn sleep?');
         UI.updateTriviaSubmissions(2, 4);
         UI.updateScoreboard('trivia-scoreboard');
     },
 
     showTimer() {
         ViewManager.showForState('TIMER');
-        document.getElementById('timer-message').textContent = 'Create your tin foil hat masterpiece!';
+        document.getElementById('timer-message').textContent = 'Swaddle the baby securely!';
 
         let remaining = 180;
         AppState.timerTotal = 180;
@@ -1316,7 +1316,7 @@ const MockTestHelper = {
     showBuzzer() {
         ViewManager.showForState('BUZZER');
         UI.resetBuzzer();
-        document.getElementById('buzzer-hint').textContent = 'Name that tune...';
+        document.getElementById('buzzer-hint').textContent = 'Name that lullaby...';
         UI.updateScoreboard('buzzer-scoreboard');
 
         // Simulate a buzz after 2 seconds
@@ -1430,7 +1430,7 @@ const SpotifyPlayer = {
 
         // Create the player
         const player = new Spotify.Player({
-            name: 'Y2K Party Game',
+            name: 'Baby Shower Game',
             getOAuthToken: async cb => {
                 // Refresh token if needed
                 try {
@@ -2057,6 +2057,7 @@ const TeamColors = {
     }
 };
 
+/*
 // ============================================================
 // BOOT SEQUENCE
 // Fake BIOS/DOS startup animation
@@ -2064,37 +2065,26 @@ const TeamColors = {
 
 const BootSequence = {
     asciiArt: `
-██╗   ██╗██████╗ ██╗  ██╗    ██████╗  █████╗ ██████╗ ████████╗██╗   ██╗
-╚██╗ ██╔╝╚════██╗██║ ██╔╝    ██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝╚██╗ ██╔╝
- ╚████╔╝  █████╔╝█████╔╝     ██████╔╝███████║██████╔╝   ██║    ╚████╔╝
-  ╚██╔╝  ██╔═══╝ ██╔═██╗     ██╔═══╝ ██╔══██║██╔══██╗   ██║     ╚██╔╝
-   ██║   ███████╗██║  ██╗    ██║     ██║  ██║██║  ██║   ██║      ██║
-   ╚═╝   ╚══════╝╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝      ╚═╝
+ BABY SHOWER
+ ═══════════
     `,
 
     bootLines: [
-        { text: 'PHOENIX BIOS v4.0 Release 6.0', class: 'boot-line--header', delay: 100 },
-        { text: 'Copyright 1985-1999 Phoenix Technologies Ltd.', delay: 50 },
+        { text: 'BABY MONITOR OS v1.0', class: 'boot-line--header', delay: 100 },
+        { text: 'Initializing Nursery Systems...', delay: 50 },
         { text: '', delay: 100 },
-        { text: 'CPU: Pentium III @ 450MHz', delay: 80 },
-        { text: 'Memory Test: 262144K OK', class: 'boot-line--success', delay: 150 },
+        { text: 'Checking Bottle Warmer... OK', class: 'boot-line--success', delay: 80 },
+        { text: 'Testing Crib Integrity... OK', class: 'boot-line--success', delay: 150 },
         { text: '', delay: 50 },
-        { text: 'Detecting Primary Master... QUANTUM FIREBALL', delay: 120 },
-        { text: 'Detecting Primary Slave... None', delay: 80 },
-        { text: 'Detecting Secondary Master... CD-ROM', delay: 100 },
+        { text: 'Detecting Baby... NOT FOUND (Yet)', delay: 120 },
+        { text: 'Loading Cuteness Protocols...', delay: 100 },
         { text: '', delay: 50 },
-        { text: 'Press DEL to enter SETUP', delay: 200 },
+        { text: 'WARNING: Sleep Deprivation Imminent', class: 'boot-line--warning', delay: 150 },
+        { text: 'ALERT: Diaper Change Required', class: 'boot-line--error', delay: 200 },
         { text: '', delay: 100 },
-        { text: 'Starting Y2K_PARTY.EXE...', class: 'boot-line--success', delay: 300 },
-        { text: '', delay: 50 },
-        { text: 'WARNING: System date approaching Y2K threshold', class: 'boot-line--warning', delay: 150 },
-        { text: 'ALERT: Temporal anomaly detected in system clock', class: 'boot-line--error', delay: 200 },
+        { text: 'Connecting to Family Network...', delay: 150 },
         { text: '', delay: 100 },
-        { text: 'Initializing emergency protocols...', delay: 150 },
-        { text: 'Loading CIVILIZATION_SAVE.DAT...', delay: 200 },
-        { text: 'Establishing secure uplink...', delay: 150 },
-        { text: '', delay: 100 },
-        { text: 'SYSTEM READY', class: 'boot-line--success', delay: 300 },
+        { text: 'READY FOR ARRIVAL', class: 'boot-line--success', delay: 300 },
     ],
 
     hasPlayed: false,
@@ -2170,6 +2160,8 @@ const BootSequence = {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 };
+*/
+
 
 // ============================================================
 // WINDOWS 98 ERROR DIALOG
@@ -2530,57 +2522,38 @@ const GlitchEffects = {
 
 const NewsTickerManager = {
     headlines: [
-        "BREAKING: Y2K BUG DETECTED IN NUCLEAR LAUNCH CODES",
-        "BANKS REPORT 99.9% DATA CORRUPTION - WITHDRAW CASH NOW",
-        "GOVERNMENT DENIES EXISTENCE OF MILLENNIUM BUNKERS",
-        "EXPERTS WARN: MICROWAVES MAY BECOME SENTIENT AT MIDNIGHT",
-        "STOCK MARKET COMPUTERS PREDICTING DATE AS '1/1/1900'",
-        "AIRLINES GROUND ALL FLIGHTS - AUTOPILOT SYSTEMS COMPROMISED",
-        "HOSPITAL EQUIPMENT BEGINS COUNTDOWN TO UNKNOWN EVENT",
-        "PENTAGON ACTIVATES EMERGENCY MANUAL OVERRIDE PROTOCOLS",
-        "POWER GRID OPERATORS ON HIGH ALERT FOR CASCADE FAILURES",
-        "CITIZENS ADVISED TO STOCKPILE CANNED GOODS AND BATTERIES",
-        "SATELLITE UPLINKS REPORTING TEMPORAL ANOMALIES",
-        "MAJOR BANKS REVERT TO PAPER LEDGER SYSTEMS",
-        "FEMA ESTABLISHES EMERGENCY BROADCAST PROTOCOLS",
-        "TRAFFIC LIGHT SYSTEMS EXPERIENCE MASS SYNCHRONIZATION FAILURE",
-        "ELEVATOR SAFETY SYSTEMS ORDERED TO MANUAL OVERRIDE",
-        "ATM MACHINES DISPENSING NEGATIVE CURRENCY VALUES",
-        "COBOL PROGRAMMERS EMERGE FROM RETIREMENT - DEMAND UNPRECEDENTED",
-        "VENDING MACHINES REJECT ALL COINS DATED AFTER 1999",
-        "NASA LOSES CONTACT WITH MARS PATHFINDER - ROVER REBOOTING",
-        "PAGERS NATIONWIDE DISPLAY ONLY QUESTION MARKS",
-        "VCR CLOCKS WORLDWIDE BEGIN FLASHING 12:00",
-        "CALLER ID SYSTEMS SHOWING CALLS FROM THE YEAR 1900",
-        "DIAL-UP MODEMS ACHIEVE BRIEF MOMENT OF SELF-AWARENESS",
-        "FURBY TOYS SPEAKING IN UNKNOWN LANGUAGE - PARENTS CONCERNED",
-        "WINDOWS 98 BLUE SCREENS DETECTED ACROSS 47 STATES",
-        "TAMAGOTCHIS REFUSING TO ACKNOWLEDGE FEEDING",
-        "GEOCITIES WEBSITES VANISHING INTO DIGITAL VOID",
-        "AOL CHATROOMS FLOODED WITH AUTOMATED DISTRESS SIGNALS",
-        "BEEPER NETWORKS OVERLOADED - USE 911 ONLY FOR EMERGENCIES",
-        "PALM PILOTS SYNCING TO INCORRECT CENTURY",
-        "BLOCKBUSTER LATE FEES CALCULATING TO INFINITY",
-        "ELECTRIC TOOTHBRUSHES ENTERING CONTINUOUS SPIN MODE",
-        "CAR ALARMS ACTIVATING SIMULTANEOUSLY ACROSS TIME ZONES",
-        "DIGITAL WATCHES COUNTING BACKWARDS FROM MIDNIGHT",
-        "FAX MACHINES TRANSMITTING DOCUMENTS TO UNKNOWN RECIPIENTS",
-        "ANSWERING MACHINES PLAYING MESSAGES IN REVERSE",
-        "CEILING FANS ROTATING IN WRONG DIRECTION - PHYSICISTS BAFFLED",
-        "SPRINKLER SYSTEMS ACTIVATING BASED ON LUNAR CALENDAR",
-        "THERMOSTAT READINGS DISPLAYING IN KELVIN",
-        "GARAGE DOORS RESPONDING TO NEIGHBORS' REMOTES",
-        "ELECTRIC KETTLES REFUSING TO SHUT OFF - FIRE RISK",
-        "ALARM CLOCKS WAKING USERS AT RANDOM INTERVALS",
-        "ZIP DRIVES EJECTING DISKS AT HIGH VELOCITY",
-        "SCREEN SAVERS STUCK ON FLYING TOASTERS - NO END IN SIGHT",
-        "PRINTER QUEUES BACKED UP SINCE 1970",
-        "NETSCAPE NAVIGATOR LOADING PAGES FROM PARALLEL UNIVERSE",
-        "MICROSOFT CLIPPY OFFERING UNSOLICITED SURVIVAL ADVICE",
-        "ENCARTA ENCYCLOPEDIA NOW CLAIMS EARTH IS FLAT",
-        "SOLITAIRE HIGH SCORES RESET TO NEGATIVE NUMBERS",
-        "MINESWEEPER BOMBS DETONATING WITHOUT WARNING",
-        "LIMEWIRE DOWNLOADS COMPLETING INSTANTLY - EXPERTS SUSPICIOUS"
+        "BREAKING: DIAPER PRICES SKYROCKET AMIDST GLOBAL SHORTAGE",
+        "SCIENTISTS CONFIRM: BABY SMELL IS ADDICTIVE",
+        "LOCAL DAD PRACTICES INSTALLING CAR SEAT FOR 8TH TIME",
+        "GRANDMA BUYING ENTIRE TOY STORE INVENTORY",
+        "NURSERY PAINT DRYING AT RECORD SPEEDS",
+        "EXPERTS WARN: SLEEP DEPRIVATION IS REAL",
+        "BABY NAMES: 'ASHER' AND 'OLIVIA' STILL TOP CHARTS",
+        "STROLLER TRAFFIC JAM REPORTED IN PARK",
+        "PACIFIER FOUND UNDER COUCH AFTER 3 WEEK SEARCH",
+        "DAD JOKE DATABASE UPDATED WITH NEW MATERIAL",
+        "MOM CRAVING PICKLES AND ICE CREAM AT 3AM",
+        "BABY KICKS DETECTED ON SEISMOGRAPH",
+        "GENDER REVEAL PARTY CAUSES MINOR EARTHQUAKE",
+        "ONESIE BUTTONS CONFUSE ROCKET SCIENTISTS",
+        "CRIB ASSEMBLY INSTRUCTIONS WRITTEN IN ALIEN LANGUAGE",
+        "BABY SHOWER CAKE DECLARED DELICIOUS",
+        "GUESTS ADVISED TO BRING WIPES",
+        "TEDDY BEAR PICNIC SCHEDULED FOR NOON",
+        "RUBBER DUCKY DEMANDS BATH TIME",
+        "BLANKET FORT CONSTRUCTION PERMITS APPROVED",
+        "FIRST SMILE CAUGHT ON CAMERA",
+        "BABY SOCKS MYSTERIOUSLY VANISHING IN LAUNDRY",
+        "HIGH CHAIR CLEANUP CREW REQUESTED",
+        "LULLABY PLAYLIST HITS PLATINUM STATUS",
+        "TEETHING RING MARKET CRASHES",
+        "BABY MONITOR PICKING UP NEIGHBOR'S RADIO",
+        "DROOL BIB TECHNOLOGY ADVANCING RAPIDLY",
+        "PEEK-A-BOO CHAMPIONSHIP FINALS TONIGHT",
+        "BABY FOOD TASTE TEST: PEAS STILL UNPOPULAR",
+        "DIAPER GENIE REACHING CAPACITY",
+        "STUFFED ANIMAL CONGRESS IN SESSION",
+        "BABY YODA STILL CUTE, EXPERTS SAY"
     ],
 
     init() {
@@ -2611,10 +2584,10 @@ const NewsTickerManager = {
 
 const StatusDashboard = {
     states: {
-        mainframe: 'ok',
-        network: 'ok',
-        database: 'ok',
-        shield: 'warning'
+        monitor: 'ok',
+        wipes: 'ok',
+        bottles: 'ok',
+        naps: 'warning'
     },
 
     init() {
@@ -2624,11 +2597,27 @@ const StatusDashboard = {
     },
 
     update() {
+        // Map new states to existing DOM IDs (repurposing them)
+        // status-mainframe -> monitor
+        // status-network -> wipes
+        // status-database -> bottles
+        // status-shield -> naps
+        
+        const mapping = {
+            'monitor': 'mainframe',
+            'wipes': 'network',
+            'bottles': 'database',
+            'naps': 'shield'
+        };
+
         Object.entries(this.states).forEach(([key, status]) => {
-            const el = document.getElementById(`status-${key}`);
+            const domId = mapping[key];
+            const el = document.getElementById(`status-${domId}`);
             if (el) {
                 el.className = 'status-light';
                 el.classList.add(`status-light--${status}`);
+                // Update title if possible (hacky since it's title attr)
+                el.title = key.toUpperCase();
             }
         });
 
@@ -2654,41 +2643,41 @@ const StatusDashboard = {
     syncWithGameState(state) {
         switch (state) {
             case 'LOBBY':
-                this.setStatus('mainframe', 'ok');
-                this.setStatus('network', 'ok');
-                this.setStatus('database', 'ok');
-                this.setStatus('shield', 'warning');
+                this.setStatus('monitor', 'ok');
+                this.setStatus('wipes', 'ok');
+                this.setStatus('bottles', 'ok');
+                this.setStatus('naps', 'warning');
                 break;
             case 'TRIVIA':
-                this.setStatus('database', 'critical');
-                this.setStatus('network', 'warning');
+                this.setStatus('bottles', 'critical');
+                this.setStatus('wipes', 'warning');
                 break;
             case 'BUZZER':
-                this.setStatus('database', 'warning');
-                this.setStatus('network', 'critical');
+                this.setStatus('bottles', 'warning');
+                this.setStatus('wipes', 'critical');
                 break;
             case 'TIMER':
-                this.setStatus('shield', 'critical');
-                this.setStatus('mainframe', 'warning');
+                this.setStatus('naps', 'critical');
+                this.setStatus('monitor', 'warning');
                 break;
             case 'TIMELINE':
-                this.setStatus('database', 'critical');
-                this.setStatus('shield', 'critical');
+                this.setStatus('bottles', 'critical');
+                this.setStatus('naps', 'critical');
                 break;
             case 'MINESWEEPER':
-                this.setStatus('mainframe', 'critical');
-                this.setStatus('shield', 'critical');
-                this.setStatus('network', 'warning');
+                this.setStatus('monitor', 'critical');
+                this.setStatus('naps', 'critical');
+                this.setStatus('wipes', 'warning');
                 break;
             case 'MACGYVER':
-                this.setStatus('mainframe', 'warning');
-                this.setStatus('network', 'ok');
+                this.setStatus('monitor', 'warning');
+                this.setStatus('wipes', 'ok');
                 break;
             case 'VICTORY':
-                this.setStatus('mainframe', 'ok');
-                this.setStatus('network', 'ok');
-                this.setStatus('database', 'ok');
-                this.setStatus('shield', 'ok');
+                this.setStatus('monitor', 'ok');
+                this.setStatus('wipes', 'ok');
+                this.setStatus('bottles', 'ok');
+                this.setStatus('naps', 'ok');
                 break;
         }
     },
@@ -2696,7 +2685,7 @@ const StatusDashboard = {
     randomFluctuation() {
         // Occasional random warning/recovery for atmosphere
         if (Math.random() > 0.75) {
-            const systems = ['mainframe', 'network', 'database'];
+            const systems = ['monitor', 'wipes', 'bottles'];
             const system = systems[Math.floor(Math.random() * systems.length)];
             const current = this.states[system];
 
@@ -3000,16 +2989,14 @@ const QRCodeManager = {
 };
 
 // ============================================================
-// MATRIX RAIN SCREENSAVER
-// Classic late-90s digital rain effect for idle lobby
+// BALLOON FLOAT SCREENSAVER
+// Floating balloons for idle lobby
 // ============================================================
 
 const MatrixRain = {
     canvas: null,
     ctx: null,
-    columns: [],
-    fontSize: 16,
-    characters: 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    balloons: [],
     animationId: null,
     idleTimeout: null,
     isActive: false,
@@ -3018,12 +3005,12 @@ const MatrixRain = {
     IDLE_DELAY: 60000,
 
     /**
-     * Initialize the Matrix rain canvas
+     * Initialize the Balloon canvas
      */
     init() {
         this.canvas = document.getElementById('matrix-rain');
         if (!this.canvas) {
-            console.log('[MatrixRain] Canvas not found');
+            console.log('[BalloonFloat] Canvas not found');
             return;
         }
 
@@ -3033,7 +3020,7 @@ const MatrixRain = {
         // Handle window resize
         window.addEventListener('resize', () => this.resize());
 
-        console.log('[MatrixRain] Initialized');
+        console.log('[BalloonFloat] Initialized');
     },
 
     /**
@@ -3044,31 +3031,33 @@ const MatrixRain = {
 
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
-
-        // Recalculate columns
-        const columnCount = Math.ceil(this.canvas.width / this.fontSize);
-        this.columns = [];
-
-        for (let i = 0; i < columnCount; i++) {
-            // Random starting position for each column
-            this.columns.push({
-                y: Math.random() * this.canvas.height,
-                speed: 0.5 + Math.random() * 1.5,
-                chars: this.generateColumnChars()
-            });
-        }
     },
 
     /**
-     * Generate random characters for a column
+     * Create a new balloon
      */
-    generateColumnChars() {
-        const length = 15 + Math.floor(Math.random() * 20);
-        let chars = '';
-        for (let i = 0; i < length; i++) {
-            chars += this.characters.charAt(Math.floor(Math.random() * this.characters.length));
-        }
-        return chars;
+    createBalloon(y) {
+        const colors = [
+            'rgba(255, 181, 167, 0.7)', // Peach
+            'rgba(176, 224, 230, 0.7)', // Powder Blue
+            'rgba(253, 252, 220, 0.7)', // Cream
+            'rgba(189, 224, 254, 0.7)', // Light Sky
+            'rgba(205, 180, 219, 0.7)', // Lavender
+            'rgba(162, 210, 255, 0.7)', // Baby Blue
+            'rgba(255, 200, 221, 0.7)', // Soft Pink
+            'rgba(152, 245, 225, 0.7)'  // Mint
+        ];
+        
+        return {
+            x: Math.random() * this.canvas.width,
+            y: y !== undefined ? y : this.canvas.height + 50,
+            radius: 20 + Math.random() * 15,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            speed: 1 + Math.random() * 1.5,
+            wobble: Math.random() * Math.PI * 2,
+            wobbleSpeed: 0.02 + Math.random() * 0.03,
+            stringLength: 30 + Math.random() * 20
+        };
     },
 
     /**
@@ -3077,52 +3066,54 @@ const MatrixRain = {
     draw() {
         if (!this.ctx || !this.canvas) return;
 
-        // Fade effect - semi-transparent black overlay
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.font = `${this.fontSize}px monospace`;
+        // Add new balloon occasionally
+        if (this.balloons.length < 30 && Math.random() < 0.02) {
+            this.balloons.push(this.createBalloon());
+        }
 
-        for (let i = 0; i < this.columns.length; i++) {
-            const col = this.columns[i];
-            const x = i * this.fontSize;
+        for (let i = 0; i < this.balloons.length; i++) {
+            const b = this.balloons[i];
 
-            // Draw the column of characters
-            for (let j = 0; j < col.chars.length; j++) {
-                const y = col.y - j * this.fontSize;
-                if (y < 0 || y > this.canvas.height) continue;
+            // Update position
+            b.y -= b.speed;
+            b.wobble += b.wobbleSpeed;
+            const wobbleX = Math.sin(b.wobble) * 1; // Gentle sway
 
-                // Brightness fades from head (bright) to tail (dim)
-                const brightness = 1 - (j / col.chars.length);
+            // Draw balloon string
+            this.ctx.beginPath();
+            this.ctx.moveTo(b.x + wobbleX, b.y + b.radius);
+            // Wavy string
+            this.ctx.quadraticCurveTo(
+                b.x + wobbleX - 5, b.y + b.radius + b.stringLength / 2,
+                b.x + wobbleX, b.y + b.radius + b.stringLength
+            );
+            this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            this.ctx.lineWidth = 1;
+            this.ctx.stroke();
 
-                if (j === 0) {
-                    // Head character - bright white/green
-                    this.ctx.fillStyle = `rgba(180, 255, 180, ${brightness})`;
-                } else {
-                    // Trail - green with fading opacity
-                    const green = Math.floor(100 + brightness * 155);
-                    this.ctx.fillStyle = `rgba(0, ${green}, 65, ${brightness * 0.8})`;
-                }
+            // Draw balloon body (oval)
+            this.ctx.beginPath();
+            this.ctx.ellipse(b.x + wobbleX, b.y, b.radius * 0.8, b.radius, 0, 0, Math.PI * 2);
+            this.ctx.fillStyle = b.color;
+            this.ctx.fill();
+            
+            // Balloon shine/reflection
+            this.ctx.beginPath();
+            this.ctx.ellipse(b.x + wobbleX - b.radius * 0.3, b.y - b.radius * 0.3, b.radius * 0.15, b.radius * 0.25, -0.5, 0, Math.PI * 2);
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            this.ctx.fill();
 
-                this.ctx.fillText(col.chars.charAt(j), x, y);
-            }
+            // Border
+            this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            this.ctx.lineWidth = 1;
+            this.ctx.stroke();
 
-            // Move column down
-            col.y += col.speed * this.fontSize * 0.3;
-
-            // Reset when fully off screen
-            if (col.y - col.chars.length * this.fontSize > this.canvas.height) {
-                col.y = 0;
-                col.chars = this.generateColumnChars();
-                col.speed = 0.5 + Math.random() * 1.5;
-            }
-
-            // Randomly change a character for that glitchy effect
-            if (Math.random() > 0.98) {
-                const idx = Math.floor(Math.random() * col.chars.length);
-                col.chars = col.chars.substring(0, idx) +
-                    this.characters.charAt(Math.floor(Math.random() * this.characters.length)) +
-                    col.chars.substring(idx + 1);
+            // Remove if off screen
+            if (b.y < -100) {
+                this.balloons.splice(i, 1);
+                i--;
             }
         }
     },
@@ -3143,13 +3134,13 @@ const MatrixRain = {
     start() {
         if (this.isActive) return;
 
-        console.log('[MatrixRain] Starting screensaver');
+        console.log('[BalloonFloat] Starting screensaver');
         this.isActive = true;
 
-        // Clear canvas first
-        if (this.ctx && this.canvas) {
-            this.ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // Initialize some balloons
+        this.balloons = [];
+        for(let i=0; i<15; i++) {
+            this.balloons.push(this.createBalloon(Math.random() * window.innerHeight));
         }
 
         // Fade in the canvas
@@ -3167,7 +3158,7 @@ const MatrixRain = {
     stop() {
         if (!this.isActive) return;
 
-        console.log('[MatrixRain] Stopping screensaver');
+        console.log('[BalloonFloat] Stopping screensaver');
         this.isActive = false;
 
         // Cancel animation
@@ -3191,7 +3182,7 @@ const MatrixRain = {
     startIdleTimer() {
         this.clearIdleTimeout();
 
-        console.log('[MatrixRain] Starting idle timer (' + (this.IDLE_DELAY / 1000) + 's)');
+        console.log('[BalloonFloat] Starting idle timer (' + (this.IDLE_DELAY / 1000) + 's)');
 
         this.idleTimeout = setTimeout(() => {
             // Only start if we're still in LOBBY state
@@ -3243,7 +3234,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('[TV] Initializing...');
 
     // Play boot sequence first (blocks until complete)
-    await BootSequence.play();
+    // await BootSequence.play();
 
     // Initialize socket connection
     SocketHandlers.init();
@@ -3349,7 +3340,7 @@ window.NewsTickerManager = NewsTickerManager;
 window.StatusDashboard = StatusDashboard;
 window.CelebrationEffects = CelebrationEffects;
 window.ReactionFeed = ReactionFeed;
-window.BootSequence = BootSequence;
+// window.BootSequence = BootSequence;
 window.Win98Dialog = Win98Dialog;
 window.BSOD = BSOD;
 window.VHSTransition = VHSTransition;

@@ -10,11 +10,15 @@ import secrets
 import base64
 import requests
 from urllib.parse import urlencode
-from flask import Flask, render_template, jsonify, redirect, request, session
+from flask import Flask, render_template, jsonify, redirect, request, session, send_from_directory
 from flask_socketio import SocketIO
 from pathlib import Path
 
-from game_manager import GameManager
+# New Architecture Imports
+from server.core.session_manager import SessionManager
+from server.core.event_router import EventRouter
+from server.games.game_registry import GameRegistry
+from server.games import ALL_GAMES
 from events import register_events
 
 # Configure logging
@@ -25,17 +29,42 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Initialize Flask app
-app = Flask(__name__)
+# Point to 'dist' folder for static assets. We won't use template_folder since we serve static HTML.
+app = Flask(__name__, static_folder='dist', static_url_path='')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'y2k-party-secret-key-2025')
 
 # Initialize Socket.IO with CORS for local network access
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# Initialize GameManager (loads persisted state)
-game_manager = GameManager(data_dir='data')
+# Initialize System
+session_manager = SessionManager(data_dir='data')
+game_registry = GameRegistry(session_manager)
+
+# Register Games
+for game_class in ALL_GAMES:
+    game_registry.register(game_class)
+
+event_router = EventRouter(socketio, session_manager, game_registry)
 
 # Register Socket.IO event handlers
-register_events(socketio, game_manager)
+register_events(socketio, session_manager, event_router, game_registry)
+
+# Initialize LOBBY if no state (or restore state)
+if session_manager.current_state:
+    logger.info(f"Restoring game state: {session_manager.current_state}")
+    event_router.current_game_id = session_manager.current_state
+    
+    # Restore game-specific state
+    game = game_registry.get_game(session_manager.current_state)
+    if game:
+        try:
+            # We use on_enter to restore state from persistence
+            game.on_enter(session_manager.state_data)
+        except Exception as e:
+            logger.error(f"Failed to restore game state: {e}")
+else:
+    logger.info("Starting fresh in LOBBY")
+    event_router.set_state("LOBBY", {})
 
 # =============================================================================
 # SPOTIFY WEB PLAYBACK SDK INTEGRATION
@@ -61,25 +90,25 @@ spotify_tokens = {
 @app.route('/')
 def index():
     """Main landing page - serves mobile controller (has registration built-in)."""
-    return render_template('mobile.html')
+    return send_from_directory('dist', 'mobile.html')
 
 
 @app.route('/mobile')
 def mobile():
     """Mobile controller view for players (alias for /)."""
-    return render_template('mobile.html')
+    return send_from_directory('dist', 'mobile.html')
 
 
 @app.route('/tv')
 def tv():
     """TV display view - main screen output."""
-    return render_template('tv.html')
+    return send_from_directory('dist', 'tv.html')
 
 
 @app.route('/admin')
 def admin():
     """Admin dashboard for host control."""
-    return render_template('admin.html')
+    return send_from_directory('dist', 'admin.html')
 
 
 @app.route('/health')
@@ -87,8 +116,8 @@ def health():
     """Health check endpoint."""
     return {
         'status': 'ok',
-        'game_state': game_manager.current_state.value,
-        'teams_count': len(game_manager.teams)
+        'game_state': session_manager.current_state,
+        'teams_count': len(session_manager.teams)
     }
 
 

@@ -1,0 +1,35 @@
+---
+import ViewContainer from '../shared/ViewContainer.astro';
+---
+<ViewContainer id="view-lobby" active={true}>
+    <div class="tv-layout">
+        <div class="tv-header">
+            <h1 class="tv-title glow-strong">THE WINTER STORYBOOK</h1>
+            <p class="tv-subtitle mt-2">CHAPTER 0: PROLOGUE</p>
+        </div>
+        <div class="tv-content">
+            <div class="text-center">
+                <div id="qr-code" class="mt-3 hidden">
+                    <canvas
+                        id="qr-canvas"
+                        style="border: 4px solid var(--terminal-green); background: white; width: 350px; height: 350px;"
+                    ></canvas>
+                    <p id="qr-url" class="tv-hint mt-2"></p>
+                    <p class="tv-status">Scan to sign the guest book</p>
+                </div>
+
+                <div class="mt-3">
+                    <h3 class="tv-section-heading">GUESTS PRESENT</h3>
+                    <div id="lobby-teams" class="tv-status mt-2">
+                        <p class="tv-status">Waiting for guests...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tv-footer">
+            <div id="scoreboard-mini" class="text-center">
+                <!-- Mini scoreboard -->
+            </div>
+        </div>
+    </div>
+</ViewContainer>

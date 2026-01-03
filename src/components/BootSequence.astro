@@ -1,0 +1,215 @@
+---
+/**
+ * BootSequence.astro
+ * Boot animation that only plays once per session using sessionStorage
+ */
+
+interface Props {
+    storageKey?: string;
+    mobile?: boolean;
+}
+
+const { storageKey = "bootSequencePlayed", mobile = false } = Astro.props;
+---
+
+<div id="boot-sequence" class="boot-sequence" data-storage-key={storageKey}>
+    <div class="boot-ascii" id="boot-ascii"></div>
+    <div id="boot-lines"></div>
+    <div class="boot-progress" id="boot-progress" style="display: none;">
+        <div class="boot-progress__bar" style="width: 200px;">
+            <div class="boot-progress__fill" id="boot-progress-fill"></div>
+        </div>
+        <span class="boot-progress__text" id="boot-progress-text">0%</span>
+    </div>
+</div>
+
+<script>
+    import { GlitchEffects } from "../scripts/effects";
+
+    interface BootLine {
+        text: string;
+        class?: string;
+        delay: number;
+    }
+
+    const BootSequence = {
+        asciiArt: `
+        BABY SHOWER
+        ═══════════
+            `,
+
+        mobileAsciiArt: `
+        IT'S A BOY
+        ══════════
+            `,
+
+        // 2. Rewrite the boot lines to be baby-themed
+        bootLines: [
+            {
+                text: "BABY MONITOR OS v9.0",
+                class: "boot-line--header",
+                delay: 100,
+            },
+            { text: "Initializing Cuteness Algorithms...", delay: 150 },
+            { text: "Checking Diaper Supply...", delay: 150 },
+            { text: "Calibrating Lullaby Frequency...", delay: 200 },
+            {
+                text: "Gender Protocol: BOY",
+                class: "boot-line--success",
+                delay: 300,
+            },
+            { text: "Checking chubby_cheeks.dll... [OK]", delay: 150 },
+            {
+                text: "Sleep Schedule: NOT FOUND",
+                class: "boot-line--error",
+                delay: 200,
+            }, // A joke!
+            {
+                text: "Adorableness Levels: CRITICAL OVERLOAD",
+                class: "boot-line--warning",
+                delay: 150,
+            },
+            {
+                text: "PROJECT: BABY BOY INITIALIZED",
+                class: "boot-line--success",
+                delay: 200,
+            },
+        ] as BootLine[],
+
+        mobileBootLines: [
+            {
+                text: "BABY_MONITOR_APP v1.0",
+                class: "boot-line--header",
+                delay: 80,
+            },
+            { text: "Searching for Parents...", delay: 100 },
+            {
+                text: "Heartbeat Detected <3",
+                class: "boot-line--success",
+                delay: 120,
+            },
+            {
+                text: "Cravings: PICKLES & ICE CREAM",
+                class: "boot-line--warning",
+                delay: 100,
+            },
+            {
+                text: "READY FOR ARRIVAL",
+                class: "boot-line--success",
+                delay: 150,
+            },
+        ] as BootLine[],
+
+        hasPlayed: false,
+
+        async play(mobile: boolean = false): Promise<void> {
+            const container = document.getElementById("boot-sequence");
+            if (!container) return;
+
+            const storageKey =
+                container.dataset.storageKey || "bootSequencePlayed";
+
+            // Check if boot sequence already played this session
+            if (sessionStorage.getItem(storageKey)) {
+                this.skip();
+                return;
+            }
+
+            const asciiEl = document.getElementById("boot-ascii");
+            const linesEl = document.getElementById("boot-lines");
+            const progressEl = document.getElementById("boot-progress");
+            const progressFill = document.getElementById("boot-progress-fill");
+            const progressText = document.getElementById("boot-progress-text");
+
+            if (
+                !asciiEl ||
+                !linesEl ||
+                !progressEl ||
+                !progressFill ||
+                !progressText
+            )
+                return;
+
+            // Set ASCII art based on mobile/desktop
+            asciiEl.textContent = mobile ? this.mobileAsciiArt : this.asciiArt;
+
+            const lines = mobile ? this.mobileBootLines : this.bootLines;
+
+            // Display boot lines one by one
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const lineEl = document.createElement("div");
+                lineEl.className = `boot-line ${line.class || ""}`;
+                lineEl.textContent = line.text;
+                linesEl.appendChild(lineEl);
+
+                await this.sleep(line.delay);
+                lineEl.classList.add("visible");
+            }
+
+            // Show progress bar
+            await this.sleep(200);
+            progressEl.style.display = "flex";
+
+            // Animate progress bar
+            for (let i = 0; i <= 100; i += 5) {
+                progressFill.style.width = `${i}%`;
+                progressText.textContent = `${i}%`;
+                await this.sleep(mobile ? 15 : 20);
+            }
+
+            // Fade out
+            await this.sleep(300);
+            container.style.transition = "opacity 0.3s ease";
+            container.style.opacity = "0";
+
+            await this.sleep(300);
+            container.classList.add("hidden");
+
+            // Mark as played in sessionStorage
+            sessionStorage.setItem(storageKey, "true");
+            this.hasPlayed = true;
+
+            // Trigger a minor glitch effect after boot
+            if (typeof GlitchEffects !== "undefined") {
+                GlitchEffects.trigger("minor");
+            }
+        },
+
+        skip(): void {
+            const container = document.getElementById("boot-sequence");
+            if (container) {
+                container.classList.add("hidden");
+            }
+            this.hasPlayed = true;
+        },
+
+        sleep(ms: number): Promise<void> {
+            return new Promise((resolve) => setTimeout(resolve, ms));
+        },
+    };
+
+    // Expose to window
+    (window as any).BootSequence = BootSequence;
+
+    // Auto-play on DOM ready
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById("boot-sequence");
+        const isMobile =
+            container?.dataset.storageKey?.includes("mobile") ||
+            window.innerWidth < 768;
+        BootSequence.play(isMobile);
+    });
+
+    // Also handle Astro View Transitions - skip boot on navigation
+    document.addEventListener("astro:page-load", () => {
+        const container = document.getElementById("boot-sequence");
+        if (container) {
+            const storageKey =
+                container.dataset.storageKey || "bootSequencePlayed";
+            if (sessionStorage.getItem(storageKey)) {
+                BootSequence.skip();
+            }
+        }
+    });
+</script>

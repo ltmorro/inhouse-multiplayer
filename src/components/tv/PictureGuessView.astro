@@ -1,0 +1,49 @@
+---
+import ViewContainer from '../shared/ViewContainer.astro';
+---
+<ViewContainer id="view-pictureguess">
+    <div class="tv-layout">
+        <div class="tv-header">
+            <h1 class="tv-title glow-strong">VISUAL ARCHIVES CORRUPTED</h1>
+            <p class="tv-subtitle">PROTOCOL 7 - Y2K IMAGE RECOVERY</p>
+        </div>
+        <div class="tv-content">
+            <div class="text-center" style="max-width: 90%;">
+                <!-- Picture display container -->
+                <div id="pictureguess-image-container" class="tv-image-container">
+                    <img id="pictureguess-image" src="" alt="Mystery Picture" style="display: none;">
+                    <p id="pictureguess-no-image" class="tv-waiting">Awaiting image transmission...</p>
+                </div>
+
+                <!-- Hint display -->
+                <p id="pictureguess-hint-tv" class="tv-hint mt-2">
+                    <!-- Hint text injected here -->
+                </p>
+
+                <div id="pictureguess-submission-status" class="tv-status mt-2">
+                    <!-- "3/4 teams submitted" -->
+                </div>
+
+                <!-- Answer reveal -->
+                <div id="pictureguess-answer-reveal" class="mt-3 hidden">
+                    <p class="tv-label">THE ANSWER:</p>
+                    <p id="pictureguess-correct-answer" class="tv-reveal glow-strong"></p>
+                </div>
+
+                <!-- Team guesses table -->
+                <div id="pictureguess-team-guesses" class="tv-table-container mt-3 hidden">
+                    <!-- Team guesses table injected here -->
+                </div>
+            </div>
+        </div>
+        <div class="tv-instructions" id="pictureguess-instructions">
+            <div class="tv-instructions-box">
+                <p class="instruction-title">Y2K IMAGE DATABASE FRAGMENTED</p>
+                <p class="instruction-text">The millennium bug has scrambled our visual archives. <strong>IDENTIFY this artifact!</strong> Submit your analysis before the data degrades completely.</p>
+            </div>
+        </div>
+        <div class="tv-footer">
+            <div id="pictureguess-scoreboard"></div>
+        </div>
+    </div>
+</ViewContainer>

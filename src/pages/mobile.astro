@@ -1,0 +1,45 @@
+---
+// src/pages/mobile.astro
+import GameLayout from "../layouts/GameLayout.astro";
+
+// Mobile Specific Components
+import MobileHeader from "../components/mobile/MobileHeader.astro";
+import RegisterView from "../components/mobile/RegisterView.astro";
+import TeamCreatedView from "../components/mobile/TeamCreatedView.astro";
+import LobbyView from "../components/mobile/LobbyView.astro";
+import MacGyverView from "../components/mobile/MacGyverView.astro";
+import TriviaView from "../components/mobile/TriviaView.astro";
+import TimerView from "../components/mobile/TimerView.astro";
+import BuzzerView from "../components/mobile/BuzzerView.astro";
+import TimelineView from "../components/mobile/TimelineView.astro";
+import MinesweeperView from "../components/mobile/MinesweeperView.astro";
+import PictureGuessView from "../components/mobile/PictureGuessView.astro";
+import EliminatedView from "../components/mobile/EliminatedView.astro";
+import VictoryView from "../components/mobile/VictoryView.astro";
+import KickedView from "../components/mobile/KickedView.astro";
+import InteractionOverlay from "../components/mobile/InteractionOverlay.astro";
+---
+
+<GameLayout title="The Guest Book">
+    <MobileHeader />
+
+    <!-- Views -->
+    <RegisterView />
+    <TeamCreatedView />
+    <LobbyView />
+    <MacGyverView />
+    <TriviaView />
+    <TimerView />
+    <BuzzerView />
+    <TimelineView />
+    <MinesweeperView />
+    <PictureGuessView />
+    <EliminatedView />
+    <VictoryView />
+    <KickedView />
+
+    <InteractionOverlay />
+
+    <script slot="scripts" src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script slot="scripts" src="/js/client.js" defer></script>
+</GameLayout>

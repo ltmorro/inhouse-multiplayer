@@ -1,0 +1,50 @@
+---
+import ViewContainer from '../shared/ViewContainer.astro';
+---
+<ViewContainer id="view-timeline">
+    <div class="tv-layout">
+        <div class="tv-header">
+            <h1 class="tv-title glow-strong">TEMPORAL DATABASE CORRUPTED</h1>
+            <p class="tv-subtitle">PROTOCOL 5 - TIMELINE RESTORATION</p>
+        </div>
+        <div class="tv-content">
+            <div class="text-center">
+                <!-- Waiting state (shown when no timeline data) -->
+                <div id="timeline-waiting-tv" class="tv-waiting">
+                    <p class="tv-waiting">Awaiting temporal anomaly data...</p>
+                    <p class="tv-cursor blink mt-2">_</p>
+                </div>
+
+                <!-- Active timeline content (hidden when waiting) -->
+                <div id="timeline-active-tv" class="hidden">
+                    <!-- Display the scrambled timeline items -->
+                    <div id="timeline-items-tv" class="tv-table-container mt-2" style="text-align: left;">
+                        <p class="tv-section-heading text-center mb-2">SCRAMBLED EVENTS:</p>
+                        <ul id="timeline-items-list-tv" class="tv-list">
+                            <!-- Timeline items injected here -->
+                        </ul>
+                    </div>
+                    <div id="timeline-team-status" class="tv-status mt-3">
+                        <!-- Team progress indicators -->
+                    </div>
+                    <div id="timeline-winner" class="mt-3 hidden">
+                        <p class="tv-label">WINNER:</p>
+                        <p id="timeline-winner-name" class="tv-reveal glow-strong"></p>
+                    </div>
+                    <div id="timeline-team-submissions" class="tv-table-container mt-3 hidden">
+                        <!-- Team submissions table injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tv-instructions">
+            <div class="tv-instructions-box">
+                <p class="instruction-title">HISTORICAL RECORDS SCRAMBLED BY Y2K BUG</p>
+                <p class="instruction-text">Reality itself is at stake. <strong>Restore the timeline before it collapses!</strong> Drag events into chronological order. First correct restoration = maximum points.</p>
+            </div>
+        </div>
+        <div class="tv-footer">
+            <div id="timeline-scoreboard"></div>
+        </div>
+    </div>
+</ViewContainer>

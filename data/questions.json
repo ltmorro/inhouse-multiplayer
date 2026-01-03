@@ -2,576 +2,319 @@
   "trivia_questions": [
     {
       "id": 1,
-      "question": "What does Y2K stand for?",
-      "answer": "Year 2000"
+      "question": "How many diapers does the average newborn go through in a day?",
+      "answer": "8 to 12"
     },
     {
       "id": 2,
-      "question": "What was the name of the paperclip assistant in Microsoft Office that everyone hated?",
-      "answer": "Clippy (or Clippit)"
+      "question": "When does a baby's eye color become permanent?",
+      "answer": "6 to 9 months"
     },
     {
       "id": 3,
-      "question": "What legendary Austin music venue on 2nd Street was demolished in 1999 to make room for tech offices?",
-      "answer": "Liberty Lunch"
+      "question": "What is the first sense a baby develops?",
+      "answer": "Hearing"
     },
     {
       "id": 4,
-      "question": "In 1998, which UT Longhorn broke the NCAA rushing record and won the Heisman Trophy?",
-      "answer": "Ricky Williams"
+      "question": "How many bones are babies born with?",
+      "answer": "300 (Adults have 206)"
     },
     {
       "id": 5,
-      "question": "Which 1993 movie, filmed entirely in Austin, gave us the phrase 'Alright, alright, alright'?",
-      "answer": "Dazed and Confused"
+      "question": "What percentage of babies are actually born on their due date?",
+      "answer": "4%"
     },
     {
       "id": 6,
-      "question": "What 'clear' soda launched in 1992, tasted like citrus syrup, and failed miserably?",
-      "answer": "Crystal Pepsi"
+      "question": "What color do babies see first?",
+      "answer": "Red"
     },
     {
       "id": 7,
-      "question": "Before streaming, what was the 'Golden Rule' of renting a VHS tape from Blockbuster?",
-      "answer": "Be Kind, Rewind"
+      "question": "How many hours a day does a newborn sleep on average?",
+      "answer": "16 to 17 hours"
     },
     {
       "id": 8,
-      "question": "In 1996, the world was terrified by a cloned sheep named...?",
-      "answer": "Dolly"
+      "question": "At what age do babies typically start smiling socially?",
+      "answer": "6 to 8 weeks"
     },
     {
       "id": 9,
-      "question": "What 1999 horror movie convinced audiences the footage was real and sparked a camping phobia?",
-      "answer": "The Blair Witch Project"
+      "question": "What is the most popular day of the week for babies to be born?",
+      "answer": "Tuesday"
     },
     {
       "id": 10,
-      "question": "What locally filmed 1999 movie satirized corporate culture and featured a red stapler?",
-      "answer": "Office Space"
+      "question": "How far can a newborn see?",
+      "answer": "8 to 12 inches"
     },
     {
       "id": 11,
-      "question": "What show featured the phrase 'The truth is out there' and made aliens mainstream?",
-      "answer": "The X-Files"
+      "question": "What body part are babies born without?",
+      "answer": "Kneecaps"
     },
     {
       "id": 12,
-      "question": "Before Google dominated, what 'Butler' themed search engine did we ask questions to?",
-      "answer": "Ask Jeeves"
+      "question": "What is the heaviest baby ever born recorded as weighing?",
+      "answer": "22 pounds 8 ounces"
     },
     {
       "id": 13,
-      "question": "What toy was so popular in 1996 that parents literally fought each other in stores to get one?",
-      "answer": "Tickle Me Elmo"
+      "question": "When do babies typically start teething?",
+      "answer": "6 months"
     },
     {
       "id": 14,
-      "question": "Before moving to Bergstrom in May 1999, where was the main Austin airport located?",
-      "answer": "Robert Mueller Municipal Airport"
+      "question": "What flavor can babies not taste until they are 4 months old?",
+      "answer": "Salt"
     },
     {
       "id": 15,
-      "question": "Which illegal file-sharing service launched in 1999 and terrified the music industry?",
-      "answer": "Napster"
+      "question": "How much does a baby's brain grow in the first year?",
+      "answer": "It doubles in size"
     }
   ],
-"timeline_puzzles": [
+  "timeline_puzzles": [
     {
       "id": 1,
-      "name": "90s Sci-Fi Blockbusters",
+      "name": "Baby Milestones",
       "events": [
-        "Terminator 2: Judgment Day (1991)",
-        "Jurassic Park (1993)",
-        "Independence Day (1996)",
-        "The Matrix (1999)"
+        "First Smile (2 months)",
+        "Rolls Over (4 months)",
+        "Sits Up (6 months)",
+        "First Steps (12 months)"
       ]
     },
     {
       "id": 2,
-      "name": "Girl Power Pop",
+      "name": "Pregnancy Progression",
       "events": [
-        "Spice Girls release 'Wannabe' (1996)",
-        "Titanic makes DiCaprio a heartthrob (1997)",
-        "Britney Spears releases '...Baby One More Time' (1998)",
-        "Christina Aguilera releases 'Genie in a Bottle' (1999)"
+        "First Heartbeat (6 weeks)",
+        "Gender Reveal (20 weeks)",
+        "Baby Can Hear (24 weeks)",
+        "Full Term (37 weeks)"
       ]
     },
     {
       "id": 3,
-      "name": "The TV Takeover",
+      "name": "Disney Babies",
       "events": [
-        "Friends Premieres (1994)",
-        "Seinfeld Finale (1998)",
-        "Family Guy Premieres (1999)",
-        "SpongeBob SquarePants Premieres (1999)"
+        "Dumbo (1941)",
+        "Bambi (1942)",
+        "Simba (1994)",
+        "Jack-Jack Parr (2004)"
       ]
     },
     {
       "id": 4,
-      "name": "Boy Band Invasion",
+      "name": "Famous TV Babies",
       "events": [
-        "New Kids on the Block - Hangin' Tough (1988)",
-        "Backstreet Boys form (1993)",
-        "NSYNC - I Want You Back (1998)",
-        "98 Degrees - The Hardest Thing (1999)"
+        "Little Ricky (I Love Lucy - 1953)",
+        "Tabitha (Bewitched - 1966)",
+        "Michelle Tanner (Full House - 1987)",
+        "Stewie Griffin (Family Guy - 1999)"
       ]
     },
     {
       "id": 5,
-      "name": "The Rise of Harry Potter (US)",
+      "name": "Diaper Evolution",
       "events": [
-        "J.K. Rowling finishes the first manuscript (1995)",
-        "Sorcerer's Stone published in US (1998)",
-        "Chamber of Secrets published in US (1999)",
-        "Prisoner of Azkaban published in US (1999)"
+        "Cloth Diapers (Ancient Times)",
+        "Safety Pins Invented (1849)",
+        "Disposable Diapers Invented (1948)",
+        "Pampers Mass Marketed (1961)"
       ]
     },
     {
       "id": 6,
-      "name": "The 90s Toy Craze Panic",
+      "name": "Baby Food History",
       "events": [
-        "Pogs & Slammers peak popularity (1994)",
-        "Tickle Me Elmo shortages (1996)",
-        "Tamagotchi virtual pets arrive in US (1997)",
-        "Furby released (1998)"
+        "Gerber Founded (1927)",
+        "First Glass Jars (1940s)",
+        "Organic Baby Food Trend (1990s)",
+        "Pouches become popular (2008)"
       ]
     },
     {
       "id": 7,
-      "name": "Handheld Gaming",
+      "name": "Toy Trends",
       "events": [
-        "Game Boy released (1989)",
-        "Sega Game Gear released (1990)",
-        "Tamagotchi released (1996)",
-        "Game Boy Color released (1998)"
-      ]
-    },
-    {
-      "id": 8,
-      "name": "Instant Messaging Wars",
-      "events": [
-        "ICQ launched (1996)",
-        "AIM launched (1997)",
-        "Yahoo Messenger launched (1998)",
-        "MSN Messenger launched (1999)"
-      ]
-    },
-    {
-      "id": 9,
-      "name": "The Evolution of Portable Music",
-      "events": [
-        "Sony Discman (Anti-Skip protection)",
-        "MiniDisc Player",
-        "Rio PMP300 (First MP3 player)",
-        "Napster Launches (1999)"
-      ]
-    },
-    {
-      "id": 10,
-      "name": "Windows Startup Sounds",
-      "events": [
-        "Windows 3.1 (Tada!)",
-        "Windows 95 (The Brian Eno Sound)",
-        "Windows 98 (The Airy Whoosh)",
-        "Windows 2000 (The Piano Flourish)"
-      ]
-    },
-    {
-      "id": 11,
-      "name": "The Cell Phone Evolution",
-      "events": [
-        "Motorola StarTAC (First flip phone - 1996)",
-        "Nokia 5110 (Snake debut - 1998)",
-        "Blackberry 850 (Pager/Email - 1999)",
-        "Nokia 3310 (2000)"
-      ]
-    },
-    {
-      "id": 12,
-      "name": "The 90s Dance Craze Order",
-      "events": [
-        "The Macarena (1993/1996 Remix)",
-        "Cotton Eye Joe (1994)",
-        "Spice Girls 'Stop' Choreography (1997)",
-        "The Hamster Dance (1998)"
-      ]
-    },
-    {
-      "id": 13,
-      "name": "Austin Cinema History",
-      "events": [
-        "Slacker puts 'Weird' Austin on the map (1991)",
-        "Dazed and Confused films at the Moon Tower (1993)",
-        "Varsity Blues films in Austin/Georgetown (1998)",
-        "Office Space films in Austin (1999)"
-      ]
-    },
-    {
-      "id": 14,
-      "name": "Austin Infrastructure",
-      "events": [
-        "Pennybacker Bridge (360 Bridge) opens (1982)",
-        "MoPac Expressway completed (1980s)",
-        "SRV Statue unveiled at Auditorium Shores (1994)",
-        "Bergstrom Airport opens (1999)"
+        "Teddy Bear Invented (1902)",
+        "LEGO Bricks Patented (1958)",
+        "Tickle Me Elmo Craze (1996)",
+        "Sophie the Giraffe US Boom (2010s)"
       ]
     }
   ],
   "audio_tracks": [
     {
       "id": 1,
-      "spotify_uri": "spotify:track:3MjUtNVVq3C8Fn0MP3zhXa",
-      "title": "...Baby One More Time",
-      "artist": "Britney Spears",
-      "hint": "1998 - Ultimate Teen Pop"
+      "spotify_uri": "spotify:track:5ghIJDpPoe3CfHMGu71E6T",
+      "title": "Baby",
+      "artist": "Justin Bieber",
+      "hint": "Teen Pop Anthem"
     },
     {
       "id": 2,
       "spotify_uri": "spotify:track:1KGi9sZVMeszgZOWivFpxs",
-      "title": "No Scrubs",
-      "artist": "TLC",
-      "hint": "1999 - R&B Girl Group Anthem"
+      "title": "Baby Love",
+      "artist": "The Supremes",
+      "hint": "Motown Classic"
     },
     {
       "id": 3,
       "spotify_uri": "spotify:track:7IsEXPk6qqt30FfQv4SZMa",
-      "title": "The Way",
-      "artist": "Fastball",
-      "hint": "1998 - A massive hit from a local Austin band"
+      "title": "Ice Ice Baby",
+      "artist": "Vanilla Ice",
+      "hint": "Stop, Collaborate and Listen"
     },
     {
       "id": 4,
       "spotify_uri": "spotify:track:0Ph6L4l8dYUuXFmb71Ajnd",
-      "title": "Livin' La Vida Loca",
-      "artist": "Ricky Martin",
-      "hint": "1999 - Latin Explosion"
+      "title": "Baby One More Time",
+      "artist": "Britney Spears",
+      "hint": "90s Pop Icon"
     },
     {
       "id": 5,
       "spotify_uri": "spotify:track:2goLsvvODILDzeeiT4dAoR",
-      "title": "Believe",
-      "artist": "Cher",
-      "hint": "1998 - Auto-Tune Pioneer"
+      "title": "Always Be My Baby",
+      "artist": "Mariah Carey",
+      "hint": "High Note Diva"
     },
     {
       "id": 6,
       "spotify_uri": "spotify:track:47BBI51FKFwOMlIiX6m8ya",
-      "title": "I Want It That Way",
-      "artist": "Backstreet Boys",
-      "hint": "1999 - Boy Band Ballad"
+      "title": "Be My Baby",
+      "artist": "The Ronettes",
+      "hint": "60s Girl Group"
     },
     {
       "id": 7,
       "spotify_uri": "spotify:track:3cfOd4CMv2snFaKAnMdnvK",
-      "title": "All Star",
-      "artist": "Smash Mouth",
-      "hint": "1999 - Alternative Pop"
+      "title": "I Got You Babe",
+      "artist": "Sonny & Cher",
+      "hint": "Famous Duet"
     },
     {
       "id": 8,
       "spotify_uri": "spotify:track:0n2SEXB2qoRQg171q7XqeW",
-      "title": "Smooth",
-      "artist": "Santana ft. Rob Thomas",
-      "hint": "1999 - Latin Rock"
+      "title": "Baby Got Back",
+      "artist": "Sir Mix-A-Lot",
+      "hint": "I like big..."
     },
     {
       "id": 9,
       "spotify_uri": "spotify:track:11mwFrKvLXCbcVGNxffGyP",
-      "title": "Genie in a Bottle",
-      "artist": "Christina Aguilera",
-      "hint": "1999 - Pop R&B"
+      "title": "Hey Baby",
+      "artist": "No Doubt",
+      "hint": "Gwen Stefani"
     },
     {
       "id": 10,
       "spotify_uri": "spotify:track:5yaCquc7koPqtgj7v0lwHX",
-      "title": "Waiting for Tonight",
-      "artist": "Jennifer Lopez",
-      "hint": "1999 - Y2K Anthem"
-    },
-    {
-      "id": 11,
-      "spotify_uri": "spotify:track:4GiVcDqNQI0fc0yYuRGH9m",
-      "title": "Inside Out",
-      "artist": "Eve 6",
-      "hint": "mosquito"
-    },
-    {
-      "id": 12,
-      "spotify_uri": "spotify:track:1ng36571Iyov4HBxUClySn",
-      "title": "Pepper",
-      "artist": "Butthole Surfers",
-      "hint": "1996 - Another legendary Texas band"
-    },
-    {
-      "id": 13,
-      "spotify_uri": "spotify:track:6Sy9BUbgFse0n0LPA5lwy5",
-      "title": "Sandstorm",
-      "artist": "Darude",
-      "hint": "1999 - The internet meme anthem"
-    },
-    {
-      "id": 14,
-      "spotify_uri": "spotify:track:4agp6oHofabdUedr0B1krj",
-      "title": "Steal My Sunshine",
-      "artist": "LEN",
-      "hint": "1999 - Peak late 90s vibe"
-    },
-    {
-      "id": 15,
-      "spotify_uri": "spotify:track:460Wn6Dq2uMviG5nPXtPnb",
-      "title": "Better Days (And the Bottom Drops Out)",
-      "artist": "Citizen King",
-      "hint": "The breakbeat drum loop and the scratching sound"
-    },
-    {
-      "id": 16,
-      "spotify_uri": "spotify:track:6lEIjrQNwJPecJ7mMXjhjo",
-      "title": "Wanna Be A Baller",
-      "artist": "Lil' Troy",
-      "hint": "1998 - Peak Y2K energy"
-    },
-    {
-      "id": 17,
-      "spotify_uri": "spotify:track:1Je1IMUlBXcx1Fz0WE7oPT",
-      "title": "Wannabe",
-      "artist": "Spice Girls",
-      "hint": "1996 - Girl Power!"
-    },
-    {
-      "id": 18,
-      "spotify_uri": "spotify:track:6JymsaWDHk2Yj4e0yNBIFH",
-      "title": "Jump Around",
-      "artist": "House of Pain",
-      "hint": "1992 - Every party needs this"
-    },
-    {
-      "id": 19,
-      "spotify_uri": "spotify:track:7fcfNW0XxTWlwVlftzfDOR",
-      "title": "Walk",
-      "artist": "Pantera",
-      "hint": "1992 - Those harmonizing brothers"
-    },
-    {
-      "id": 20,
-      "spotify_uri": "spotify:track:7nnWIPM5hwE3DaUBkvOIpy",
-      "title": "Drive",
-      "artist": "Incubus",
-      "hint": "1999 - A little bit of ..."
+      "title": "Baby Shark",
+      "artist": "Pinkfong",
+      "hint": "Doo doo doo doo doo doo"
     }
   ],
   "round_soundtracks": {
     "LOBBY": {
-      "description": "Upbeat 90s party mix for waiting room",
+      "description": "Upbeat Baby Shower Mix",
       "shuffle": true,
       "tracks": [
-        { "spotify_uri": "spotify:track:5ghIJDpPoe3CfHMGu71E6T", "title": "Smells Like Teen Spirit", "artist": "Nirvana" },
-        { "spotify_uri": "spotify:track:3XKIUb7HzIF1Vu9usunMzc", "title": "Maria Maria", "artist": "Santana, The Product G&B" },
-        { "spotify_uri": "spotify:track:6Qyc6fS4DsZjB2mRW9DsQs", "title": "Iris", "artist": "The Goo Goo Dolls" },
-        { "spotify_uri": "spotify:track:6MdqqkQ8sSC0WB4i8PyRuQ", "title": "No Diggity", "artist": "Blackstreet, Dr. Dre, Queen Pen" },
-        { "spotify_uri": "spotify:track:70LcF31zb1H0PyJoS1Sx1r", "title": "Creep", "artist": "Radiohead" },
-        { "spotify_uri": "spotify:track:31AOj9sFz2gM0O3hMARRBx", "title": "Losing My Religion", "artist": "R.E.M." },
-        { "spotify_uri": "spotify:track:6EMynpZ10GVcwVqiLZj6Ye", "title": "Champagne Supernova", "artist": "Oasis" },
-        { "spotify_uri": "spotify:track:5QLHGv0DfpeXLNFo7SFEy1", "title": "1979", "artist": "The Smashing Pumpkins" },
-        { "spotify_uri": "spotify:track:6WK9dVrRABMkUXFLNlgWFh", "title": "Enjoy the Silence", "artist": "Depeche Mode" },
-        { "spotify_uri": "spotify:track:2EoOZnxNgtmZaD8uUmz2nD", "title": "Black Hole Sun", "artist": "Soundgarden" },
-        { "spotify_uri": "spotify:track:42et6fnHCw1HIPSrdPprMl", "title": "Semi-Charmed Life", "artist": "Third Eye Blind" },
-        { "spotify_uri": "spotify:track:6cJqlSO19vsfCsH1FeFI35", "title": "Santeria", "artist": "Sublime" },
-        { "spotify_uri": "spotify:track:1Cwsd5xI8CajJz795oy4XF", "title": "You Get What You Give", "artist": "New Radicals" }
+        { "spotify_uri": "spotify:track:5ghIJDpPoe3CfHMGu71E6T", "title": "Isn't She Lovely", "artist": "Stevie Wonder" },
+        { "spotify_uri": "spotify:track:3XKIUb7HzIF1Vu9usunMzc", "title": "Beautiful Boy", "artist": "John Lennon" },
+        { "spotify_uri": "spotify:track:6Qyc6fS4DsZjB2mRW9DsQs", "title": "My Girl", "artist": "The Temptations" },
+        { "spotify_uri": "spotify:track:6MdqqkQ8sSC0WB4i8PyRuQ", "title": "Sweet Child O' Mine", "artist": "Guns N' Roses" },
+        { "spotify_uri": "spotify:track:70LcF31zb1H0PyJoS1Sx1r", "title": "Count on Me", "artist": "Bruno Mars" }
       ]
     },
     "MACGYVER": {
-      "description": "Heist / Hacking Tension (Matrix & Spy Vibes)",
+      "description": "Diaper Duty Tension",
       "shuffle": false,
       "tracks": [
         { "spotify_uri": "spotify:track:1FL7eUG80aeUeyMO2N4btN", "title": "Mission: Impossible Theme", "artist": "Adam Clayton & Larry Mullen" },
-        { "spotify_uri": "spotify:track:2ffVdgR2RUHIaENDIrlVvG", "title": "Clubbed to Death (Matrix Soundtrack)", "artist": "Rob Dougan" },
-        { "spotify_uri": "spotify:track:5HWR5bZ3SBN6zA6zHJS3Y6", "title": "Spybreak! (The Lobby Scene)", "artist": "Propellerheads" },
-        { "spotify_uri": "spotify:track:43F49A8ReVXhH7l0jGMViS", "title": "Busy Child", "artist": "The Crystal Method" },
-        { "spotify_uri": "spotify:track:5Q8TJJf4X18GRemriCEUs2", "title": "Battleflag", "artist": "Lo Fidelity Allstars" }
+        { "spotify_uri": "spotify:track:2ffVdgR2RUHIaENDIrlVvG", "title": "The Pink Panther Theme", "artist": "Henry Mancini" }
       ]
     },
     "TRIVIA": {
-      "description": "Thinking Music (Game Show Tension)",
+      "description": "Thinking Music",
       "shuffle": false,
       "tracks": [
-        { "spotify_uri": "spotify:track:57JDumk9hPiiPjAZRmTqvC", "title": "Who Wants to Be a Millionaire Theme", "artist": "Keith Strachan" },
-        { "spotify_uri": "spotify:track:4th0mPYPuZUs564oCu5I1U", "title": "The X-Files Theme", "artist": "Mark Snow" },
-        { "spotify_uri": "spotify:track:67Hna13dNDkZvBpTXRIaOJ", "title": "Teardrop", "artist": "Massive Attack" },
-        { "spotify_uri": "spotify:track:5fJAYWoFgXm26HLNViFiUh", "title": "Porcelain", "artist": "Moby" }
+        { "spotify_uri": "spotify:track:57JDumk9hPiiPjAZRmTqvC", "title": "Jeopardy Theme", "artist": "Merv Griffin" }
       ]
     },
     "TIMER": {
-      "description": "Panic Mode (High BPM Techno/Dance)",
+      "description": "Swaddle Panic",
       "shuffle": false,
       "tracks": [
-        { "spotify_uri": "spotify:track:4Fpsa3pYc3gozrxHRRPvR6", "title": "Ray of Light", "artist": "Madonna" },
-        { "spotify_uri": "spotify:track:623rRTKwGmgjH6sjE9uWLh", "title": "Scatman (Ski-Ba-Bop-Ba-Dop-Bop)", "artist": "Scatman John" },
-        { "spotify_uri": "spotify:track:7xQYVjs4wZNdCwO0EeAWMC", "title": "Born Slippy (Trainspotting)", "artist": "Underworld" }
+        { "spotify_uri": "spotify:track:4Fpsa3pYc3gozrxHRRPvR6", "title": "Flight of the Bumblebee", "artist": "Rimsky-Korsakov" }
       ]
     },
     "TIMELINE": {
-      "description": "Nostalgic Reflection",
+      "description": "Growing Up",
       "shuffle": false,
       "tracks": [
-        { "spotify_uri": "spotify:track:6ORqU0bHbVCRjXm9AjyHyZ", "title": "Good Riddance (Time of Your Life)", "artist": "Green Day" },
-        { "spotify_uri": "spotify:track:57iDDD9N9tTWe75x6qhStw", "title": "Bitter Sweet Symphony", "artist": "The Verve" },
-        { "spotify_uri": "spotify:track:0gEyKnHvgkrkBM6fbeHdwK", "title": "Linger", "artist": "The Cranberries" },
-        { "spotify_uri": "spotify:track:7o9uu2GDtVDr9nsR7ZRN73", "title": "Time After Time", "artist": "Cyndi Lauper" },
-        {"spotify_uri":  "spotify:track:5PntSbMHC1ud6Vvl8x56qd", "title":  "Loser", "artist":"Beck"},
-        {"spotify_uri":  "spotify:track:0shK5iZQppbHPQYiy60xs9", "title":  "Rosa Parks", "artist":"Outkast"}
+        { "spotify_uri": "spotify:track:6ORqU0bHbVCRjXm9AjyHyZ", "title": "Circle of Life", "artist": "Elton John" },
+        { "spotify_uri": "spotify:track:57iDDD9N9tTWe75x6qhStw", "title": "Forever Young", "artist": "Rod Stewart" }
       ]
     },
     "PICTUREGUESS": {
-      "description": "Mystery & investigation",
+      "description": "Mystery Baby",
       "shuffle": false,
       "tracks": [
-        { "spotify_uri": "spotify:track:5xdtUZKYnE4l7KSzgQ6MBD", "title": "Twin Peaks Theme", "artist": "Angelo Badalamenti" },
-        { "spotify_uri": "spotify:track:1MRAN5LZRO7oDPOVwT1OTv", "title": "The X-Files Theme", "artist": "Mark Snow" },
-        { "spotify_uri": "spotify:track:24SUWisv2lYQiB3bVpE1sn", "title": "Virtual Insanity", "artist": "Jamiroquai" },
-        { "spotify_uri": "spotify:track:1pKYYY0dkg23sQQXi0Q5zN", "title": "Around the World", "artist": "Daft Punk" },
-        { "spotify_uri": "spotify:track:3Dq2FHZ73hBUG815MoapQu", "title": "Men In Black", "artist": "Will Smith" }
+        { "spotify_uri": "spotify:track:5xdtUZKYnE4l7KSzgQ6MBD", "title": "Inspector Gadget Theme", "artist": "Shuki Levy" }
       ]
     },
     "MINESWEEPER": {
-      "description": "High Stakes Survival (Intense Big Beat)",
+      "description": "Quiet Please",
       "shuffle": false,
       "tracks": [
-        { "spotify_uri": "spotify:track:1auX4gkGe7hbrOH0BXdpV4", "title": "Firestarter", "artist": "The Prodigy" },
-        { "spotify_uri": "spotify:track:6uEvFCaOqXyEidoO8BZbyh", "title": "Du Hast", "artist": "Rammstein" },
-        { "spotify_uri": "spotify:track:1FNvrp5K02oThumS6gllzp", "title": "Block Rockin' Beats", "artist": "The Chemical Brothers" }
+        { "spotify_uri": "spotify:track:1auX4gkGe7hbrOH0BXdpV4", "title": "Twinkle Twinkle Little Star", "artist": "Lullaby Version" }
       ]
     },
     "VICTORY": {
-      "description": "We Won! (Jock Jams)",
+      "description": "It's a Boy!",
       "shuffle": false,
       "tracks": [
-        { "spotify_uri": "spotify:track:683hRieVmYdAhVA1DkjSAk", "title": "Space Jam", "artist": "Quad City DJ's" },
-        { "spotify_uri": "spotify:track:22HYEJveCvykVDHDiEEmjZ", "title": "Tubthumping", "artist": "Chumbawamba" },
-        { "spotify_uri": "spotify:track:3cfOd4CMv2snFaKAnMdnvK", "title": "All Star", "artist": "Smash Mouth" }
+        { "spotify_uri": "spotify:track:683hRieVmYdAhVA1DkjSAk", "title": "Celebration", "artist": "Kool & The Gang" },
+        { "spotify_uri": "spotify:track:22HYEJveCvykVDHDiEEmjZ", "title": "Happy", "artist": "Pharrell Williams" }
       ]
     }
   },
-"picture_guesses": [
+  "picture_guesses": [
     {
       "id": 1,
-      "image_url": "/static/images/y2k/Tamagotchi_0124_ubt.jpeg",
-      "answer": "Tamagotchi",
-      "hint": "This virtual pet from 1996 needed constant attention or it would die..."
+      "image_url": "/images/y2k/pacifier.jpg",
+      "answer": "Pacifier",
+      "hint": "Soothes the baby..."
     },
     {
       "id": 2,
-      "image_url": "/static/images/y2k/magic-eye.jpg",
-      "answer": "Magic Eye (Stereogram)",
-      "hint": "You have to cross your eyes and look through the picture to see the 3D shape..."
+      "image_url": "/images/y2k/bottle.jpg",
+      "answer": "Baby Bottle",
+      "hint": "Milk delivery system..."
     },
     {
       "id": 3,
-      "image_url": "/static/images/y2k/pog.webp",
-      "answer": "Pogs",
-      "hint": "Little cardboard disks you stacked and hit with a metal slammer..."
+      "image_url": "/images/y2k/stroller.jpg",
+      "answer": "Stroller",
+      "hint": "Baby's first car..."
     },
     {
       "id": 4,
-      "image_url": "/static/images/y2k/furbys.webp",
-      "answer": "Furby",
-      "hint": "This 1998 interactive toy spoke its own language and was briefly banned by the NSA..."
+      "image_url": "/images/y2k/monitor.jpg",
+      "answer": "Baby Monitor",
+      "hint": "Big Brother is watching..."
     },
     {
       "id": 5,
-      "image_url": "/static/images/y2k/icq.jpg",
-      "answer": "ICQ",
-      "hint": "This instant messenger from 1996 made an 'Uh Oh!' sound when you got a message..."
-    },
-    {
-      "id": 6,
-      "image_url": "/static/images/y2k/sonydiscman.jpg",
-      "answer": "Sony Discman",
-      "hint": "It had 'Anti-Skip Protection' but still skipped if you breathed on it..."
-    },
-    {
-      "id": 7,
-      "image_url": "/static/images/y2k/doritos-3d.jpg",
-      "answer": "Doritos 3D",
-      "hint": "These chips didn't last long to the superior Bugle"
-    },
-    {
-      "id": 8,
-      "image_url": "/static/images/y2k/Nokia_5110.jpg",
-      "answer": "Nokia 5110",
-      "hint": "The one with the colorful changeable faceplates and Snake..."
-    },
-    {
-      "id": 9,
-      "image_url": "/static/images/y2k/solo-jazz.jpg",
-      "answer": "Solo Jazz Cup",
-      "hint": "That teal and purple scribble design seen at every 90s birthday party..."
-    },
-    {
-      "id": 10,
-      "image_url": "/static/images/y2k/palm.avif",
-      "answer": "Palm Pilot",
-      "hint": "This 1996 PDA was the smartphone before smartphones existed..."
-    },
-    {
-      "id": 11,
-      "image_url": "/static/images/y2k/jnco-jeans.jpg",
-      "answer": "JNCO Jeans",
-      "hint": "Fashion so wide you could hide a family of four inside..."
-    },
-    {
-      "id": 12,
-      "image_url": "/static/images/y2k/dancing-baby.webp",
-      "answer": "The Dancing Baby",
-      "hint": "The very first internet meme, also known as Baby Cha-Cha..."
-    },
-    {
-      "id": 13,
-      "image_url": "/static/images/y2k/beeper.jpg",
-      "answer": "Pager / Beeper",
-      "hint": "Before texting, you had to find a payphone to call the number on this screen..."
-    },
-    {
-      "id": 14,
-      "image_url": "/static/images/y2k/blockbuster.jpg",
-      "answer": "Blockbuster",
-      "hint": "Be kind, rewind. Late fees apply..."
-    },
-    {
-      "id": 15,
-      "image_url": "/static/images/y2k/beanie.webp",
-      "answer": "Beanie Baby",
-      "hint": "People thought these stuffed animals would be worth millions one day. Don't remove the tag!"
-    },
-    {
-      "id": 16,
-      "image_url": "/static/images/y2k/super-soaker.jpg",
-      "answer": "Super Soaker",
-      "hint": "Only the superior technology of the 90's could make a water gun this strong"
-    },
-    {
-      "id": 17,
-      "image_url": "/static/images/y2k/moonboots.webp",
-      "answer": "Moon Shoes",
-      "hint": "Mini trampolines for your feet (ankle breakers)..."
-    },
-    {
-      "id": 18,
-      "image_url": "/static/images/y2k/sky-dancers.jpg",
-      "answer": "Sky Dancers",
-      "hint": "They flew in the air and sometimes into fireplaces..."
-    },
-    {
-      "id": 19,
-      "image_url": "/static/images/y2k/gameboy.png",
-      "answer": "Game Boy Color (Lime Green)",
-      "hint": "This specific color handheld was the 'Atomic Purple' alternative..."
-    },
-    {
-      "id": 20,
-      "image_url": "/static/images/y2k/orbitz-drink.jpg",
-      "answer": "Orbitz Drink",
-      "hint": "A soda with floating gelatin balls from 1997..."
+      "image_url": "/images/y2k/onesie.jpg",
+      "answer": "Onesie",
+      "hint": "The standard uniform..."
     }
   ]
 }

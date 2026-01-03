@@ -1,0 +1,33 @@
+---
+import ViewContainer from '../shared/ViewContainer.astro';
+---
+<ViewContainer id="view-timer">
+    <div class="flex-grow flex-center flex-column text-center">
+        <h2 class="glow">CHAPTER 2: THE PERFECT SWADDLE</h2>
+        <p style="color: var(--terminal-amber); font-size: 0.9rem;">
+            WRAP THE BABY
+        </p>
+        <p
+            id="timer-message"
+            class="mt-2"
+            style="color: var(--terminal-amber);"
+        >
+            KEEP THE COLD OUT.
+        </p>
+
+        <div id="timer-display" class="timer-display glow-strong mt-3">
+            03:00
+        </div>
+        <div
+            class="timer-progress mt-2"
+            style="max-width: 400px; width: 100%;"
+        >
+            <div
+                id="timer-progress-bar"
+                class="timer-progress__bar"
+                style="width: 100%;"
+            >
+            </div>
+        </div>
+    </div>
+</ViewContainer>

@@ -1,0 +1,66 @@
+---
+---
+<!-- Mock Mode Banner -->
+<div id="mock-mode-banner" class="mock-mode-banner hidden">
+    MOCK MODE - NO SERVER CONNECTION
+</div>
+
+<!-- Reaction Feed - Floating Emoji Reactions -->
+<div class="reaction-feed" id="reaction-feed">
+    <!-- Floating reactions populated by ReactionFeed -->
+</div>
+
+<!-- Chat Feed - Messages from Players -->
+<div class="chat-feed" id="chat-feed">
+    <!-- Chat messages populated by ChatFeed -->
+</div>
+
+<!-- Now Playing Indicator -->
+<div class="now-playing hidden" id="now-playing">
+    <div class="now-playing__icon">
+        <span class="now-playing__bar"></span>
+        <span class="now-playing__bar"></span>
+        <span class="now-playing__bar"></span>
+    </div>
+    <div class="now-playing__info">
+        <div class="now-playing__title" id="now-playing-title">---</div>
+        <div class="now-playing__artist" id="now-playing-artist">---</div>
+    </div>
+</div>
+
+<!-- Hidden countdown div for backwards compatibility -->
+<div class="midnight-countdown hidden" id="midnight-countdown"></div>
+
+<!-- Audio Unlock Overlay - must be clicked to enable Spotify playback -->
+<div id="audio-unlock-overlay" class="audio-unlock-overlay">
+    <div class="audio-unlock-content">
+        <p class="tv-main-message mb-2">CLICK TO ENABLE AUDIO</p>
+        <p class="tv-status">Browser requires user interaction before playing audio</p>
+        <button id="audio-unlock-btn" class="terminal-btn tv-label mt-3">
+            ENABLE AUDIO
+        </button>
+    </div>
+</div>
+
+<style>
+.audio-unlock-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    cursor: pointer;
+}
+.audio-unlock-overlay.hidden {
+    display: none;
+}
+.audio-unlock-content {
+    text-align: center;
+    color: var(--terminal-green);
+}
+</style>
