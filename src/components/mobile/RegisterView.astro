@@ -1,106 +1,105 @@
 ---
 import ViewContainer from '../shared/ViewContainer.astro';
+import ChapterHeader from './storybook/ChapterHeader.astro';
+import StoryPageFrame from './storybook/StoryPageFrame.astro';
+import NarratorText from './storybook/NarratorText.astro';
 ---
 <ViewContainer id="view-register" active={true}>
-    <div class="flex-grow flex-center flex-column">
-        <div class="ascii-art glow">
-   _   
-  ( )  
-   H   
-  ( )  
+    <div class="frost-viewport">
+        <ChapterHeader
+            chapter="The Beginning"
+            title="The Guest Book"
+            narrator="Sign your name and join the celebration..."
+        />
+
+        <StoryPageFrame withGlow={true}>
+            <NarratorText variant="instruction">
+                Choose your path, dear traveler
+            </NarratorText>
+        </StoryPageFrame>
+
+        <div class="frost-actions">
+            <div class="frost-tabs">
+                <button id="tab-create" class="frost-tab frost-tab--active" onclick="showCreateTab()">
+                    New Family
+                </button>
+                <button id="tab-join" class="frost-tab" onclick="showJoinTab()">
+                    Join Family
+                </button>
+            </div>
+
+            <form id="create-form" class="register-form">
+                <input type="text" id="create-team-name" class="frost-input" placeholder="Family Name" required />
+                <input type="text" id="create-player-name" class="frost-input" placeholder="Your Name" required />
+                <button type="submit" class="enchanted-btn enchanted-btn--primary enchanted-btn--glow">Sign the Guestbook</button>
+            </form>
+
+            <form id="join-form" class="register-form hidden">
+                <input type="text" id="join-code" class="frost-input join-code-input" placeholder="Code" maxlength="4" required />
+                <input type="text" id="join-player-name" class="frost-input" placeholder="Your Name" required />
+                <button type="submit" class="enchanted-btn enchanted-btn--primary enchanted-btn--glow">Join Family</button>
+            </form>
+
+            <p id="register-error" class="frost-status frost-status--error hidden"></p>
         </div>
-        <h2 class="glow mt-3">THE GUEST BOOK</h2>
-        <p
-            style="color: var(--terminal-amber); font-size: 0.9rem;"
-            class="mt-1"
-        >
-            PLEASE SIGN THE GUESTBOOK
-        </p>
-
-        <div
-            class="mt-3"
-            style="display: flex; gap: 1rem; width: 100%; max-width: 400px;"
-        >
-            <button
-                id="tab-create"
-                class="terminal-btn terminal-btn--primary"
-                style="flex: 1;"
-                onclick="showCreateTab()"
-            >
-                NEW FAMILY
-            </button>
-            <button
-                id="tab-join"
-                class="terminal-btn"
-                style="flex: 1;"
-                onclick="showJoinTab()"
-            >
-                JOIN FAMILY
-            </button>
-        </div>
-
-        <form
-            id="create-form"
-            class="mt-3"
-            style="width: 100%; max-width: 400px;"
-        >
-            <input
-                type="text"
-                id="create-team-name"
-                class="terminal-input"
-                placeholder="FAMILY NAME"
-                required
-            />
-            <input
-                type="text"
-                id="create-player-name"
-                class="terminal-input mt-2"
-                placeholder="YOUR NAME"
-                required
-            />
-            <button
-                type="submit"
-                class="terminal-btn terminal-btn--primary mt-2"
-                style="width: 100%;"
-            >
-                SIGN GUESTBOOK
-            </button>
-        </form>
-
-        <form
-            id="join-form"
-            class="mt-3"
-            style="width: 100%; max-width: 400px; display: none;"
-        >
-            <input
-                type="text"
-                id="join-code"
-                class="terminal-input"
-                placeholder="FAMILY CODE"
-                maxlength="4"
-                style="text-transform: uppercase; letter-spacing: 0.5em; text-align: center; font-size: 1.5rem;"
-                required
-            />
-            <input
-                type="text"
-                id="join-player-name"
-                class="terminal-input mt-2"
-                placeholder="YOUR NAME"
-                required
-            />
-            <button
-                type="submit"
-                class="terminal-btn terminal-btn--primary mt-2"
-                style="width: 100%;"
-            >
-                JOIN FAMILY
-            </button>
-        </form>
-        <p
-            id="register-error"
-            class="mt-2"
-            style="color: var(--terminal-red); display: none;"
-        >
-        </p>
     </div>
 </ViewContainer>
+
+<style>
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.join-code-input {
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.enchanted-btn {
+    appearance: none;
+    width: 100%;
+    padding: 1rem 2rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: #0a1628;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.98) 0%,
+        rgba(232, 244, 252, 0.95) 100%
+    );
+    box-shadow:
+        0 6px 0 rgba(135, 206, 235, 0.35),
+        0 8px 24px rgba(0, 0, 0, 0.2),
+        0 0 30px rgba(135, 206, 235, 0.12);
+}
+
+.enchanted-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 0 rgba(135, 206, 235, 0.35),
+        0 12px 32px rgba(0, 0, 0, 0.25),
+        0 0 50px rgba(135, 206, 235, 0.2);
+}
+
+.enchanted-btn:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow:
+        0 2px 0 rgba(135, 206, 235, 0.35),
+        0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.enchanted-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+</style>

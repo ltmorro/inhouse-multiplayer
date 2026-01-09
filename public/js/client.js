@@ -1,10 +1,15 @@
 /**
  * CLIENT.JS - Mobile Controller View Manager
  * Handles view switching, socket events, and mock mode for testing
+ *
+ * Uses shared modules from src/scripts/ (exposed via window globals):
+ * - window.STATE_VIEW_MAP, window.AVATARS, window.AVATAR_EMOJIS
+ * - window.Haptics, window.GlitchEffects, window.VHSTransition
+ * - window.TimerEffects, window.BSOD, window.Win98Dialog
  */
 
 // ============================================================
-// CONFIGURATION
+// CONFIGURATION (uses shared STATE_VIEW_MAP from globals)
 // ============================================================
 
 const CONFIG = {
@@ -14,17 +19,22 @@ const CONFIG = {
     // Mock mode delay (ms) for simulated responses
     MOCK_DELAY: 500,
 
-    // States mapping to views
-    STATE_VIEW_MAP: {
-        'LOBBY': 'view-lobby',
-        'MACGYVER': 'view-macgyver',
-        'TRIVIA': 'view-trivia',
-        'TIMER': 'view-timer',
-        'BUZZER': 'view-buzzer',
-        'TIMELINE': 'view-timeline',
-        'MINESWEEPER': 'view-minesweeper',
-        'PICTUREGUESS': 'view-pictureguess',
-        'VICTORY': 'view-victory'
+    // States mapping to views - use shared config, fallback to inline for safety
+    get STATE_VIEW_MAP() {
+        return window.STATE_VIEW_MAP || {
+            'LOBBY': 'view-lobby',
+            'MACGYVER': 'view-macgyver',
+            'TRIVIA': 'view-trivia',
+            'TIMER': 'view-timer',
+            'BUZZER': 'view-buzzer',
+            'TIMELINE': 'view-timeline',
+            'MINESWEEPER': 'view-minesweeper',
+            'PICTUREGUESS': 'view-pictureguess',
+            'PIXELPERFECT': 'view-pixelperfect',
+            'PRICEGUESS': 'view-priceguess',
+            'SURVIVAL': 'view-survival',
+            'VICTORY': 'view-victory'
+        };
     }
 };
 
@@ -53,14 +63,19 @@ const AppState = {
     currentQuestionId: null,
     currentPuzzleId: null,
     currentPictureId: null,
+    currentProductId: null,
     answerTypingTimeout: null,
     pictureGuessTypingTimeout: null,
+    priceGuessTypingTimeout: null,
     syncingFromRemote: false,  // Flag to prevent echo when syncing
     timelineCompleted: false,  // Flag to track if timeline has been revealed
     triviaSubmitted: false,    // Flag to track if user submitted trivia answer (prevents count overwrite)
     selectedAvatar: null,      // Selected team avatar
     lastReactionTime: 0,       // Throttle reactions
-    lastChatTime: 0            // Throttle chat messages
+    lastChatTime: 0,           // Throttle chat messages
+    lastTeamSubmissionTime: 0, // Timestamp of last teammate's submission (prevents count overwrite)
+    pixelperfectLocked: false, // Track if pixelperfect buzzer is locked
+    pixelperfectFreezeInterval: null  // Timer for pixelperfect freeze countdown
 };
 
 // ============================================================
@@ -146,226 +161,65 @@ const BootSequence = {
 };
 
 // ============================================================
-// HAPTICS - Comprehensive haptic feedback for mobile
+// HAPTICS - Use shared module from window.Haptics
 // ============================================================
 
-const Haptics = {
-    // Check if vibration is supported
-    isSupported() {
-        return 'vibrate' in navigator;
-    },
-
-    // Light tap - for button presses
-    tap() {
-        if (this.isSupported()) {
-            navigator.vibrate(10);
-        }
-    },
-
-    // Medium feedback - for form submissions
-    confirm() {
-        if (this.isSupported()) {
-            navigator.vibrate(30);
-        }
-    },
-
-    // Success pattern - for correct answers
-    success() {
-        if (this.isSupported()) {
-            navigator.vibrate([20, 50, 20]);
-        }
-    },
-
-    // Error pattern - for wrong answers
-    error() {
-        if (this.isSupported()) {
-            navigator.vibrate([50, 30, 50]);
-        }
-    },
-
-    // Urgent pattern - for buzzer press
-    buzzer() {
-        if (this.isSupported()) {
-            navigator.vibrate([30, 20, 30, 20, 30]);
-        }
-    },
-
-    // Heavy impact - for eliminations, BSOD
-    impact() {
-        if (this.isSupported()) {
-            navigator.vibrate([100, 50, 100, 50, 100]);
-        }
-    },
-
-    // Warning - for timer critical, lockouts
-    warning() {
-        if (this.isSupported()) {
-            navigator.vibrate([50, 30, 50]);
-        }
-    },
-
-    // Countdown tick - subtle pulse for final countdown
-    tick() {
-        if (this.isSupported()) {
-            navigator.vibrate(15);
-        }
-    },
-
-    // State change - when game state transitions
-    stateChange() {
-        if (this.isSupported()) {
-            navigator.vibrate([20, 40, 20]);
-        }
-    }
+// Haptics is now loaded from src/scripts/haptics.js via globals
+// Access via window.Haptics (fallback defined for safety)
+const Haptics = window.Haptics || {
+    isSupported() { return 'vibrate' in navigator; },
+    tap() { this.isSupported() && navigator.vibrate(10); },
+    confirm() { this.isSupported() && navigator.vibrate(30); },
+    success() { this.isSupported() && navigator.vibrate([20, 50, 20]); },
+    error() { this.isSupported() && navigator.vibrate([50, 30, 50]); },
+    buzzer() { this.isSupported() && navigator.vibrate([30, 20, 30, 20, 30]); },
+    impact() { this.isSupported() && navigator.vibrate([100, 50, 100, 50, 100]); },
+    warning() { this.isSupported() && navigator.vibrate([50, 30, 50]); },
+    tick() { this.isSupported() && navigator.vibrate(15); },
+    stateChange() { this.isSupported() && navigator.vibrate([20, 40, 20]); }
 };
 
 // ============================================================
-// GLITCH EFFECTS
+// GLITCH EFFECTS - Use shared module from window.GlitchEffects
 // ============================================================
 
-const GlitchEffects = {
-    trigger(type = 'minor') {
-        const screen = document.querySelector('.crt-screen');
-        if (!screen) return;
-
-        switch (type) {
-            case 'minor':
-                screen.classList.add('glitch-active');
-                setTimeout(() => screen.classList.remove('glitch-active'), 150);
-                break;
-            case 'major':
-                screen.classList.add('glitch-active', 'static-overlay', 'static-active');
-                setTimeout(() => {
-                    screen.classList.remove('glitch-active', 'static-overlay', 'static-active');
-                }, 400);
-                break;
-            case 'critical':
-                screen.classList.add('screen-distort', 'static-overlay', 'static-active', 'glitch-active');
-                setTimeout(() => {
-                    screen.classList.remove('screen-distort', 'static-overlay', 'static-active', 'glitch-active');
-                }, 600);
-                break;
-        }
-
-        // Haptic feedback if available
-        if (navigator.vibrate) {
-            navigator.vibrate(type === 'critical' ? [50, 30, 50] : 30);
-        }
-    },
-
-    shake(duration = 300) {
-        const screen = document.querySelector('.crt-screen');
-        if (!screen) return;
-
-        screen.classList.add('screen-shake');
-        setTimeout(() => screen.classList.remove('screen-shake'), duration);
-
-        if (navigator.vibrate) {
-            navigator.vibrate(50);
-        }
-    }
+// GlitchEffects loaded from src/scripts/effects.ts via globals (disabled for winter theme)
+const GlitchEffects = window.GlitchEffects || {
+    trigger(type = 'minor') { /* no-op for winter theme */ },
+    shake(duration = 300) { /* no-op for winter theme */ }
 };
 
 // ============================================================
-// WINDOWS 98 ERROR DIALOG
+// WINDOWS 98 ERROR DIALOG - Use shared module
 // ============================================================
 
-const Win98Dialog = {
+const Win98Dialog = window.Win98Dialog || {
     show(options = {}) {
         const overlay = document.getElementById('win98-overlay');
-        const title = document.getElementById('win98-title');
-        const message = document.getElementById('win98-message');
-        const icon = document.getElementById('win98-icon');
-
         if (!overlay) return;
-
-        title.textContent = options.title || 'Baby Monitor Alert';
-        message.innerHTML = options.message || '<strong>An event has occurred.</strong>';
-        icon.textContent = options.icon || '⚠️';
-
         overlay.classList.remove('hidden');
-        GlitchEffects.shake(100);
-
-        if (navigator.vibrate) {
-            navigator.vibrate([30, 20, 30]);
-        }
-
-        if (options.duration && options.duration > 0) {
-            setTimeout(() => this.hide(), options.duration);
-        }
+        if (options.duration > 0) setTimeout(() => this.hide(), options.duration);
     },
-
     hide() {
         const overlay = document.getElementById('win98-overlay');
         if (overlay) overlay.classList.add('hidden');
     },
-
-    showWrongAnswer(context) {
-        this.show({
-            title: 'OOPS.EXE',
-            message: `<strong>Incorrect Response</strong>
-                ${context || 'The submitted answer is invalid.'}
-                <br><br>Error code: 0xBABY`,
-            icon: '❌',
-            duration: 2500
-        });
-    },
-
-    showBuzzerLock(teamName) {
-        this.show({
-            title: 'BUZZER.SYS',
-            message: `<strong>Signal Intercepted!</strong>
-                ${teamName ? `Team "${teamName}" locked the transmission.` : 'Another team buzzed first.'}`,
-            icon: '🔔',
-            duration: 2000
-        });
-    },
-
-    showFreeze(seconds) {
-        this.show({
-            title: 'TIMEOUT.EXE',
-            message: `<strong>Wrong Answer Penalty</strong>
-                Buzzer frozen for ${seconds} seconds.`,
-            icon: '🥶',
-            duration: 2000
-        });
-    }
+    showWrongAnswer(context) { this.show({ duration: 2500 }); },
+    showBuzzerLock(teamName) { this.show({ duration: 2000 }); },
+    showFreeze(seconds) { this.show({ duration: 2000 }); }
 };
 
 // ============================================================
-// BLUE SCREEN OF DEATH
+// BLUE SCREEN OF DEATH - Use shared module
 // ============================================================
 
-const BSOD = {
+const BSOD = window.BSOD || {
     show(teamName, duration = 3000) {
         const overlay = document.getElementById('bsod-overlay');
-        const teamEl = document.getElementById('bsod-team-name');
-
         if (!overlay) return;
-
-        teamEl.textContent = teamName || 'ELIMINATED';
         overlay.classList.remove('hidden');
-
-        GlitchEffects.trigger('critical');
-
-        if (navigator.vibrate) {
-            navigator.vibrate([100, 50, 100, 50, 100]);
-        }
-
         setTimeout(() => this.hide(), duration);
-
-        const dismiss = () => {
-            this.hide();
-            document.removeEventListener('click', dismiss);
-            document.removeEventListener('touchstart', dismiss);
-        };
-
-        setTimeout(() => {
-            document.addEventListener('click', dismiss, { once: true });
-            document.addEventListener('touchstart', dismiss, { once: true });
-        }, 500);
     },
-
     hide() {
         const overlay = document.getElementById('bsod-overlay');
         if (overlay) overlay.classList.add('hidden');
@@ -373,95 +227,30 @@ const BSOD = {
 };
 
 // ============================================================
-// VHS TRANSITIONS
+// VHS TRANSITIONS - Use shared module (disabled for winter theme)
 // ============================================================
 
-const VHSTransition = {
-    async play(type = 'switch') {
-        const el = document.getElementById('vhs-transition');
-        const staticEl = document.getElementById('static-burst');
-        if (!el) return;
-
-        el.classList.add('active');
-        if (staticEl) staticEl.classList.add('active');
-
-        await this.sleep(300);
-
-        el.classList.remove('active');
-        if (staticEl) staticEl.classList.remove('active');
-    },
-
-    sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+const VHSTransition = window.VHSTransition || {
+    async play(type = 'switch') { await this.sleep(50); },
+    sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 };
 
 // ============================================================
-// TIMER EFFECTS
+// TIMER EFFECTS - Use shared module
 // ============================================================
 
-const TimerEffects = {
+const TimerEffects = window.TimerEffects || {
     criticalOverlayActive: false,
-
-    setCriticalOverlay(active) {
-        const overlay = document.getElementById('timer-critical-overlay');
-        if (!overlay) return;
-
-        if (active && !this.criticalOverlayActive) {
-            overlay.classList.add('active');
-            this.criticalOverlayActive = true;
-        } else if (!active && this.criticalOverlayActive) {
-            overlay.classList.remove('active');
-            this.criticalOverlayActive = false;
-        }
-    },
-
-    setHeartbeat(active) {
-        const display = document.getElementById('timer-display');
-        if (!display) return;
-
-        if (active) {
-            display.classList.add('heartbeat');
-        } else {
-            display.classList.remove('heartbeat');
-        }
-    },
-
-    updateForTime(seconds, total) {
-        const percent = (seconds / total) * 100;
-
-        if (percent <= 20) {
-            this.setCriticalOverlay(true);
-        } else {
-            this.setCriticalOverlay(false);
-        }
-
-        if (percent <= 10) {
-            this.setHeartbeat(true);
-            if (navigator.vibrate && seconds > 0) {
-                navigator.vibrate(30);
-            }
-        } else {
-            this.setHeartbeat(false);
-        }
-
-        if (seconds <= 5 && seconds > 0) {
-            GlitchEffects.trigger('minor');
-        }
-
-        if (seconds === 0) {
-            this.setCriticalOverlay(false);
-            this.setHeartbeat(false);
-            GlitchEffects.trigger('critical');
-        }
-    }
+    setCriticalOverlay(active) { /* fallback no-op */ },
+    setHeartbeat(active) { /* fallback no-op */ },
+    updateForTime(seconds, total) { /* fallback no-op */ }
 };
 
 // ============================================================
-// AVATAR CONFIGURATION
+// AVATAR CONFIGURATION - Use shared module
 // ============================================================
 
-const AVATARS = [
+const AVATARS = window.AVATARS || [
     { id: 'bottle', emoji: '🍼', name: 'BOTTLE' },
     { id: 'pacifier', emoji: '👶', name: 'BABY' },
     { id: 'bear', emoji: '🧸', name: 'TEDDY' },
@@ -558,13 +347,14 @@ const UI = {
         const status = document.getElementById('connection-status');
 
         if (connected) {
-            indicator.classList.remove('status-indicator--disconnected');
-            indicator.classList.add('status-indicator--connected');
-            status.textContent = 'CONNECTED';
+            // Support both old and new class naming
+            indicator.classList.remove('status-indicator--disconnected', 'storybook-status-bar__indicator--disconnected');
+            indicator.classList.add('status-indicator--connected', 'storybook-status-bar__indicator--connected');
+            status.textContent = 'Connected';
         } else {
-            indicator.classList.remove('status-indicator--connected');
-            indicator.classList.add('status-indicator--disconnected');
-            status.textContent = 'DISCONNECTED';
+            indicator.classList.remove('status-indicator--connected', 'storybook-status-bar__indicator--connected');
+            indicator.classList.add('status-indicator--disconnected', 'storybook-status-bar__indicator--disconnected');
+            status.textContent = 'Reconnecting...';
         }
     },
 
@@ -626,7 +416,7 @@ const UI = {
 
         el.innerHTML = players.map((p, i) => {
             const isYou = p.player_id === AppState.playerId;
-            return `<div style="color: ${isYou ? 'var(--terminal-green)' : 'var(--terminal-green-dim)'};">
+            return `<div style="color: ${isYou ? 'var(--baby-blue)' : 'var(--baby-blue-dim)'};">
                 ${i + 1}. ${p.name}${isYou ? ' (you)' : ''}
             </div>`;
         }).join('');
@@ -694,6 +484,31 @@ const UI = {
     },
 
     /**
+     * Update price guess hint
+     * @param {string} hint
+     */
+    updatePriceGuessHint(hint) {
+        const el = document.getElementById('priceguess-hint');
+        if (el) {
+            el.textContent = hint || '';
+        }
+    },
+
+    /**
+     * Update price guess status
+     * @param {string} status
+     * @param {boolean} disabled - Disable submit button
+     */
+    updatePriceGuessStatus(status, disabled = false) {
+        const statusEl = document.getElementById('priceguess-status');
+        const submitEl = document.getElementById('priceguess-submit');
+        const answerEl = document.getElementById('priceguess-answer');
+        if (statusEl) statusEl.textContent = status;
+        if (submitEl) submitEl.disabled = disabled;
+        if (answerEl) answerEl.disabled = disabled;
+    },
+
+    /**
      * Update timer display
      * @param {number} seconds
      * @param {number} totalSeconds
@@ -753,13 +568,13 @@ const UI = {
         switch (state) {
             case 'active':
                 btn.classList.add('buzzer-btn--active');
-                text.textContent = 'EXECUTE';
+                text.textContent = 'BUZZ!';
                 status.textContent = '';
                 AppState.buzzerLocked = false;
                 break;
             case 'locked-self':
                 btn.classList.add('buzzer-btn--locked-self');
-                text.textContent = 'TRANSMITTING...';
+                text.textContent = 'BUZZING!';
                 status.textContent = 'Waiting for judgment...';
                 btn.disabled = true;
                 AppState.buzzerLocked = true;
@@ -767,7 +582,7 @@ const UI = {
             case 'locked-other':
                 btn.classList.add('buzzer-btn--locked-other');
                 text.textContent = 'LOCKED';
-                status.textContent = lockedByName ? `${lockedByName} is transmitting` : 'Another team buzzed first';
+                status.textContent = lockedByName ? `${lockedByName} buzzed in` : 'Another team buzzed first';
                 btn.disabled = true;
                 AppState.buzzerLocked = true;
                 break;
@@ -806,6 +621,92 @@ const UI = {
                 AppState.buzzerFreezeInterval = null;
                 // Re-enable buzzer
                 this.updateBuzzer('active');
+            } else {
+                text.textContent = `FROZEN ${remaining}s`;
+            }
+        }, 1000);
+    },
+
+    /**
+     * Update Pixel Perfect buzzer state
+     * @param {string} state - 'active', 'locked-self', 'locked-other'
+     * @param {string} [lockedByName] - Name of team that locked buzzer
+     */
+    updatePixelPerfectBuzzer(state, lockedByName = null) {
+        const btn = document.getElementById('pixelperfect-buzzer-button');
+        const text = document.getElementById('pixelperfect-buzzer-text');
+        const status = document.getElementById('pixelperfect-status');
+
+        if (!btn || !text) return;
+
+        // Clear any existing freeze timer
+        if (AppState.pixelperfectFreezeInterval) {
+            clearInterval(AppState.pixelperfectFreezeInterval);
+            AppState.pixelperfectFreezeInterval = null;
+        }
+
+        // Remove all state classes
+        btn.classList.remove('buzzer-btn--active', 'buzzer-btn--locked-self', 'buzzer-btn--locked-other', 'buzzer-btn--frozen');
+        btn.disabled = false;
+
+        switch (state) {
+            case 'active':
+                btn.classList.add('buzzer-btn--active');
+                text.textContent = 'BUZZ IN!';
+                if (status) status.textContent = '';
+                AppState.pixelperfectLocked = false;
+                break;
+            case 'locked-self':
+                btn.classList.add('buzzer-btn--locked-self');
+                text.textContent = 'BUZZING!';
+                if (status) status.textContent = 'Waiting for judgment...';
+                btn.disabled = true;
+                AppState.pixelperfectLocked = true;
+                break;
+            case 'locked-other':
+                btn.classList.add('buzzer-btn--locked-other');
+                text.textContent = 'LOCKED';
+                if (status) status.textContent = lockedByName ? `${lockedByName} is answering` : 'Another team buzzed first';
+                btn.disabled = true;
+                AppState.pixelperfectLocked = true;
+                break;
+        }
+    },
+
+    /**
+     * Start a Pixel Perfect buzzer freeze countdown for the team
+     * @param {number} seconds - Duration of the freeze
+     */
+    startPixelPerfectFreeze(seconds) {
+        const btn = document.getElementById('pixelperfect-buzzer-button');
+        const text = document.getElementById('pixelperfect-buzzer-text');
+        const status = document.getElementById('pixelperfect-status');
+
+        if (!btn || !text) return;
+
+        // Clear any existing freeze timer
+        if (AppState.pixelperfectFreezeInterval) {
+            clearInterval(AppState.pixelperfectFreezeInterval);
+        }
+
+        // Set frozen state
+        btn.classList.remove('buzzer-btn--active', 'buzzer-btn--locked-self', 'buzzer-btn--locked-other');
+        btn.classList.add('buzzer-btn--frozen');
+        btn.disabled = true;
+        AppState.pixelperfectLocked = true;
+
+        let remaining = seconds;
+        text.textContent = `FROZEN ${remaining}s`;
+        if (status) status.textContent = 'Wrong answer penalty';
+
+        // Countdown timer
+        AppState.pixelperfectFreezeInterval = setInterval(() => {
+            remaining--;
+            if (remaining <= 0) {
+                clearInterval(AppState.pixelperfectFreezeInterval);
+                AppState.pixelperfectFreezeInterval = null;
+                // Re-enable buzzer
+                this.updatePixelPerfectBuzzer('active');
             } else {
                 text.textContent = `FROZEN ${remaining}s`;
             }
@@ -912,7 +813,7 @@ const UI = {
      * @param {string} message
      * @param {string} [color] - CSS color value
      */
-    updateTimelineStatus(message, color = 'var(--terminal-green)') {
+    updateTimelineStatus(message, color = 'var(--baby-blue)') {
         const status = document.getElementById('timeline-status');
         status.textContent = message;
         status.style.color = color;
@@ -926,11 +827,63 @@ const UI = {
         const statusEl = document.getElementById('player-alive-status');
         if (alive) {
             statusEl.textContent = 'ACTIVE';
-            statusEl.style.color = 'var(--terminal-green)';
+            statusEl.style.color = 'var(--baby-blue)';
         } else {
             statusEl.textContent = 'ELIMINATED';
             statusEl.style.color = 'var(--terminal-red)';
         }
+    },
+
+    /**
+     * Update survival status text
+     * @param {string} message
+     */
+    updateSurvivalStatus(message) {
+        const el = document.getElementById('survival-status');
+        if (el) el.textContent = message;
+    },
+
+    /**
+     * Update survival team status (alive/eliminated)
+     * @param {boolean} eliminated
+     */
+    updateSurvivalTeamStatus(eliminated) {
+        const el = document.getElementById('survival-team-status');
+        if (!el) return;
+        if (eliminated) {
+            el.textContent = 'ELIMINATED - You have been snowed out!';
+            el.className = 'survival-team-status eliminated';
+        } else {
+            el.textContent = 'ALIVE - Stay with the herd!';
+            el.className = 'survival-team-status alive';
+        }
+    },
+
+    /**
+     * Reset survival vote buttons
+     */
+    resetSurvivalVoteButtons() {
+        const btnA = document.getElementById('survival-vote-a');
+        const btnB = document.getElementById('survival-vote-b');
+        if (btnA) {
+            btnA.classList.remove('selected');
+            btnA.disabled = AppState.survivalEliminated;
+        }
+        if (btnB) {
+            btnB.classList.remove('selected');
+            btnB.disabled = AppState.survivalEliminated;
+        }
+    },
+
+    /**
+     * Select a survival vote button
+     * @param {string} vote - 'A' or 'B'
+     */
+    selectSurvivalVote(vote) {
+        const btnA = document.getElementById('survival-vote-a');
+        const btnB = document.getElementById('survival-vote-b');
+        if (btnA) btnA.classList.toggle('selected', vote === 'A');
+        if (btnB) btnB.classList.toggle('selected', vote === 'B');
     },
 
     /**
@@ -965,7 +918,7 @@ const UI = {
         correctLabels.forEach((label, index) => {
             const li = document.createElement('li');
             li.className = 'timeline-item timeline-item--revealed';
-            li.innerHTML = `<span style="color: var(--terminal-green-dim); margin-right: 0.5rem;">${index + 1}.</span> ${label}`;
+            li.innerHTML = `<span style="color: var(--baby-blue-dim); margin-right: 0.5rem;">${index + 1}.</span> ${label}`;
             li.style.cursor = 'default';
             list.appendChild(li);
         });
@@ -973,11 +926,11 @@ const UI = {
         // Update status message
         const isWinner = winnerTeamId === AppState.teamId;
         if (isWinner) {
-            UI.updateTimelineStatus('CORRECT ORDER REVEALED - You solved it!', 'var(--terminal-green)');
+            UI.updateTimelineStatus('CORRECT ORDER REVEALED - You solved it!', 'var(--baby-blue)');
         } else if (winnerTeamId) {
             UI.updateTimelineStatus('CORRECT ORDER REVEALED', 'var(--terminal-amber)');
         } else {
-            UI.updateTimelineStatus('CORRECT ORDER REVEALED', 'var(--terminal-green)');
+            UI.updateTimelineStatus('CORRECT ORDER REVEALED', 'var(--baby-blue)');
         }
 
         AppState.timelineCompleted = true;
@@ -1078,6 +1031,8 @@ const SocketHandlers = {
         }
 
         AppState.socket = io();
+        // Expose socket globally for screensaver and other shared components
+        window.socket = AppState.socket;
 
         // Connection events
         AppState.socket.on('connect', () => {
@@ -1204,8 +1159,9 @@ const SocketHandlers = {
         });
 
         AppState.socket.on('submission_status', (data) => {
-            // Don't overwrite user's own submission confirmation
-            if (!AppState.triviaSubmitted) {
+            // Don't overwrite user's own submission confirmation or recent teammate submission
+            const timeSinceTeamSubmission = Date.now() - AppState.lastTeamSubmissionTime;
+            if (!AppState.triviaSubmitted && timeSinceTeamSubmission > 3000) {
                 UI.updateTriviaStatus(`${data.submitted_count}/${data.total_teams} teams submitted`);
             }
         });
@@ -1240,16 +1196,40 @@ const SocketHandlers = {
             Haptics.warning();
         });
 
+        // Pixel Perfect events
+        AppState.socket.on('pixelperfect_locked', (data) => {
+            if (data.locked_by_team_id === AppState.teamId) {
+                UI.updatePixelPerfectBuzzer('locked-self');
+            } else {
+                UI.updatePixelPerfectBuzzer('locked-other', data.locked_by_team_name);
+                Win98Dialog.showBuzzerLock(data.locked_by_team_name);
+            }
+        });
+
+        AppState.socket.on('pixelperfect_reset', (data) => {
+            // Only reset if this team wasn't frozen (freeze is handled separately)
+            if (data.result === 'correct' || data.previous_team_id !== AppState.teamId) {
+                UI.updatePixelPerfectBuzzer('active');
+            }
+        });
+
+        AppState.socket.on('pixelperfect_lockout', (data) => {
+            const freezeSeconds = data.freeze_seconds || 10;
+            UI.startPixelPerfectFreeze(freezeSeconds);
+            Win98Dialog.showFreeze(freezeSeconds);
+            Haptics.warning();
+        });
+
         // Timeline events
         AppState.socket.on('timeline_result', (data) => {
             if (data.correct) {
                 const msg = data.player_name
-                    ? `${data.player_name} RESTORED THE TIMELINE! +${data.points_awarded} points`
+                    ? `${data.player_name} put the milestones in order! +${data.points_awarded} points`
                     : `TIMELINE RESTORED! +${data.points_awarded} points`;
-                UI.updateTimelineStatus(msg, 'var(--terminal-green)');
+                UI.updateTimelineStatus(msg, 'var(--baby-blue)');
                 Haptics.success();
             } else {
-                UI.updateTimelineStatus(data.message || 'INDEX ERROR - Try again', 'var(--terminal-red)');
+                UI.updateTimelineStatus(data.message || 'Incorrect! - Try again', 'var(--terminal-red)');
                 Haptics.error();
             }
         });
@@ -1283,6 +1263,8 @@ const SocketHandlers = {
             console.log('[Socket] Answer submitted by teammate:', data.player_name);
             // Show who submitted, but keep inputs enabled so team can resubmit to update answer
             UI.updateTriviaStatus(`${data.player_name} submitted: "${data.answer_text}" (can still change)`);
+            // Set timestamp to prevent submission_status from immediately overwriting this message
+            AppState.lastTeamSubmissionTime = Date.now();
         });
 
         // Picture Guess events
@@ -1311,6 +1293,40 @@ const SocketHandlers = {
         AppState.socket.on('picture_guess_submitted', (data) => {
             console.log('[Socket] Picture guess submitted by teammate:', data.player_name);
             UI.updatePictureGuessStatus(`${data.player_name} submitted: "${data.guess_text}" (can still change)`);
+            // Set timestamp to prevent submission_status from immediately overwriting this message
+            AppState.lastTeamSubmissionTime = Date.now();
+        });
+
+        // Price Guess events
+        AppState.socket.on('price_guess_result', (data) => {
+            if (data.winner) {
+                UI.updatePriceGuessStatus(`Winner! Actual price: $${data.actual_price.toFixed(2)}`, true);
+                GlitchEffects.trigger('minor');
+                Haptics.success();
+            } else if (data.bust) {
+                UI.updatePriceGuessStatus(`Bust! You went over. Actual price: $${data.actual_price.toFixed(2)}`, true);
+                Win98Dialog.showWrongAnswer('You went over the price!');
+                Haptics.error();
+            } else {
+                UI.updatePriceGuessStatus(`Close! Actual price: $${data.actual_price.toFixed(2)}`, true);
+            }
+        });
+
+        AppState.socket.on('price_guess_sync', (data) => {
+            console.log('[Socket] Price guess sync from teammate:', data.from_player_name);
+            const guessInput = document.getElementById('priceguess-answer');
+            if (guessInput) {
+                AppState.syncingFromRemote = true;
+                guessInput.value = data.text;
+                AppState.syncingFromRemote = false;
+            }
+        });
+
+        AppState.socket.on('price_guess_submitted', (data) => {
+            console.log('[Socket] Price guess submitted by teammate:', data.player_name);
+            UI.updatePriceGuessStatus(`${data.player_name} submitted: $${parseFloat(data.guess_amount).toFixed(2)} (can still change)`);
+            // Set timestamp to prevent submission_status from immediately overwriting this message
+            AppState.lastTeamSubmissionTime = Date.now();
         });
 
         // Minesweeper events
@@ -1327,6 +1343,70 @@ const SocketHandlers = {
                 UI.updateMinesweeperStatus(false);
                 BSOD.show(AppState.teamName, 3000);
             }
+        });
+
+        // Survival events
+        AppState.socket.on('survival_vote_confirmed', (data) => {
+            AppState.survivalVote = data.vote;
+            UI.selectSurvivalVote(data.vote);
+            UI.updateSurvivalStatus('Vote submitted! Waiting for others...');
+            Haptics.confirm();
+        });
+
+        AppState.socket.on('survival_vote_update', (data) => {
+            // Could show anonymous vote counts if desired
+            console.log('[Socket] Survival vote update:', data);
+        });
+
+        AppState.socket.on('survival_reveal', (data) => {
+            const myVote = AppState.survivalVote;
+            const wasEliminated = data.newly_eliminated?.includes(AppState.teamId);
+
+            if (data.is_tie) {
+                UI.updateSurvivalStatus('TIE! No one eliminated this round.');
+                Haptics.success();
+            } else if (wasEliminated) {
+                AppState.survivalEliminated = true;
+                UI.updateSurvivalTeamStatus(true);
+                UI.updateSurvivalStatus('You voted with the minority! ELIMINATED!');
+                BSOD.show(AppState.teamName, 3000);
+                Haptics.impact();
+            } else {
+                UI.updateSurvivalStatus(`Safe! You stayed with the herd. ${data.remaining_count} teams remain.`);
+                Haptics.success();
+            }
+        });
+
+        AppState.socket.on('survival_eliminated', (data) => {
+            AppState.survivalEliminated = true;
+            UI.updateSurvivalTeamStatus(true);
+            UI.resetSurvivalVoteButtons();
+        });
+
+        AppState.socket.on('survival_round_reset', (data) => {
+            // New round starting
+            AppState.survivalVote = null;
+            AppState.survivalEliminated = data.eliminated_teams?.includes(AppState.teamId) || false;
+            const questionEl = document.getElementById('survival-question');
+            if (questionEl && data.question_text) {
+                questionEl.textContent = data.question_text;
+            }
+            const labelA = document.getElementById('survival-label-a');
+            const labelB = document.getElementById('survival-label-b');
+            if (labelA && data.option_a) labelA.textContent = data.option_a;
+            if (labelB && data.option_b) labelB.textContent = data.option_b;
+            UI.updateSurvivalStatus('');
+            UI.updateSurvivalTeamStatus(AppState.survivalEliminated);
+            UI.resetSurvivalVoteButtons();
+            Haptics.stateChange();
+        });
+
+        AppState.socket.on('survival_revive_all', (data) => {
+            AppState.survivalEliminated = false;
+            AppState.survivalVote = null;
+            UI.updateSurvivalTeamStatus(false);
+            UI.resetSurvivalVoteButtons();
+            UI.updateSurvivalStatus('All teams revived!');
         });
 
         // Admin actions
@@ -1428,6 +1508,46 @@ const SocketHandlers = {
                 if (picGuessInput) picGuessInput.value = '';
                 // Track current picture ID for submission
                 AppState.currentPictureId = data.state_data?.picture_id || null;
+                break;
+
+            case 'PIXELPERFECT':
+                // Reset buzzer state for pixel perfect
+                UI.updatePixelPerfectBuzzer('active');
+                AppState.pixelperfectLocked = false;
+                break;
+
+            case 'PRICEGUESS':
+                if (data.state_data?.hint) {
+                    UI.updatePriceGuessHint(data.state_data.hint);
+                } else {
+                    UI.updatePriceGuessHint('');
+                }
+                UI.updatePriceGuessStatus('', false);
+                const priceGuessInput = document.getElementById('priceguess-answer');
+                if (priceGuessInput) priceGuessInput.value = '';
+                // Track current product ID for submission
+                AppState.currentProductId = data.state_data?.product_id || null;
+                break;
+
+            case 'SURVIVAL':
+                // Reset survival vote state
+                AppState.survivalVote = null;
+                AppState.survivalEliminated = data.state_data?.eliminated_teams?.includes(AppState.teamId) || false;
+                if (data.state_data?.question_text) {
+                    const questionEl = document.getElementById('survival-question');
+                    if (questionEl) questionEl.textContent = data.state_data.question_text;
+                }
+                if (data.state_data?.option_a) {
+                    const labelA = document.getElementById('survival-label-a');
+                    if (labelA) labelA.textContent = data.state_data.option_a;
+                }
+                if (data.state_data?.option_b) {
+                    const labelB = document.getElementById('survival-label-b');
+                    if (labelB) labelB.textContent = data.state_data.option_b;
+                }
+                UI.updateSurvivalStatus('');
+                UI.updateSurvivalTeamStatus(AppState.survivalEliminated);
+                UI.resetSurvivalVoteButtons();
                 break;
 
             case 'VICTORY':
@@ -1609,9 +1729,9 @@ const MockSocket = {
     mockTimelineSubmit() {
         const correct = Math.random() > 0.7;
         if (correct) {
-            UI.updateTimelineStatus('TIMELINE RESTORED! +100 points', 'var(--terminal-green)');
+            UI.updateTimelineStatus('TIMELINE RESTORED! +100 points', 'var(--baby-blue)');
         } else {
-            UI.updateTimelineStatus('INDEX ERROR - Try again', 'var(--terminal-red)');
+            UI.updateTimelineStatus('Incorrect! - Try again', 'var(--terminal-red)');
         }
     }
 };
@@ -1723,6 +1843,36 @@ function initEventBindings() {
         });
     }
 
+    // Price guess form
+    const priceGuessForm = document.getElementById('priceguess-form');
+    if (priceGuessForm) {
+        priceGuessForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const guessAmount = document.getElementById('priceguess-answer').value;
+            if (guessAmount && AppState.teamId) {
+                Haptics.confirm();
+                SocketHandlers.emit('submit_price_guess', {
+                    team_id: AppState.teamId,
+                    product_id: AppState.currentProductId,
+                    guess_amount: parseFloat(guessAmount)
+                });
+                UI.updatePriceGuessStatus(`Submitted: $${parseFloat(guessAmount).toFixed(2)} (can still change)`);
+            }
+        });
+    }
+
+    // Price guess answer input - sync typing to teammates
+    const priceGuessAnswer = document.getElementById('priceguess-answer');
+    if (priceGuessAnswer) {
+        priceGuessAnswer.addEventListener('input', (e) => {
+            if (AppState.syncingFromRemote) return;
+            clearTimeout(AppState.priceGuessTypingTimeout);
+            AppState.priceGuessTypingTimeout = setTimeout(() => {
+                SocketHandlers.emit('price_guess_typing', { text: e.target.value });
+            }, 300);
+        });
+    }
+
     // Buzzer button
     const buzzerBtn = document.getElementById('buzzer-button');
     if (buzzerBtn) {
@@ -1730,6 +1880,20 @@ function initEventBindings() {
             if (!AppState.buzzerLocked && AppState.teamId) {
                 Haptics.buzzer();
                 SocketHandlers.emit('press_buzzer', {
+                    team_id: AppState.teamId,
+                    timestamp: Date.now()
+                });
+            }
+        });
+    }
+
+    // Pixel Perfect buzzer button
+    const pixelperfectBuzzerBtn = document.getElementById('pixelperfect-buzzer-button');
+    if (pixelperfectBuzzerBtn) {
+        pixelperfectBuzzerBtn.addEventListener('click', () => {
+            if (!AppState.pixelperfectLocked && AppState.teamId) {
+                Haptics.buzzer();
+                SocketHandlers.emit('press_pixelperfect_buzzer', {
                     team_id: AppState.teamId,
                     timestamp: Date.now()
                 });
@@ -1752,6 +1916,32 @@ function initEventBindings() {
                     order: AppState.timelineOrder
                 });
             }
+        });
+    }
+
+    // Survival vote buttons
+    const survivalVoteA = document.getElementById('survival-vote-a');
+    const survivalVoteB = document.getElementById('survival-vote-b');
+
+    if (survivalVoteA) {
+        survivalVoteA.addEventListener('click', () => {
+            if (AppState.survivalEliminated || AppState.survivalVote) return;
+            Haptics.tap();
+            SocketHandlers.emit('survival_vote', {
+                team_id: AppState.teamId,
+                vote: 'A'
+            });
+        });
+    }
+
+    if (survivalVoteB) {
+        survivalVoteB.addEventListener('click', () => {
+            if (AppState.survivalEliminated || AppState.survivalVote) return;
+            Haptics.tap();
+            SocketHandlers.emit('survival_vote', {
+                team_id: AppState.teamId,
+                vote: 'B'
+            });
         });
     }
 }
@@ -1965,7 +2155,7 @@ function updateReactionBarVisibility(state) {
     const chatBar = document.getElementById('chat-input-bar');
 
     // Show reaction and chat bars during gameplay, hide during registration
-    const showStates = ['LOBBY', 'MACGYVER', 'TRIVIA', 'TIMER', 'BUZZER', 'TIMELINE', 'MINESWEEPER', 'PICTUREGUESS', 'VICTORY'];
+    const showStates = ['LOBBY', 'MACGYVER', 'TRIVIA', 'TIMER', 'BUZZER', 'TIMELINE', 'MINESWEEPER', 'PICTUREGUESS', 'PIXELPERFECT', 'PRICEGUESS', 'SURVIVAL', 'VICTORY'];
 
     if (showStates.includes(state) && AppState.isRegistered) {
         if (bar) bar.classList.remove('hidden');

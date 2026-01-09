@@ -1,0 +1,36 @@
+---
+/**
+ * MobileLayout.astro
+ * Mobile controller variant of GameLayout.
+ * Provides mobile-specific header (MobileHeader), overlays, and scripts.
+ */
+import GameLayout from './GameLayout.astro';
+import MobileHeader from '../components/mobile/MobileHeader.astro';
+import InteractionOverlay from '../components/mobile/InteractionOverlay.astro';
+import '../styles/mobile.css';
+import '../styles/frost.css';
+
+interface Props {
+    title?: string;
+}
+
+const { title = 'The Guest Book' } = Astro.props;
+---
+
+<GameLayout title={title} variant="mobile">
+    <!-- Mobile Header -->
+    <MobileHeader slot="header" />
+
+    <!-- Main Stage Content (passed through from page) -->
+    <slot />
+
+    <!-- Mobile Overlays -->
+    <InteractionOverlay slot="overlays" />
+
+    <!-- Mobile Scripts -->
+    <Fragment slot="scripts">
+        <script is:inline src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+        <script is:inline src="/js/fairy-dust.js" defer></script>
+        <script is:inline src="/js/client.js" defer></script>
+    </Fragment>
+</GameLayout>

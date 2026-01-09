@@ -1,0 +1,221 @@
+---
+/**
+ * PriceGuessView.astro - Immersive TV display for price guessing games
+ * Features price tag overlay and sorted number line reveal
+ * HUD elements handled by TVHud + MoonTimer
+ */
+import ViewContainer from '../shared/ViewContainer.astro';
+---
+<ViewContainer id="view-priceguess">
+    <!-- STAGE ONLY - HUD and atmosphere handled by layout -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <p class="stage-subtitle">Chapter 5: Stocking the Burrow</p>
+            <h1 class="stage-title fairy-title--glow animate-breathe">The Price is Right</h1>
+
+            <!-- Product display container with price tag overlay -->
+            <div id="priceguess-image-container" class="tv-image-container priceguess-product-container glass-panel--glowing animate-fade-in mt-3">
+                <img id="priceguess-image" src="" alt="Mystery Product" class="hidden image-clearing">
+                <p id="priceguess-no-image" class="stage-narrator animate-breathe">Preparing the product...</p>
+
+                <!-- Price Tag Overlay -->
+                <div id="priceguess-price-tag" class="price-tag">
+                    <span class="price-tag-label">Price</span>
+                    <span id="priceguess-price-value" class="price-tag-value">???</span>
+                </div>
+            </div>
+
+            <!-- Hint display -->
+            <p id="priceguess-hint-tv" class="stage-narrator mt-2">
+                <!-- Hint text injected here -->
+            </p>
+
+            <div id="priceguess-submission-status" class="stage-narrator mt-2">
+                <!-- "3/4 families submitted" -->
+            </div>
+
+            <!-- Answer reveal -->
+            <div id="priceguess-answer-reveal" class="mt-3 hidden">
+                <div class="chapter-star">
+                    <span class="animate-twinkle">*</span>
+                </div>
+                <p class="tv-label-text">The Actual Price:</p>
+                <p id="priceguess-correct-answer" class="stage-reveal glow-baby-blue-intense animate-float"></p>
+            </div>
+
+            <!-- Team guesses - sorted number line display -->
+            <div id="priceguess-team-guesses" class="tv-team-answers ethereal-scroll mt-3 hidden">
+                <div class="priceguess-number-line">
+                    <!-- Sorted guesses injected here as priceguess-guess-row elements -->
+                </div>
+            </div>
+        </div>
+    </div>
+</ViewContainer>
+
+<style>
+/* Product container extends tv-image-container */
+.priceguess-product-container {
+    position: relative;
+}
+
+/* Price Tag Overlay */
+.price-tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, var(--gold-candle) 0%, var(--gold-ember) 100%);
+    border: 3px solid var(--gold-ember);
+    border-radius: 8px;
+    padding: 8px 16px;
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transform: rotate(5deg);
+    z-index: 10;
+    text-align: center;
+    min-width: 80px;
+}
+
+.price-tag::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--gold-ember);
+    border-radius: 50%;
+    border: 2px solid var(--void-dusk);
+}
+
+.price-tag-label {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: bold;
+    color: var(--void-twilight);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.price-tag-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--void-deep);
+    font-family: var(--font-story);
+}
+
+/* Number Line / Sorted Guesses Display */
+.priceguess-number-line {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    background: rgba(15, 40, 71, 0.3);
+    border-radius: 8px;
+}
+
+.priceguess-guess-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    border-left: 5px solid var(--ice-soft);
+    transition: all 0.3s ease;
+}
+
+.priceguess-guess-row .team-name {
+    font-weight: bold;
+    font-size: var(--tv-text-small);
+    color: var(--void-twilight);
+}
+
+.priceguess-guess-row .guess-amount {
+    font-family: var(--font-story);
+    font-size: var(--tv-text-body);
+    font-weight: bold;
+    color: var(--void-twilight);
+}
+
+/* Winner - Closest without going over */
+.priceguess-guess-row.winner {
+    background: linear-gradient(135deg, rgba(127, 212, 163, 0.3) 0%, rgba(127, 212, 163, 0.2) 100%);
+    border-left-color: var(--status-complete);
+    box-shadow: 0 0 12px rgba(127, 212, 163, 0.4);
+}
+
+.priceguess-guess-row.winner .team-name,
+.priceguess-guess-row.winner .guess-amount {
+    color: var(--void-deep);
+}
+
+.priceguess-guess-row.winner::after {
+    content: 'WINNER!';
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: var(--status-complete);
+    margin-left: 12px;
+    padding: 2px 8px;
+    background: rgba(127, 212, 163, 0.2);
+    border-radius: 4px;
+}
+
+/* Bust - Over the price */
+.priceguess-guess-row.bust {
+    background: linear-gradient(135deg, rgba(242, 139, 130, 0.3) 0%, rgba(242, 139, 130, 0.2) 100%);
+    border-left-color: var(--status-oops);
+    opacity: 0.85;
+}
+
+.priceguess-guess-row.bust .team-name,
+.priceguess-guess-row.bust .guess-amount {
+    color: var(--void-twilight);
+    text-decoration: line-through;
+}
+
+.priceguess-guess-row.bust::after {
+    content: 'BUST!';
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: var(--status-oops);
+    margin-left: 12px;
+    padding: 2px 8px;
+    background: rgba(242, 139, 130, 0.2);
+    border-radius: 4px;
+}
+
+/* Valid guesses (under price but not winner) */
+.priceguess-guess-row.valid {
+    border-left-color: var(--ice-glow);
+}
+
+/* Actual price indicator line */
+.priceguess-actual-price-line {
+    display: flex;
+    align-items: center;
+    padding: 8px 20px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 229, 180, 0.3) 50%, transparent 100%);
+    border-top: 2px dashed var(--gold-candle);
+    border-bottom: 2px dashed var(--gold-candle);
+    margin: 8px 0;
+}
+
+.priceguess-actual-price-line .label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--gold-ember);
+    text-transform: uppercase;
+    margin-right: 12px;
+}
+
+.priceguess-actual-price-line .amount {
+    font-family: var(--font-story);
+    font-size: var(--tv-text-small);
+    font-weight: bold;
+    color: var(--gold-ember);
+}
+</style>

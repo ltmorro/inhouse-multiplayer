@@ -1,0 +1,248 @@
+---
+/**
+ * PixelPerfectView.astro - Immersive TV display for blur-to-clear picture game
+ * Image clears from pixelated/blurred to sharp over time
+ * HUD elements handled by TVHud + MoonTimer
+ */
+import ViewContainer from '../shared/ViewContainer.astro';
+---
+<ViewContainer id="view-pixelperfect">
+    <!-- STAGE ONLY - HUD and atmosphere handled by layout -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <p class="stage-subtitle">Chapter 4: Through the Frosty Window</p>
+            <h1 class="stage-title fairy-title--glow animate-breathe">Peek-a-Boo Puzzle</h1>
+
+            <!-- Picture display container -->
+            <div id="pixelperfect-image-container" class="tv-image-container glass-panel--glowing mt-3">
+                <img id="pixel-image" src="" alt="Mystery Picture" class="hidden pixelated">
+                <p id="pixelperfect-no-image" class="stage-narrator animate-breathe">Preparing the picture...</p>
+            </div>
+
+            <!-- Buzzer Status -->
+            <div id="pixelperfect-locked-display" class="mt-3 hidden locked-display-glow">
+                <p class="tv-label-text">Locked by:</p>
+                <p id="pixelperfect-locked-team" class="stage-reveal text-glow-baby-blue"></p>
+            </div>
+            <div id="pixelperfect-ready-display" class="mt-3">
+                <p class="tv-active-indicator tv-ready-indicator animate-twinkle">Buzzer Ready</p>
+            </div>
+
+            <!-- Paused indicator -->
+            <div id="pixelperfect-paused-indicator" class="tv-paused hidden">
+                [ PAUSED ]
+            </div>
+
+            <!-- Answer reveal -->
+            <div id="pixelperfect-answer-reveal" class="mt-3 hidden">
+                <div class="chapter-star">
+                    <span class="animate-twinkle">*</span>
+                </div>
+                <p class="tv-label-text">The Answer:</p>
+                <p id="pixelperfect-correct-answer" class="stage-reveal glow-baby-blue-intense animate-float"></p>
+            </div>
+        </div>
+    </div>
+</ViewContainer>
+
+<style>
+/* Pixelated/blurred image styles - game-specific */
+#pixel-image {
+    filter: blur(20px);
+    transition: filter 30s linear;
+}
+
+#pixel-image.clearing {
+    filter: blur(0px);
+}
+
+#pixel-image.paused {
+    transition: none;
+}
+
+/* Optional 8-bit pixelated aesthetic */
+.pixelated {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+</style>
+
+<script>
+/**
+ * Pixel Perfect View Controller
+ * Manages the blur animation with pause/resume functionality
+ */
+(function() {
+    let animationStartTime = null;
+    let elapsedBeforePause = 0;
+    let isPaused = false;
+    let timerInterval = null;
+    let remainingTime = 30;
+    const TOTAL_DURATION = 30; // seconds
+
+    const elements = {
+        image: null,
+        timer: null,
+        pausedIndicator: null,
+        lockedDisplay: null,
+        readyDisplay: null,
+        lockedTeam: null
+    };
+
+    function initElements() {
+        elements.image = document.getElementById('pixel-image');
+        elements.timer = document.getElementById('pixelperfect-timer');
+        elements.pausedIndicator = document.getElementById('pixelperfect-paused-indicator');
+        elements.lockedDisplay = document.getElementById('pixelperfect-locked-display');
+        elements.readyDisplay = document.getElementById('pixelperfect-ready-display');
+        elements.lockedTeam = document.getElementById('pixelperfect-locked-team');
+    }
+
+    function startClearingAnimation() {
+        if (!elements.image) return;
+
+        // Reset state
+        isPaused = false;
+        elapsedBeforePause = 0;
+        remainingTime = TOTAL_DURATION;
+
+        // Remove paused class and add clearing class
+        elements.image.classList.remove('paused');
+        elements.image.classList.add('clearing');
+
+        animationStartTime = performance.now();
+        startTimer();
+    }
+
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+
+        timerInterval = setInterval(() => {
+            if (!isPaused && remainingTime > 0) {
+                remainingTime -= 1;
+                if (elements.timer) {
+                    elements.timer.textContent = Math.max(0, Math.round(remainingTime));
+                }
+
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                }
+            }
+        }, 1000);
+    }
+
+    function pauseAnimation() {
+        if (isPaused || !elements.image) return;
+
+        isPaused = true;
+
+        // Calculate how much time has elapsed
+        const now = performance.now();
+        elapsedBeforePause += (now - animationStartTime) / 1000;
+
+        // Get the current computed blur value and freeze it
+        const computedStyle = window.getComputedStyle(elements.image);
+        const currentFilter = computedStyle.filter;
+
+        // Add paused class to stop transition
+        elements.image.classList.add('paused');
+        elements.image.style.filter = currentFilter;
+
+        // Show paused indicator
+        if (elements.pausedIndicator) {
+            elements.pausedIndicator.classList.remove('hidden');
+        }
+    }
+
+    function resumeAnimation() {
+        if (!isPaused || !elements.image) return;
+
+        isPaused = false;
+
+        // Calculate remaining animation time
+        const remainingAnimationTime = Math.max(0, TOTAL_DURATION - elapsedBeforePause);
+
+        // Remove paused class and set new transition duration for remaining time
+        elements.image.classList.remove('paused');
+        elements.image.style.transition = `filter ${remainingAnimationTime}s linear`;
+        elements.image.style.filter = 'blur(0px)';
+
+        // Reset animation start time
+        animationStartTime = performance.now();
+
+        // Hide paused indicator
+        if (elements.pausedIndicator) {
+            elements.pausedIndicator.classList.add('hidden');
+        }
+    }
+
+    function showBuzzerLocked(teamName) {
+        if (elements.lockedTeam) {
+            elements.lockedTeam.textContent = teamName;
+        }
+        if (elements.lockedDisplay) {
+            elements.lockedDisplay.classList.remove('hidden');
+        }
+        if (elements.readyDisplay) {
+            elements.readyDisplay.classList.add('hidden');
+        }
+
+        // Pause the animation when buzzer is locked
+        pauseAnimation();
+    }
+
+    function showBuzzerReady() {
+        if (elements.lockedDisplay) {
+            elements.lockedDisplay.classList.add('hidden');
+        }
+        if (elements.readyDisplay) {
+            elements.readyDisplay.classList.remove('hidden');
+        }
+
+        // Resume animation when buzzer unlocks (wrong answer)
+        resumeAnimation();
+    }
+
+    function resetView() {
+        if (timerInterval) clearInterval(timerInterval);
+
+        if (elements.image) {
+            elements.image.classList.remove('clearing', 'paused');
+            elements.image.style.filter = 'blur(20px)';
+            elements.image.style.transition = 'filter 30s linear';
+        }
+
+        if (elements.timer) {
+            elements.timer.textContent = '30';
+        }
+
+        if (elements.pausedIndicator) {
+            elements.pausedIndicator.classList.add('hidden');
+        }
+
+        remainingTime = TOTAL_DURATION;
+        elapsedBeforePause = 0;
+        isPaused = false;
+        animationStartTime = null;
+    }
+
+    // Expose functions globally for the main tv.js to call
+    window.pixelPerfectController = {
+        init: initElements,
+        start: startClearingAnimation,
+        pause: pauseAnimation,
+        resume: resumeAnimation,
+        showLocked: showBuzzerLocked,
+        showReady: showBuzzerReady,
+        reset: resetView
+    };
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initElements);
+    } else {
+        initElements();
+    }
+})();
+</script>

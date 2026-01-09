@@ -2,29 +2,70 @@
 import ViewContainer from '../shared/ViewContainer.astro';
 ---
 <ViewContainer id="view-team-created">
-    <div class="flex-grow flex-center flex-column text-center">
-        <h2 class="glow">FAMILY CREATED</h2>
-        <p class="mt-2">Share this code with your family:</p>
+    <div class="frost-viewport">
+        <header class="frost-header">
+            <p class="frost-header__chapter">Family Created!</p>
+            <h2 class="frost-header__title">Share Your Code</h2>
+        </header>
 
-        <div id="join-code-display" class="mt-3" style="font-size: 3rem; letter-spacing: 0.3em; font-weight: bold; padding: 1rem 2rem; border: 2px solid var(--terminal-green); background: rgba(0, 255, 65, 0.1);">
-            ----
-        </div>
+        <div class="frost-card frost-card--glow">
+            <p class="frost-card__instruction">Share this code with your family:</p>
 
-        <div class="mt-3" style="width: 100%; max-width: 320px;">
-            <p style="color: var(--terminal-amber); font-size: 0.85rem; margin-bottom: 0.5rem;">SELECT FAMILY AVATAR:</p>
-            <div class="avatar-grid" id="avatar-grid">
-                <!-- Avatars populated by client.js -->
+            <div id="join-code-display" class="team-code">
+                ----
+            </div>
+
+            <div class="avatar-section">
+                <p class="frost-card__instruction" style="font-size: 0.8rem;">Select Family Avatar:</p>
+                <div class="avatar-grid" id="avatar-grid">
+                    <!-- Avatars populated by client.js -->
+                </div>
+            </div>
+
+            <div id="players-list" class="players-list">
+                <!-- Player list will be injected here -->
             </div>
         </div>
 
-        <p class="mt-2" style="color: var(--terminal-green-dim);">Waiting for family members...</p>
-
-        <div id="players-list" class="mt-2" style="text-align: left;">
-            <!-- Player list will be injected here -->
+        <div class="frost-actions">
+            <p class="frost-status">Waiting for family members...</p>
+            <button id="start-game-btn" class="frost-btn frost-btn--enchanted hidden" onclick="proceedToLobby()">
+                Proceed to Lobby
+            </button>
         </div>
-
-        <button id="start-game-btn" class="terminal-btn terminal-btn--primary mt-3" style="display: none;" onclick="proceedToLobby()">
-            PROCEED TO LOBBY
-        </button>
     </div>
 </ViewContainer>
+
+<style>
+.team-code {
+    font-size: 2.5rem;
+    letter-spacing: 0.3em;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    margin: 1rem 0;
+    border: 2px solid rgba(77, 135, 191, 0.5);
+    border-radius: 12px;
+    background: rgba(77, 135, 191, 0.15);
+    color: #ffffff;
+    box-shadow: 0 0 25px rgba(77, 135, 191, 0.2);
+}
+
+.avatar-section {
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.avatar-grid {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.players-list {
+    margin-top: 1rem;
+    text-align: left;
+    width: 100%;
+}
+</style>

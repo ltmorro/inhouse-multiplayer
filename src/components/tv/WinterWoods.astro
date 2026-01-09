@@ -1,0 +1,149 @@
+---
+/**
+ * WinterWoods.astro
+ * Fix: Removed 'currentColor' conflict so gradients render correctly.
+ */
+---
+<div class="winter-woods" id="winter-woods">
+    <svg class="winter-woods__svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMax slice">
+        <defs>
+            <linearGradient id="treeFar" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#8FB8DE" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="#4D87BF" stop-opacity="0.8" />
+            </linearGradient>
+
+            <linearGradient id="treeMid" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#3A6D99" />
+                <stop offset="100%" stop-color="#1A3A5A" />
+            </linearGradient>
+
+            <linearGradient id="treeNear" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#2C5275" />
+                <stop offset="100%" stop-color="#050E1A" />
+            </linearGradient>
+
+            <symbol id="layered-tree" viewBox="0 0 100 200">
+                <rect x="42" y="150" width="16" height="50" fill="#050E1A" />
+
+                <path d="M10,170 L50,80 L90,170 Q50,185 10,170 Z" />
+                <path d="M15,120 L50,40 L85,120 Q50,135 15,120 Z" />
+                <path d="M25,70 L50,0 L75,70 Q50,80 25,70 Z" />
+            </symbol>
+        </defs>
+
+        <path d="M0,950 Q960,850 1920,950 L1920,1080 L0,1080 Z" fill="url(#treeNear)" />
+
+        <g class="layer layer--far" opacity="0.8">
+            <use href="#layered-tree" x="-20" y="650" width="100" height="200" fill="url(#treeFar)" />
+            <use href="#layered-tree" x="50" y="620" width="120" height="240" fill="url(#treeFar)" />
+            <use href="#layered-tree" x="140" y="660" width="90" height="180" fill="url(#treeFar)" />
+            <use href="#layered-tree" x="220" y="630" width="110" height="220" fill="url(#treeFar)" />
+            <use href="#layered-tree" x="310" y="670" width="95" height="190" fill="url(#treeFar)" />
+
+            <use href="#layered-tree" x="450" y="610" width="130" height="260" fill="url(#treeFar)" />
+            <!--<use href="#layered-tree" x="550" y="650" width="100" height="200" fill="url(#treeFar)" />-->
+            <!--<use href="#layered-tree" x="630" y="630" width="115" height="230" fill="url(#treeFar)" />-->
+            <!--<use href="#layered-tree" x="720" y="680" width="85" height="170" fill="url(#treeFar)" />-->
+
+            <!--<use href="#layered-tree" x="850" y="600" width="140" height="280" fill="url(#treeFar)" />-->
+            <!--<use href="#layered-tree" x="960" y="640" width="110" height="220" fill="url(#treeFar)" />-->
+            <!--<use href="#layered-tree" x="1050" y="660" width="90" height="180" fill="url(#treeFar)" />-->
+
+            <!--<use href="#layered-tree" x="1180" y="620" width="125" height="250" fill="url(#treeFar)" />-->
+            <!--<use href="#layered-tree" x="1280" y="650" width="100" height="200" fill="url(#treeFar)" />-->
+            <use href="#layered-tree" x="1360" y="630" width="115" height="230" fill="url(#treeFar)" />
+
+            <use href="#layered-tree" x="1480" y="670" width="90" height="180" fill="url(#treeFar)" />
+            <use href="#layered-tree" x="1560" y="610" width="130" height="260" fill="url(#treeFar)" />
+            <use href="#layered-tree" x="1680" y="650" width="100" height="200" fill="url(#treeFar)" />
+            <use href="#layered-tree" x="1760" y="630" width="110" height="220" fill="url(#treeFar)" />
+            <use href="#layered-tree" x="1850" y="660" width="95" height="190" fill="url(#treeFar)" />
+        </g>
+
+        <g class="layer layer--mid">
+            <use href="#layered-tree" x="-50" y="550" width="300" height="600" fill="url(#treeMid)" />
+            <use href="#layered-tree" x="180" y="650" width="200" height="400" fill="url(#treeMid)" />
+            <use href="#layered-tree" x="350" y="600" width="240" height="480" fill="url(#treeMid)" />
+
+            <!--<use href="#layered-tree" x="800" y="680" width="180" height="360" fill="url(#treeMid)" />-->
+
+            <use href="#layered-tree" x="1250" y="620" width="220" height="440" fill="url(#treeMid)" />
+            <use href="#layered-tree" x="1450" y="580" width="260" height="520" fill="url(#treeMid)" />
+            <use href="#layered-tree" x="1700" y="500" width="350" height="700" fill="url(#treeMid)" />
+        </g>
+
+        <g class="layer layer--near">
+            <use href="#layered-tree" x="-150" y="400" width="500" height="1000" fill="url(#treeNear)" />
+            <use href="#layered-tree" x="250" y="750" width="300" height="600" fill="url(#treeNear)" />
+
+            <use href="#layered-tree" x="1550" y="650" width="350" height="700" fill="url(#treeNear)" />
+            <use href="#layered-tree" x="1650" y="300" width="600" height="1200" fill="url(#treeNear)" />
+        </g>
+
+        <g class="snow-layer" fill="#FFF">
+            <circle cx="200" cy="0" r="3" class="snow-flake s-1" />
+            <circle cx="500" cy="0" r="2" class="snow-flake s-2" />
+            <circle cx="900" cy="0" r="4" class="snow-flake s-3" />
+            <circle cx="1200" cy="0" r="2.5" class="snow-flake s-1" />
+            <circle cx="1600" cy="0" r="3" class="snow-flake s-2" />
+            <circle cx="300" cy="0" r="2" class="snow-flake s-3" />
+            <circle cx="1400" cy="0" r="3.5" class="snow-flake s-1" />
+            <circle cx="700" cy="0" r="2" class="snow-flake s-2" />
+            <circle cx="1000" cy="0" r="3" class="snow-flake s-3" />
+        </g>
+    </svg>
+
+    <div class="winter-woods__fog"></div>
+</div>
+
+<style>
+.winter-woods {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70vh;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.winter-woods__svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Animations */
+.layer--far { animation: sway 20s ease-in-out infinite alternate; transform-origin: bottom center; }
+.layer--mid { animation: sway 15s ease-in-out infinite alternate-reverse; transform-origin: bottom center; }
+.layer--near { animation: sway 25s ease-in-out infinite alternate; transform-origin: bottom center; }
+
+@keyframes sway {
+    0% { transform: translateX(0) rotate(0deg); }
+    100% { transform: translateX(10px) rotate(0.5deg); }
+}
+
+.snow-flake { opacity: 0.8; }
+.s-1 { animation: fall 10s linear infinite; }
+.s-2 { animation: fall 15s linear infinite; animation-delay: -5s; }
+.s-3 { animation: fall 12s linear infinite; animation-delay: -2s; }
+
+@keyframes fall {
+    0% { transform: translateY(-100px); opacity: 0; }
+    10% { opacity: 0.8; }
+    100% { transform: translateY(1100px) translateX(50px); opacity: 0; }
+}
+
+.winter-woods__fog {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: radial-gradient(circle at 50% 100%, rgba(77, 135, 191, 0.1) 0%, transparent 70%);
+    mix-blend-mode: screen;
+}
+</style>

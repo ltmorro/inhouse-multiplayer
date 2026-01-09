@@ -1,0 +1,76 @@
+---
+/**
+ * ChapterHeader.astro
+ * Storybook-style chapter header with decorative flourishes
+ * Used at the top of game views for narrative framing
+ */
+interface Props {
+    chapter?: string;      // e.g., "Chapter One"
+    title: string;         // Main title
+    narrator?: string;     // Italic narrator hook
+}
+
+const { chapter, title, narrator } = Astro.props;
+---
+
+<header class="chapter-header">
+    {chapter && (
+        <p class="chapter-header__chapter">
+            <span class="chapter-header__flourish">~</span>
+            {chapter}
+            <span class="chapter-header__flourish">~</span>
+        </p>
+    )}
+    <h2 class="chapter-header__title">{title}</h2>
+    {narrator && (
+        <p class="chapter-header__narrator">"{narrator}"</p>
+    )}
+</header>
+
+<style>
+.chapter-header {
+    text-align: center;
+    padding: 0.5rem 0 0.75rem;
+}
+
+.chapter-header__chapter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--narrator-gold, rgba(255, 229, 180, 0.9));
+    margin: 0 0 0.25rem;
+}
+
+.chapter-header__flourish {
+    font-size: 1rem;
+    opacity: 0.6;
+}
+
+.chapter-header__title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+    text-shadow:
+        0 2px 20px rgba(77, 135, 191, 0.4),
+        0 0 40px rgba(77, 135, 191, 0.2);
+    letter-spacing: 0.02em;
+}
+
+.chapter-header__narrator {
+    font-family: var(--font-serif);
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--narrator-gold, rgba(255, 229, 180, 0.8));
+    margin: 0.5rem 0 0;
+    text-shadow: var(--narrator-shadow, 0 0 20px rgba(255, 229, 180, 0.2));
+    opacity: 0.9;
+}
+</style>

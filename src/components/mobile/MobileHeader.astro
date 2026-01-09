@@ -1,17 +1,141 @@
 ---
+/**
+ * MobileHeader.astro
+ * Mobile status bar - Storybook Ribbon Banner
+ * Floats above the winter night with warm gold accents
+ */
 ---
-<div class="status-bar">
-    <div>
+<div class="storybook-status-bar">
+    <div class="storybook-status-bar__left">
         <span
             id="connection-indicator"
-            class="status-indicator status-indicator--disconnected"></span>
-        <span id="connection-status">SEARCHING...</span>
-    </div>
-    <div>
-        <span id="team-name-display">---</span>
-        <span
-            id="player-name-display"
-            style="color: var(--terminal-green-dim); margin-left: 0.5rem;"
+            class="storybook-status-bar__indicator storybook-status-bar__indicator--disconnected"
         ></span>
+        <span id="connection-status" class="storybook-status-bar__connection">Connecting...</span>
+    </div>
+    <div class="storybook-status-bar__right">
+        <span id="team-name-display" class="storybook-status-bar__team">---</span>
+        <span id="player-name-display" class="storybook-status-bar__player"></span>
     </div>
 </div>
+
+<style>
+.storybook-status-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 20px;
+    padding-top: calc(12px + env(safe-area-inset-top, 0));
+    background: linear-gradient(
+        180deg,
+        rgba(10, 22, 40, 0.95) 0%,
+        rgba(15, 40, 71, 0.9) 100%
+    );
+    border-bottom: 1px solid rgba(135, 206, 235, 0.15);
+    font-size: 0.85rem;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow:
+        0 2px 20px rgba(0, 0, 0, 0.3),
+        inset 0 -1px 0 rgba(255, 229, 180, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Baby blue accent line at top */
+.storybook-status-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(77, 135, 191, 0.4),
+        transparent
+    );
+}
+
+/* Gold accent line at bottom */
+.storybook-status-bar::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    right: 25%;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 229, 180, 0.3),
+        transparent
+    );
+}
+
+.storybook-status-bar__left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.storybook-status-bar__right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.storybook-status-bar__indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(135, 206, 235, 0.3);
+    transition: all 0.3s ease;
+}
+
+.storybook-status-bar__indicator--connected {
+    background-color: var(--baby-blue, #4D87BF);
+    box-shadow: 0 0 10px rgba(77, 135, 191, 0.6);
+    animation: gentle-pulse 3s ease-in-out infinite;
+}
+
+.storybook-status-bar__indicator--disconnected {
+    background-color: var(--status-oops, #F28B82);
+    box-shadow: 0 0 8px rgba(242, 139, 130, 0.5);
+}
+
+.storybook-status-bar__connection {
+    color: rgba(255, 255, 255, 0.6);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+}
+
+.storybook-status-bar__team {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    color: var(--ice-whisper, #E0F4FF);
+    font-size: 0.9rem;
+    text-shadow: 0 0 15px rgba(135, 206, 235, 0.2);
+}
+
+.storybook-status-bar__player {
+    font-family: var(--font-sans);
+    color: var(--narrator-gold, rgba(255, 229, 180, 0.8));
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.storybook-status-bar__player:not(:empty)::before {
+    content: '~ ';
+    opacity: 0.5;
+}
+
+@keyframes gentle-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+</style>

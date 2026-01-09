@@ -285,10 +285,102 @@
       ]
     }
   },
+  "survival_questions": [
+    {
+      "id": 1,
+      "question": "Would you rather change 100 dirty diapers in a row OR stay up for 48 hours straight with a crying baby?",
+      "option_a": "100 Diapers",
+      "option_b": "48 Hours Awake"
+    },
+    {
+      "id": 2,
+      "question": "Is it acceptable to use a pacifier for a 3-year-old?",
+      "option_a": "Yes",
+      "option_b": "No"
+    },
+    {
+      "id": 3,
+      "question": "Which is worse: a blowout diaper in public OR projectile spit-up on your nice outfit?",
+      "option_a": "Blowout",
+      "option_b": "Spit-up"
+    },
+    {
+      "id": 4,
+      "question": "Would you rather have a baby who sleeps through the night but is fussy all day OR one who is happy all day but wakes up every 2 hours?",
+      "option_a": "Sleeps at Night",
+      "option_b": "Happy All Day"
+    },
+    {
+      "id": 5,
+      "question": "Is it okay to let babies 'cry it out' at bedtime?",
+      "option_a": "Yes",
+      "option_b": "No"
+    },
+    {
+      "id": 6,
+      "question": "Which baby stage is harder: newborn (0-3 months) OR toddler (1-2 years)?",
+      "option_a": "Newborn",
+      "option_b": "Toddler"
+    },
+    {
+      "id": 7,
+      "question": "Would you rather have triplets all at once OR three kids one year apart?",
+      "option_a": "Triplets",
+      "option_b": "Three Years Apart"
+    },
+    {
+      "id": 8,
+      "question": "Is it ever okay to lie to your kids about where babies come from?",
+      "option_a": "Yes",
+      "option_b": "No"
+    },
+    {
+      "id": 9,
+      "question": "Which is a bigger parenting fear: the baby rolling off the bed OR choking on food?",
+      "option_a": "Rolling Off",
+      "option_b": "Choking"
+    },
+    {
+      "id": 10,
+      "question": "Would you rather only be able to use cloth diapers OR only have access to formula (no breastfeeding)?",
+      "option_a": "Cloth Diapers",
+      "option_b": "Formula Only"
+    },
+    {
+      "id": 11,
+      "question": "Is screen time okay for babies under 2?",
+      "option_a": "Yes",
+      "option_b": "No"
+    },
+    {
+      "id": 12,
+      "question": "Which celebrity baby name is worse: Apple (Gwyneth Paltrow) OR North (Kim Kardashian)?",
+      "option_a": "Apple",
+      "option_b": "North"
+    },
+    {
+      "id": 13,
+      "question": "Would you rather your baby's first word be 'Dada' OR 'Mama'?",
+      "option_a": "Dada",
+      "option_b": "Mama"
+    },
+    {
+      "id": 14,
+      "question": "Is it okay to post baby photos on social media?",
+      "option_a": "Yes",
+      "option_b": "No"
+    },
+    {
+      "id": 15,
+      "question": "Which is harder to deal with: teething OR potty training?",
+      "option_a": "Teething",
+      "option_b": "Potty Training"
+    }
+  ],
   "picture_guesses": [
     {
       "id": 1,
-      "image_url": "/images/y2k/pacifier.jpg",
+      "image_url": "/images/shower/paci.webp",
       "answer": "Pacifier",
       "hint": "Soothes the baby..."
     },
@@ -315,6 +407,145 @@
       "image_url": "/images/y2k/onesie.jpg",
       "answer": "Onesie",
       "hint": "The standard uniform..."
+    }
+  ],
+  "pixelperfect_images": [
+    {
+      "id": 1,
+      "image_url": "/images/shower/paci.webp",
+      "answer": "Pacifier",
+      "hint": "Baby soother"
+    },
+    {
+      "id": 2,
+      "image_url": "/images/shower/pampers.webp",
+      "answer": "Diapers",
+      "hint": "Essential supply"
+    },
+    {
+      "id": 3,
+      "image_url": "/images/shower/boppy.webp",
+      "answer": "Boppy Pillow",
+      "hint": "Nursing helper"
+    },
+    {
+      "id": 4,
+      "image_url": "/images/shower/avent-bottles.webp",
+      "answer": "Baby Bottles",
+      "hint": "Feeding time"
+    },
+    {
+      "id": 5,
+      "image_url": "/images/shower/hatch-rest.webp",
+      "answer": "Sound Machine",
+      "hint": "White noise"
+    }
+  ],
+  "price_products": [
+    {
+      "id": 1,
+      "name": "Pampers Swaddlers (84 count)",
+      "image_url": "/images/shower/pampers.webp",
+      "actual_price": 34.99,
+      "hint": "Newborn size, mega pack"
+    },
+    {
+      "id": 2,
+      "name": "Philips Avent Baby Bottle Set",
+      "image_url": "/images/shower/avent-bottles.webp",
+      "actual_price": 29.99,
+      "hint": "4-pack with natural nipples"
+    },
+    {
+      "id": 3,
+      "name": "Graco Pack 'n Play",
+      "image_url": "/images/shower/pack-n-play.webp",
+      "actual_price": 89.99,
+      "hint": "Portable playard with bassinet"
+    },
+    {
+      "id": 4,
+      "name": "Hatch Rest Baby Sound Machine",
+      "image_url": "/images/shower/hatch-rest.webp",
+      "actual_price": 69.99,
+      "hint": "Night light + white noise"
+    },
+    {
+      "id": 5,
+      "name": "Infant Optics Baby Monitor",
+      "image_url": "/images/shower/infant-optics.webp",
+      "actual_price": 165.99,
+      "hint": "Video monitor with interchangeable lens"
+    },
+    {
+      "id": 6,
+      "name": "Ergobaby Omni 360 Carrier",
+      "image_url": "/images/shower/ergobaby.webp",
+      "actual_price": 180.00,
+      "hint": "All-position baby carrier"
+    },
+    {
+      "id": 7,
+      "name": "MAM Pacifiers (6 pack)",
+      "image_url": "/images/shower/mam-pacis.webp",
+      "actual_price": 14.99,
+      "hint": "0-6 months, orthodontic"
+    },
+    {
+      "id": 8,
+      "name": "Baby Brezza Formula Pro",
+      "image_url": "/images/shower/baby-brezza.webp",
+      "actual_price": 224.99,
+      "hint": "The Keurig for formula"
+    },
+    {
+      "id": 9,
+      "name": "Boppy Nursing Pillow",
+      "image_url": "/images/shower/boppy.webp",
+      "actual_price": 44.99,
+      "hint": "Feeding support pillow"
+    },
+    {
+      "id": 10,
+      "name": "Snoo Smart Sleeper Bassinet",
+      "image_url": "/images/shower/snoo.webp",
+      "actual_price": 1695.00,
+      "hint": "The Tesla of bassinets"
+    },
+    {
+      "id": 11,
+      "name": "Medela Pump in Style",
+      "image_url": "/images/shower/medela-pump.webp",
+      "actual_price": 249.99,
+      "hint": "Double electric breast pump"
+    },
+    {
+      "id": 12,
+      "name": "UPPAbaby Vista V2 Stroller",
+      "image_url": "/images/shower/uppababy.webp",
+      "actual_price": 1099.99,
+      "hint": "Luxury convertible stroller"
+    },
+    {
+      "id": 13,
+      "name": "Owlet Dream Sock",
+      "image_url": "/images/shower/owlet.webp",
+      "actual_price": 299.00,
+      "hint": "Smart baby health monitor"
+    },
+    {
+      "id": 14,
+      "name": "Aquaphor Baby Healing Ointment",
+      "image_url": "/images/shower/aquaphor.webp",
+      "actual_price": 12.99,
+      "hint": "14 oz tub, diaper rash essential"
+    },
+    {
+      "id": 15,
+      "name": "Fisher-Price Jumperoo",
+      "image_url": "/images/shower/jumperoo.webp",
+      "actual_price": 89.99,
+      "hint": "Baby's first bounce house"
     }
   ]
 }

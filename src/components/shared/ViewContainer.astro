@@ -10,3 +10,34 @@ const { id, active = false, class: className = "" } = Astro.props;
 <div id={id} class:list={["view", { active }, className]}>
     <slot />
 </div>
+
+<style>
+/* Base View State */
+.view {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    backface-visibility: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.view.active {
+    display: block;
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Smooth fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+</style>

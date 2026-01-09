@@ -1,0 +1,198 @@
+---
+/**
+ * MoonTimer.astro
+ * Immersive moon arc timer - replaces digital TimerOrb
+ *
+ * The moon travels in an arc across the top of the screen (left to right).
+ * It starts high and bright, setting behind a mountain silhouette as time runs out.
+ * Casts a baby blue (#4D87BF) glow that intensifies as time decreases.
+ */
+---
+<div
+    id="moon-timer"
+    class="moon-timer hud-element"
+    data-show-states="TRIVIA,TIMELINE,PICTUREGUESS,TIMER,BUZZER,PIXELPERFECT,PRICEGUESS,SURVIVAL,MINESWEEPER,MACGYVER"
+>
+    <!-- Ambient glow that follows the moon -->
+    <div class="moon-timer__ambient" id="moon-ambient"></div>
+
+    <!-- SVG sky with moon arc -->
+    <svg class="moon-timer__sky" viewBox="0 0 1920 200" preserveAspectRatio="xMidYMin slice">
+        <!-- Gradient definitions -->
+        <defs>
+            <!-- Moon surface gradient -->
+            <radialGradient id="moonGradient" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#FFFEF0" />
+                <stop offset="60%" stop-color="#F0F8FF" />
+                <stop offset="100%" stop-color="#E8F4FD" />
+            </radialGradient>
+
+            <!-- Moon outer glow - baby blue -->
+            <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(77, 135, 191, 0.8)" />
+                <stop offset="50%" stop-color="rgba(77, 135, 191, 0.4)" />
+                <stop offset="100%" stop-color="transparent" />
+            </radialGradient>
+
+            <!-- Mountain silhouette gradient -->
+            <linearGradient id="mountainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#0a1628" />
+                <stop offset="100%" stop-color="#05101a" />
+            </linearGradient>
+
+            <!-- Glow filter for intensity -->
+            <filter id="moonGlowFilter" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+                <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+        </defs>
+
+        <!-- Arc path for moon to follow (hidden, used for calculations) -->
+        <path
+            id="moon-path"
+            d="M 60 160 Q 960 -40 1860 160"
+            fill="none"
+            stroke="none"
+        />
+
+        <!-- Stars along the path (subtle) -->
+        <g class="moon-timer__stars" opacity="0.6">
+            <circle cx="200" cy="60" r="1.5" fill="white" class="twinkle-star" />
+            <circle cx="400" cy="40" r="1" fill="white" class="twinkle-star" style="animation-delay: 0.5s" />
+            <circle cx="600" cy="30" r="1.5" fill="white" class="twinkle-star" style="animation-delay: 1s" />
+            <circle cx="960" cy="20" r="2" fill="white" class="twinkle-star" style="animation-delay: 0.3s" />
+            <circle cx="1300" cy="30" r="1" fill="white" class="twinkle-star" style="animation-delay: 0.8s" />
+            <circle cx="1500" cy="45" r="1.5" fill="white" class="twinkle-star" style="animation-delay: 1.2s" />
+            <circle cx="1700" cy="65" r="1" fill="white" class="twinkle-star" style="animation-delay: 0.6s" />
+        </g>
+
+        <!-- Mountain silhouette at bottom -->
+        <polygon
+            class="moon-timer__mountains"
+            fill="url(#mountainGradient)"
+            points="0,200 120,155 250,175 380,130 520,160 680,105 850,145 1000,95 1150,130 1300,115 1450,150 1600,120 1750,155 1850,135 1920,165 1920,200"
+        />
+
+        <!-- The Moon group (animated along path) -->
+        <g class="moon-timer__moon" id="moon-orb" transform="translate(60, 160)">
+            <!-- Outer glow ring -->
+            <circle
+                r="70"
+                fill="url(#moonGlow)"
+                class="moon-glow-outer"
+                id="moon-glow-outer"
+                opacity="0.4"
+            />
+            <!-- Inner glow ring -->
+            <circle
+                r="50"
+                fill="url(#moonGlow)"
+                class="moon-glow-inner"
+                id="moon-glow-inner"
+                opacity="0.6"
+            />
+            <!-- Moon surface -->
+            <circle
+                r="32"
+                fill="url(#moonGradient)"
+                class="moon-surface"
+                filter="url(#moonGlowFilter)"
+            />
+            <!-- Subtle crater details -->
+            <circle cx="-8" cy="-5" r="6" fill="rgba(200, 220, 240, 0.3)" />
+            <circle cx="10" cy="8" r="4" fill="rgba(200, 220, 240, 0.2)" />
+            <circle cx="-3" cy="12" r="3" fill="rgba(200, 220, 240, 0.25)" />
+        </g>
+    </svg>
+</div>
+
+<style>
+.moon-timer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.moon-timer.visible {
+    opacity: 1;
+}
+
+.moon-timer__sky {
+    width: 100%;
+    height: 100%;
+}
+
+.moon-timer__ambient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 300px;
+    background: radial-gradient(
+        ellipse 60% 80% at var(--moon-x, 50%) 0%,
+        rgba(77, 135, 191, var(--glow-intensity, 0.1)) 0%,
+        transparent 70%
+    );
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.moon-timer__mountains {
+    opacity: 0.95;
+}
+
+.moon-timer__moon {
+    transition: transform 0.1s linear;
+}
+
+/* Star twinkle animation */
+.twinkle-star {
+    animation: star-twinkle 3s ease-in-out infinite;
+}
+
+@keyframes star-twinkle {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* Moon glow pulse (intensifies as time runs out) */
+.moon-glow-outer,
+.moon-glow-inner {
+    transition: opacity 0.3s ease;
+}
+
+/* Warning state - moon pulses faster */
+.moon-timer.warning .moon-glow-outer {
+    animation: moon-warning-pulse 1.5s ease-in-out infinite;
+}
+
+/* Danger state - moon pulses urgently */
+.moon-timer.danger .moon-glow-outer {
+    animation: moon-danger-pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes moon-warning-pulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+@keyframes moon-danger-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.15); }
+}
+
+/* Hide when not in a timed state */
+.moon-timer:not(.visible) {
+    opacity: 0;
+    pointer-events: none;
+}
+</style>

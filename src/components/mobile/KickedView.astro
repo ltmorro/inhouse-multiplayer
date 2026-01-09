@@ -2,9 +2,19 @@
 import ViewContainer from '../shared/ViewContainer.astro';
 ---
 <ViewContainer id="view-kicked">
-    <div class="flex-grow flex-center flex-column text-center">
-        <h1 style="color: var(--terminal-red); font-size: 2rem;">ACCESS REVOKED</h1>
-        <p class="mt-2" style="color: var(--terminal-red);">TERMINATED BY SYSTEM ADMINISTRATOR</p>
-        <p class="mt-1" style="color: var(--terminal-red); opacity: 0.7; font-size: 0.9rem;">[ SECURITY PROTOCOL ENGAGED ]</p>
+    <div class="frost-viewport">
+        <header class="frost-header">
+            <p class="frost-header__chapter">The End of a Chapter</p>
+            <h2 class="frost-header__title">Heading Home</h2>
+        </header>
+
+        <div class="frost-card frost-card--glow">
+            <p class="frost-card__instruction">Thanks for visiting the lodge!</p>
+            <div class="frost-waiting__icon waiting-pulse">❄</div>
+        </div>
+
+        <div class="frost-actions">
+            <p class="frost-status">Safe travels through the snow</p>
+        </div>
     </div>
 </ViewContainer>

@@ -1,0 +1,16 @@
+---
+/**
+ * RoomCodeBadge.astro
+ * Room code display for players to join
+ * Only visible during lobby state
+ */
+---
+<div
+    id="room-code-badge"
+    class="hud-element room-code-badge"
+    data-show-states="LOBBY"
+>
+    <span class="room-code-badge__label">Join at</span>
+    <span class="room-code-badge__url" id="hud-room-url">--</span>
+    <span class="room-code-badge__code" id="hud-room-code">----</span>
+</div>

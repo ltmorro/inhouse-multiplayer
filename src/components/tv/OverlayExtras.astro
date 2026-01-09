@@ -1,5 +1,11 @@
 ---
+/**
+ * OverlayExtras.astro
+ * TV overlay components: audio unlock, reactions, chat, now playing indicator
+ * Styled for Winter Storybook theme
+ */
 ---
+
 <!-- Mock Mode Banner -->
 <div id="mock-mode-banner" class="mock-mode-banner hidden">
     MOCK MODE - NO SERVER CONNECTION
@@ -34,33 +40,89 @@
 <!-- Audio Unlock Overlay - must be clicked to enable Spotify playback -->
 <div id="audio-unlock-overlay" class="audio-unlock-overlay">
     <div class="audio-unlock-content">
-        <p class="tv-main-message mb-2">CLICK TO ENABLE AUDIO</p>
-        <p class="tv-status">Browser requires user interaction before playing audio</p>
-        <button id="audio-unlock-btn" class="terminal-btn tv-label mt-3">
-            ENABLE AUDIO
+        <div class="audio-unlock-snowflake">*</div>
+        <h2 class="audio-unlock-title">Welcome to the Celebration</h2>
+        <p class="audio-unlock-subtitle">Click anywhere to enable audio</p>
+        <button id="audio-unlock-btn" class="terminal-btn terminal-btn--primary mt-3">
+            BEGIN THE STORY
         </button>
+        <p class="audio-unlock-hint mt-2">Browser requires interaction to play audio</p>
     </div>
 </div>
 
 <style>
+/* Audio Unlock Overlay - Winter Storybook Theme */
 .audio-unlock-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.95);
+    background: linear-gradient(180deg, var(--midnight-blue) 0%, var(--ink-blue) 100%);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 10000;
     cursor: pointer;
 }
+
 .audio-unlock-overlay.hidden {
     display: none;
 }
+
 .audio-unlock-content {
     text-align: center;
-    color: var(--terminal-green);
+    color: white;
+    padding: 3rem;
+    max-width: 500px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.audio-unlock-snowflake {
+    font-size: 4rem;
+    color: var(--ice-blue);
+    margin-bottom: 1rem;
+    animation: twinkle 2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+.audio-unlock-title {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.audio-unlock-subtitle {
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+    color: var(--ice-blue);
+    margin-bottom: 1rem;
+}
+
+.audio-unlock-hint {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+}
+
+/* Override button colors for dark background */
+.audio-unlock-content .terminal-btn--primary {
+    background: white;
+    color: var(--midnight-blue);
+    border-color: white;
+}
+
+.audio-unlock-content .terminal-btn--primary:hover {
+    background: var(--ice-blue);
+    color: var(--midnight-blue);
 }
 </style>

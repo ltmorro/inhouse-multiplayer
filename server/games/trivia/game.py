@@ -16,6 +16,7 @@ class TriviaGame(BaseGame):
     def on_enter(self, state_data):
         self._state = {
             'question_id': state_data.get('question_id'),
+            'question_text': state_data.get('question_text'),
             'answers': {}  # team_id -> {answer_text, player_id, player_name, question_id}
         }
         return EventResponse()

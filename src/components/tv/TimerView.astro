@@ -2,39 +2,23 @@
 import ViewContainer from '../shared/ViewContainer.astro';
 ---
 <ViewContainer id="view-timer">
-    <div class="tv-layout">
-        <div class="tv-header">
-            <h1 class="tv-title glow-strong">THE PERFECT SWADDLE</h1>
-            <p class="tv-subtitle">CHAPTER 2</p>
-        </div>
-        <div class="tv-content flex-column">
-            <p id="timer-message" class="tv-timer-message">
-                WRAP THE BABY BEFORE THE DRAFT GETS IN
+    <!-- STAGE: Main Content -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <h1 class="stage-title fairy-title--glow animate-breathe">The Perfect Swaddle</h1>
+            <p class="stage-subtitle">Chapter A Cozy Challenge</p>
+
+            <p id="timer-message" class="stage-narrator animate-breathe mt-3">
+                Wrap the baby before the draft gets in...
             </p>
-            <div id="timer-display" class="tv-timer glow-strong mt-3">
+
+            <div id="timer-display" class="tv-timer animate-float mt-3">
                 03:00
             </div>
+
             <div class="timer-progress tv-progress mt-3">
-                <div
-                    id="timer-progress-bar"
-                    class="timer-progress__bar"
-                    style="width: 100%;"
-                >
-                </div>
+                <div id="timer-progress-bar" class="timer-progress__bar w-full"></div>
             </div>
-        </div>
-        <div class="tv-instructions">
-            <div class="tv-instructions-box">
-                <p class="instruction-title">PROTECT THE CHILD</p>
-                <p class="instruction-text">
-                    The wind is howling. <strong
-                        >Wrap the baby securely using available blankets.</strong
-                    > Warmth and comfort will be judged.
-                </p>
-            </div>
-        </div>
-        <div class="tv-footer">
-            <div id="timer-scoreboard"></div>
         </div>
     </div>
 </ViewContainer>

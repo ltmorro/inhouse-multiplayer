@@ -1,57 +1,43 @@
 ---
-// src/pages/tv.astro
-import GameLayout from "../layouts/GameLayout.astro";
+/**
+ * src/pages/tv.astro
+ * TV Display Page - Main display for the party game
+ *
+ * Uses TVLayout which provides:
+ * - Atmosphere (frost-bg, snow)
+ * - TVHud header
+ * - GameProgress, TimerOverlay, OverlayExtras
+ * - All required scripts
+ *
+ * This page only defines the game views (Stage content).
+ */
+import TVLayout from "../layouts/TVLayout.astro";
 
-// Shared Components
-import GameProgress from "../components/shared/GameProgress.astro";
-import NewsTicker from "../components/shared/NewsTicker.astro";
-import TimerOverlay from "../components/shared/TimerOverlay.astro";
-
-// TV Specific Components
-import TVHeader from "../components/tv/TVHeader.astro";
-import OverlayExtras from "../components/tv/OverlayExtras.astro";
+// Game Views Only - the Stage content
 import LobbyView from "../components/tv/LobbyView.astro";
-import MacGyverView from "../components/tv/MacGyverView.astro";
 import TriviaView from "../components/tv/TriviaView.astro";
-import TimerView from "../components/tv/TimerView.astro";
-import BuzzerView from "../components/tv/BuzzerView.astro";
+import MusicGuessingView from "../components/tv/MusicGuessingView.astro";
 import TimelineView from "../components/tv/TimelineView.astro";
 import PictureGuessView from "../components/tv/PictureGuessView.astro";
-import MinesweeperView from "../components/tv/MinesweeperView.astro";
+import PriceGuessView from "../components/tv/PriceGuessView.astro";
+import PixelPerfectView from "../components/tv/PixelPerfectView.astro";
+import SurvivalView from "../components/tv/SurvivalView.astro";
 import VictoryView from "../components/tv/VictoryView.astro";
+// import MacGyverView from "../components/tv/MacGyverView.astro";
+// import MinesweeperView from "../components/tv/MinesweeperView.astro";
 ---
 
-<GameLayout title="The Storybook">
-    <!-- Background Effects handled by GameLayout (Snow) -->
-    <TimerOverlay />
-
-    <!-- Overlays -->
-    <GameProgress />
-
-    <!-- Game Views -->
+<TVLayout>
+    <!-- Game Views (in chapter order) -->
     <LobbyView />
-    <MacGyverView />
+    <!--<MacGyverView />-->
     <TriviaView />
-    <TimerView />
-    <BuzzerView />
+    <MusicGuessingView />
     <TimelineView />
+    <!--<MinesweeperView />-->
     <PictureGuessView />
-    <MinesweeperView />
+    <PriceGuessView />
+    <PixelPerfectView />
+    <SurvivalView />
     <VictoryView />
-
-    <!-- Extras -->
-    <OverlayExtras />
-    <NewsTicker />
-    <TVHeader />
-
-    <script slot="scripts" src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-    <script slot="scripts">
-        // This callback is called by the Spotify SDK when it's ready
-        window.onSpotifyWebPlaybackSDKReady = () => {
-            console.log('[Spotify] SDK ready callback fired');
-            window.spotifySDKReady = true;
-        };
-    </script>
-    <script slot="scripts" src="https://sdk.scdn.co/spotify-player.js"></script>
-    <script slot="scripts" src="/js/tv.js" defer></script>
-</GameLayout>
+</TVLayout>

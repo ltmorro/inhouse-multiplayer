@@ -11,12 +11,14 @@ class TimerGame(BaseGame):
     }
 
     def on_enter(self, state_data):
+        duration = state_data.get('duration_seconds', 180)
         self._state = {
-            'total_seconds': 0,
-            'remaining_seconds': 0,
+            'total_seconds': duration,
+            'remaining_seconds': duration,
+            'duration_seconds': duration,
             'start_time': 0,
             'paused': False,
-            'message': ''
+            'message': state_data.get('message', '')
         }
         return EventResponse()
     
@@ -88,3 +90,9 @@ class TimerGame(BaseGame):
         self._state['remaining_seconds'] = self._state.get('total_seconds', 0)
         self._state['start_time'] = 0
         self._state['paused'] = False
+
+    def get_sanitized_state_data(self) -> dict:
+        return {
+            'duration_seconds': self._state.get('duration_seconds', self._state.get('total_seconds', 180)),
+            'message': self._state.get('message', '')
+        }

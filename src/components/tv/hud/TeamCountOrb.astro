@@ -1,0 +1,15 @@
+---
+/**
+ * TeamCountOrb.astro
+ * Small orb showing connected team/player count
+ * Only visible during lobby state
+ */
+---
+<div
+    id="team-count-orb"
+    class="hud-orb hud-element team-count-orb"
+    data-show-states="LOBBY"
+>
+    <span class="team-count-orb__value" id="hud-team-count">0</span>
+    <span class="team-count-orb__label">families</span>
+</div>

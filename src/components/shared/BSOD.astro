@@ -1,20 +1,126 @@
 ---
 ---
-<div class="bsod-overlay hidden" id="bsod-overlay">
-    <div class="bsod-content">
-        <div class="bsod-header">Y2K PARTY GAME</div>
-        <div class="bsod-text">
-            A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) +
-            00010E36. The current application will be terminated.
-        </div>
-        <div class="bsod-team" id="bsod-team-name">TEAM NAME</div>
-        <div class="bsod-text">
-            * Your team has been ELIMINATED from the game.<br>
-            * All unsaved progress has been lost.<br>
-            * The Y2K bug has claimed another victim.
-        </div>
-        <div class="bsod-prompt">
-            Press any key to continue_
-        </div>
+<div class="winter-error-overlay hidden" id="bsod-overlay">
+    <div class="winter-error-content">
+        <div class="snowflake-icon">❄️</div>
+        <h2 class="winter-error-heading">Oh, Deer!</h2>
+        <div class="winter-error-team" id="bsod-team-name">TEAM NAME</div>
+        <p class="winter-error-text">It seems we've gotten stuck in a snowdrift.</p>
+        <p class="winter-error-text">Please wait for the host to dig us out.</p>
+    </div>
+    <div class="falling-snow" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
     </div>
 </div>
+
+<style>
+    .winter-error-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, #0a1628 0%, #1a3a5c 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        overflow: hidden;
+    }
+
+    .winter-error-overlay.hidden {
+        display: none;
+    }
+
+    .winter-error-content {
+        text-align: center;
+        color: #ffffff;
+        z-index: 1;
+    }
+
+    .snowflake-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .winter-error-heading {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+
+    .winter-error-team {
+        font-size: 1.5rem;
+        color: #7eb8da;
+        margin: 1rem 0;
+        font-weight: bold;
+    }
+
+    .winter-error-text {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin: 0.5rem 0;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .falling-snow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .falling-snow span {
+        position: absolute;
+        top: -10%;
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        animation: fall linear infinite;
+        opacity: 0.7;
+    }
+
+    .falling-snow span:nth-child(1) { left: 5%; animation-duration: 8s; animation-delay: 0s; width: 6px; height: 6px; }
+    .falling-snow span:nth-child(2) { left: 15%; animation-duration: 10s; animation-delay: 1s; width: 8px; height: 8px; }
+    .falling-snow span:nth-child(3) { left: 25%; animation-duration: 7s; animation-delay: 2s; width: 5px; height: 5px; }
+    .falling-snow span:nth-child(4) { left: 35%; animation-duration: 9s; animation-delay: 0.5s; width: 7px; height: 7px; }
+    .falling-snow span:nth-child(5) { left: 45%; animation-duration: 11s; animation-delay: 1.5s; width: 6px; height: 6px; }
+    .falling-snow span:nth-child(6) { left: 55%; animation-duration: 8s; animation-delay: 3s; width: 9px; height: 9px; }
+    .falling-snow span:nth-child(7) { left: 65%; animation-duration: 10s; animation-delay: 2.5s; width: 5px; height: 5px; }
+    .falling-snow span:nth-child(8) { left: 75%; animation-duration: 7s; animation-delay: 0.8s; width: 8px; height: 8px; }
+    .falling-snow span:nth-child(9) { left: 85%; animation-duration: 9s; animation-delay: 1.8s; width: 6px; height: 6px; }
+    .falling-snow span:nth-child(10) { left: 95%; animation-duration: 12s; animation-delay: 2.8s; width: 7px; height: 7px; }
+    .falling-snow span:nth-child(11) { left: 10%; animation-duration: 9s; animation-delay: 4s; width: 5px; height: 5px; }
+    .falling-snow span:nth-child(12) { left: 30%; animation-duration: 11s; animation-delay: 3.5s; width: 8px; height: 8px; }
+    .falling-snow span:nth-child(13) { left: 50%; animation-duration: 8s; animation-delay: 4.5s; width: 6px; height: 6px; }
+    .falling-snow span:nth-child(14) { left: 70%; animation-duration: 10s; animation-delay: 5s; width: 7px; height: 7px; }
+    .falling-snow span:nth-child(15) { left: 90%; animation-duration: 9s; animation-delay: 3.2s; width: 5px; height: 5px; }
+
+    @keyframes fall {
+        0% {
+            transform: translateY(-10vh) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.7;
+        }
+        90% {
+            opacity: 0.7;
+        }
+        100% {
+            transform: translateY(110vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+</style>

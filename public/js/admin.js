@@ -1,6 +1,10 @@
 /**
  * ADMIN.JS - Admin Dashboard Controller
  * Placeholder implementation - full functionality in WP5
+ *
+ * Uses shared modules from src/scripts/ (exposed via window globals):
+ * - window.STATE_VIEW_MAP, window.GAME_PHASES (if needed)
+ * - window.TeamColors for team color utilities
  */
 
 // ============================================================
@@ -33,7 +37,14 @@ const AppState = {
     // Timeline submissions (team_id -> submission data)
     timelineSubmissions: {},
     // QR code visibility (default hidden)
-    qrVisible: false
+    qrVisible: false,
+    // Pixel Perfect state
+    pixelperfectLockedBy: null,
+    pixelperfectImages: [],
+    // Price Guess state
+    priceProducts: [],
+    // Survival questions
+    survivalQuestions: []
 };
 
 // ============================================================
@@ -57,14 +68,14 @@ const UI = {
         const teams = Object.entries(AppState.teams);
 
         if (teams.length === 0) {
-            list.innerHTML = '<li style="color: var(--terminal-green-dim);">No teams connected</li>';
+            list.innerHTML = '<li style="color: var(--baby-blue-dim);">No teams connected</li>';
             select.innerHTML = '<option value="">-- No teams --</option>';
             return;
         }
 
         list.innerHTML = teams.map(([id, team]) => {
             const score = AppState.scores[id] || 0;
-            return `<li style="padding: 0.5rem; border-bottom: 1px solid var(--terminal-green-dim);">
+            return `<li style="padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim);">
                 ${team.name} - ${score} pts
                 <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 10px;"
                     onclick="AdminActions.kickTeam('${id}')">KICK</button>
@@ -80,12 +91,22 @@ const UI = {
         document.getElementById('current-state').textContent = `STATE: ${state}`;
         AppState.currentState = state;
 
-        // Show/hide section-specific controls
-        document.getElementById('buzzer-section').style.display = state === 'BUZZER' ? 'block' : 'none';
-        document.getElementById('trivia-section').style.display = state === 'TRIVIA' ? 'block' : 'none';
-        document.getElementById('timeline-section').style.display = state === 'TIMELINE' ? 'block' : 'none';
-        document.getElementById('timer-section').style.display = state === 'TIMER' ? 'block' : 'none';
-        document.getElementById('pictureguess-section').style.display = state === 'PICTUREGUESS' ? 'block' : 'none';
+        // Show/hide section-specific controls (with null checks)
+        const sections = {
+            'buzzer-section': 'BUZZER',
+            'trivia-section': 'TRIVIA',
+            'timeline-section': 'TIMELINE',
+            'timer-section': 'TIMER',
+            'pictureguess-section': 'PICTUREGUESS',
+            'pixelperfect-section': 'PIXELPERFECT',
+            'priceguess-section': 'PRICEGUESS',
+            'survival-section': 'SURVIVAL'
+        };
+
+        Object.entries(sections).forEach(([id, sectionState]) => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = state === sectionState ? 'block' : 'none';
+        });
     },
 
     updateTimerDisplay(remaining, total, status) {
@@ -110,7 +131,7 @@ const UI = {
             list.appendChild(li);
         }
 
-        li.style.cssText = 'padding: 0.5rem; border-bottom: 1px solid var(--terminal-green-dim);';
+        li.style.cssText = 'padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim);';
         li.innerHTML = `
             <strong>${teamName}:</strong> ${answer}
             <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 10px; background: #004400;"
@@ -185,7 +206,7 @@ const UI = {
         const submissions = Object.values(AppState.timelineSubmissions);
 
         if (submissions.length === 0) {
-            list.innerHTML = '<li style="color: var(--terminal-green-dim);">No submissions yet</li>';
+            list.innerHTML = '<li style="color: var(--baby-blue-dim);">No submissions yet</li>';
             return;
         }
 
@@ -193,9 +214,9 @@ const UI = {
             const statusColor = sub.status === 'winner' ? '#004400' : '#440000';
             const statusText = sub.status === 'winner' ? 'CORRECT' : 'INCORRECT';
             const playerInfo = sub.player_name ? ` (${sub.player_name})` : '';
-            return `<li style="padding: 0.5rem; border-bottom: 1px solid var(--terminal-green-dim); background: ${statusColor};">
+            return `<li style="padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim); background: ${statusColor};">
                 <strong>${sub.team_name}</strong>${playerInfo}: ${statusText}
-                <br><small style="color: var(--terminal-green-dim);">Order: [${sub.order.join(', ')}]</small>
+                <br><small style="color: var(--baby-blue-dim);">Order: [${sub.order.join(', ')}]</small>
             </li>`;
         }).join('');
     },
@@ -227,7 +248,7 @@ const UI = {
             list.appendChild(li);
         }
 
-        li.style.cssText = 'padding: 0.5rem; border-bottom: 1px solid var(--terminal-green-dim);';
+        li.style.cssText = 'padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim);';
         li.innerHTML = `
             <strong>${teamName}:</strong> ${guessText}
             <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 10px; background: #004400;"
@@ -240,6 +261,198 @@ const UI = {
     clearPictureGuessList() {
         const list = document.getElementById('pictureguess-list');
         if (list) list.innerHTML = '';
+    },
+
+    // ========== PRICE GUESS ==========
+
+    addPriceGuess(teamId, teamName, guessAmount) {
+        const list = document.getElementById('priceguess-list');
+        if (!list) return;
+
+        const existingId = `priceguess-${teamId}`;
+        let li = document.getElementById(existingId);
+
+        if (!li) {
+            li = document.createElement('li');
+            li.id = existingId;
+            list.appendChild(li);
+        }
+
+        const formattedAmount = parseFloat(guessAmount).toFixed(2);
+        li.style.cssText = 'padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim);';
+        li.innerHTML = `<strong>${teamName}:</strong> $${formattedAmount}`;
+    },
+
+    clearPriceGuessList() {
+        const list = document.getElementById('priceguess-list');
+        if (list) list.innerHTML = '';
+    },
+
+    showPriceGuessResults(actualPrice, teamGuesses) {
+        const list = document.getElementById('priceguess-list');
+        if (!list) return;
+
+        list.innerHTML = teamGuesses.map(guess => {
+            let statusClass = '';
+            let statusText = '';
+            if (guess.status === 'winner') {
+                statusClass = 'background: #004400;';
+                statusText = ' - WINNER!';
+            } else if (guess.status === 'bust') {
+                statusClass = 'background: #440000;';
+                statusText = ' - BUST';
+            }
+            const formattedAmount = parseFloat(guess.guess_amount).toFixed(2);
+            return `<li style="padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim); ${statusClass}">
+                <strong>${guess.team_name}:</strong> $${formattedAmount}${statusText}
+            </li>`;
+        }).join('');
+    },
+
+    // ========== SURVIVAL MODE ==========
+
+    updateSurvivalVotes(voteCounts, votersA, votersB) {
+        const countA = document.getElementById('admin-vote-count-a');
+        const countB = document.getElementById('admin-vote-count-b');
+        const listA = document.getElementById('admin-voters-a');
+        const listB = document.getElementById('admin-voters-b');
+
+        if (countA) countA.textContent = voteCounts.A || 0;
+        if (countB) countB.textContent = voteCounts.B || 0;
+
+        if (listA && votersA) {
+            listA.innerHTML = votersA.map(v => `<li>${v.team_name}</li>`).join('');
+        }
+        if (listB && votersB) {
+            listB.innerHTML = votersB.map(v => `<li>${v.team_name}</li>`).join('');
+        }
+    },
+
+    addSurvivalVote(teamName, vote) {
+        const listId = vote === 'A' ? 'admin-voters-a' : 'admin-voters-b';
+        const countId = vote === 'A' ? 'admin-vote-count-a' : 'admin-vote-count-b';
+        const list = document.getElementById(listId);
+        const countEl = document.getElementById(countId);
+
+        if (list) {
+            const li = document.createElement('li');
+            li.textContent = teamName;
+            list.appendChild(li);
+        }
+        if (countEl) {
+            countEl.textContent = parseInt(countEl.textContent || 0, 10) + 1;
+        }
+    },
+
+    clearSurvivalVotes() {
+        const listA = document.getElementById('admin-voters-a');
+        const listB = document.getElementById('admin-voters-b');
+        const countA = document.getElementById('admin-vote-count-a');
+        const countB = document.getElementById('admin-vote-count-b');
+
+        if (listA) listA.innerHTML = '';
+        if (listB) listB.innerHTML = '';
+        if (countA) countA.textContent = '0';
+        if (countB) countB.textContent = '0';
+    },
+
+    updateSurvivalTeamList(teams, eliminatedTeams) {
+        const list = document.getElementById('survival-team-list');
+        if (!list) return;
+
+        const teamIds = Object.keys(teams);
+        if (teamIds.length === 0) {
+            list.innerHTML = '<li style="color: var(--baby-blue-dim);">No teams</li>';
+            return;
+        }
+
+        const eliminatedSet = new Set(eliminatedTeams || []);
+        list.innerHTML = teamIds.map(id => {
+            const team = teams[id];
+            const isEliminated = eliminatedSet.has(id);
+            const status = isEliminated ? 'ELIMINATED' : 'ALIVE';
+            const color = isEliminated ? '#ff4444' : 'var(--baby-blue)';
+            return `<li style="padding: 0.25rem 0.5rem; color: ${color};">
+                ${team.name} - ${status}
+            </li>`;
+        }).join('');
+    },
+
+    populateSurvivalPresets() {
+        const select = document.getElementById('survival-preset-select');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">-- Select a question or type custom --</option>';
+
+        AppState.survivalQuestions.forEach((q, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = `Q${q.id}: ${q.question.substring(0, 50)}${q.question.length > 50 ? '...' : ''}`;
+            select.appendChild(option);
+        });
+    },
+
+    // ========== PIXEL PERFECT ==========
+
+    updatePixelPerfectLocker(teamName) {
+        const el = document.getElementById('pixelperfect-locker');
+        if (el) el.textContent = teamName || '---';
+    },
+
+    populatePixelPerfectPresets() {
+        const select = document.getElementById('pixelperfect-preset-select');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">-- Select an image or enter custom URL --</option>';
+
+        AppState.pixelperfectImages.forEach((img, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = `#${img.id}: ${img.answer.substring(0, 40)}${img.answer.length > 40 ? '...' : ''}`;
+            select.appendChild(option);
+        });
+    },
+
+    populatePriceGuessPresets() {
+        const select = document.getElementById('priceguess-preset-select');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">-- Select a product or enter custom --</option>';
+
+        AppState.priceProducts.forEach((p, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = `#${p.id}: ${p.name.substring(0, 40)}${p.name.length > 40 ? '...' : ''}`;
+            select.appendChild(option);
+        });
+    },
+
+    // ========== ROUND TIMER (Global HUD) ==========
+
+    updateRoundTimerDisplay(remaining, total, status) {
+        const display = document.getElementById('round-timer-display');
+        const statusEl = document.getElementById('round-timer-status');
+
+        if (!display) return;
+
+        const mins = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+
+        if (status === 'stopped') {
+            display.textContent = '--:--';
+            if (statusEl) statusEl.textContent = '(stopped)';
+        } else {
+            display.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (statusEl) {
+                if (status === 'paused') {
+                    statusEl.textContent = '(paused)';
+                } else if (status === 'finished') {
+                    statusEl.textContent = '(finished)';
+                } else {
+                    statusEl.textContent = '(running)';
+                }
+            }
+        }
     }
 };
 
@@ -483,6 +696,44 @@ const AdminActions = {
         }
     },
 
+    // Round Timer actions (global HUD timer)
+    startRoundTimer() {
+        const duration = parseInt(document.getElementById('round-timer-duration').value, 10) || 60;
+        if (AppState.socket) {
+            AppState.socket.emit('round_timer_control', {
+                action: 'start',
+                duration_seconds: duration
+            });
+        }
+    },
+
+    pauseRoundTimer() {
+        if (AppState.socket) {
+            AppState.socket.emit('round_timer_control', { action: 'pause' });
+        }
+    },
+
+    resumeRoundTimer() {
+        if (AppState.socket) {
+            AppState.socket.emit('round_timer_control', { action: 'resume' });
+        }
+    },
+
+    stopRoundTimer() {
+        if (AppState.socket) {
+            AppState.socket.emit('round_timer_control', { action: 'stop' });
+        }
+    },
+
+    addRoundTimerTime(seconds) {
+        if (AppState.socket) {
+            AppState.socket.emit('round_timer_control', {
+                action: 'add_time',
+                seconds: seconds
+            });
+        }
+    },
+
     sendPicture() {
         const imageUrl = document.getElementById('pictureguess-url-input').value.trim();
         const hint = document.getElementById('pictureguess-hint-input').value.trim();
@@ -559,11 +810,64 @@ const AdminActions = {
         if (AppState.qrVisible) {
             btn.textContent = 'HIDE QR CODE';
             status.textContent = 'QR visible';
-            status.style.color = 'var(--terminal-green)';
+            status.style.color = 'var(--baby-blue)';
         } else {
             btn.textContent = 'SHOW QR CODE';
             status.textContent = 'QR hidden';
-            status.style.color = 'var(--terminal-green-dim)';
+            status.style.color = 'var(--baby-blue-dim)';
+        }
+    },
+
+    // ========== PRICE GUESS ==========
+
+    sendProduct() {
+        const imageUrl = document.getElementById('priceguess-url-input').value.trim();
+        const hint = document.getElementById('priceguess-hint-input').value.trim();
+        const productId = parseInt(document.getElementById('priceguess-id').value, 10);
+
+        if (!imageUrl) {
+            alert('Please enter a product image URL');
+            return;
+        }
+
+        if (AppState.socket) {
+            // Clear previous guesses
+            UI.clearPriceGuessList();
+
+            // Set state with product data
+            AppState.socket.emit('set_state', {
+                new_state: 'PRICEGUESS',
+                state_data: {
+                    product_id: productId,
+                    image_url: imageUrl,
+                    hint: hint
+                }
+            });
+
+            // Emit show_price_product event for TV
+            AppState.socket.emit('show_price_product', {
+                product_id: productId,
+                image_url: imageUrl,
+                hint: hint
+            });
+        }
+    },
+
+    revealPrice() {
+        const actualPrice = parseFloat(document.getElementById('priceguess-actual-price').value);
+        const productId = parseInt(document.getElementById('priceguess-id').value, 10);
+
+        if (isNaN(actualPrice) || actualPrice < 0) {
+            alert('Please enter a valid actual price');
+            return;
+        }
+
+        if (AppState.socket) {
+            AppState.socket.emit('reveal_price', {
+                product_id: productId,
+                actual_price: actualPrice,
+                points: 100
+            });
         }
     },
 
@@ -587,6 +891,125 @@ const AdminActions = {
             AppState.socket.emit('music_previous', {});
             console.log('[Admin] Music previous emitted');
         }
+    },
+
+    // ========== SURVIVAL MODE ==========
+
+    sendSurvivalQuestion() {
+        const questionText = document.getElementById('survival-question-input').value.trim();
+        const optionA = document.getElementById('survival-option-a').value.trim() || 'YES';
+        const optionB = document.getElementById('survival-option-b').value.trim() || 'NO';
+        const roundId = parseInt(document.getElementById('survival-round-id').value, 10);
+
+        if (!questionText) {
+            alert('Please enter a question');
+            return;
+        }
+
+        if (AppState.socket) {
+            UI.clearSurvivalVotes();
+            AppState.socket.emit('set_state', {
+                new_state: 'SURVIVAL',
+                state_data: {
+                    round_id: roundId,
+                    question_text: questionText,
+                    option_a: optionA,
+                    option_b: optionB,
+                    eliminated_teams: AppState.survivalEliminatedTeams || []
+                }
+            });
+
+            // Update option labels in admin UI
+            const labelA = document.getElementById('admin-vote-label-a');
+            const labelB = document.getElementById('admin-vote-label-b');
+            if (labelA) labelA.textContent = optionA;
+            if (labelB) labelB.textContent = optionB;
+        }
+    },
+
+    survivalReveal() {
+        if (AppState.socket) {
+            AppState.socket.emit('survival_reveal', {});
+        }
+    },
+
+    survivalResetRound() {
+        if (AppState.socket) {
+            const questionText = document.getElementById('survival-question-input').value.trim();
+            const optionA = document.getElementById('survival-option-a').value.trim() || 'YES';
+            const optionB = document.getElementById('survival-option-b').value.trim() || 'NO';
+            const roundId = parseInt(document.getElementById('survival-round-id').value, 10) + 1;
+
+            // Increment round number
+            document.getElementById('survival-round-id').value = roundId;
+
+            UI.clearSurvivalVotes();
+            AppState.socket.emit('survival_reset_round', {
+                round_id: roundId,
+                question_text: questionText,
+                option_a: optionA,
+                option_b: optionB
+            });
+        }
+    },
+
+    survivalReviveAll() {
+        if (AppState.socket && confirm('Revive all eliminated teams?')) {
+            AppState.survivalEliminatedTeams = [];
+            AppState.socket.emit('survival_revive_all', {});
+            UI.updateSurvivalTeamList(AppState.teams, []);
+        }
+    },
+
+    // ========== PIXEL PERFECT ==========
+
+    startPixelPerfectRound() {
+        const imageUrl = document.getElementById('pixelperfect-url-input').value.trim();
+        const correctAnswer = document.getElementById('pixelperfect-correct-answer').value.trim();
+        const roundId = parseInt(document.getElementById('pixelperfect-round-id').value, 10);
+
+        if (!imageUrl) {
+            alert('Please enter an image URL');
+            return;
+        }
+
+        if (AppState.socket) {
+            // Set state to PIXELPERFECT
+            AppState.socket.emit('set_state', {
+                new_state: 'PIXELPERFECT',
+                state_data: {
+                    round_id: roundId,
+                    image_url: imageUrl,
+                    correct_answer: correctAnswer
+                }
+            });
+
+            // Start the round
+            AppState.socket.emit('start_pixelperfect_round', {
+                round_id: roundId,
+                image_url: imageUrl,
+                correct_answer: correctAnswer
+            });
+        }
+    },
+
+    judgePixelPerfect(correct, points = 0) {
+        if (AppState.socket && AppState.pixelperfectLockedBy) {
+            AppState.socket.emit('judge_pixelperfect', {
+                team_id: AppState.pixelperfectLockedBy,
+                correct,
+                points: points
+            });
+        }
+    },
+
+    revealPixelPerfect() {
+        const answer = document.getElementById('pixelperfect-correct-answer').value.trim();
+        if (AppState.socket && answer) {
+            AppState.socket.emit('reveal_pixelperfect', {
+                correct_answer: answer
+            });
+        }
     }
 };
 
@@ -596,10 +1019,14 @@ const AdminActions = {
 
 function initSocket() {
     AppState.socket = io();
+    // Expose socket globally for screensaver and other shared components
+    window.socket = AppState.socket;
 
     AppState.socket.on('connect', () => {
         console.log('[Admin] Connected to server');
         AppState.connected = true;
+        // Notify server of activity on connect
+        AppState.socket.emit('screensaver_activity');
     });
 
     AppState.socket.on('disconnect', () => {
@@ -646,6 +1073,7 @@ function initSocket() {
 
     // Timeline submission handler
     AppState.socket.on('timeline_submission', (data) => {
+        console.log('[Admin] Timeline submission received:', data);
         UI.updateTimelineSubmission(data);
     });
 
@@ -696,6 +1124,46 @@ function initSocket() {
             AppState.timerPaused = false;
             UI.updateTimerDisplay(0, AppState.timerTotal, 'COMPLETE');
         }
+    });
+
+    // Price guess handlers
+    AppState.socket.on('price_guess_received', (data) => {
+        UI.addPriceGuess(data.team_id, data.team_name, data.guess_amount);
+    });
+
+    AppState.socket.on('price_revealed', (data) => {
+        UI.showPriceGuessResults(data.actual_price, data.team_guesses);
+    });
+
+    // Survival handlers
+    AppState.socket.on('survival_vote_received', (data) => {
+        console.log('[Admin] Survival vote received:', data);
+        UI.addSurvivalVote(data.team_name, data.vote);
+    });
+
+    AppState.socket.on('survival_round_complete', (data) => {
+        console.log('[Admin] Survival round complete:', data);
+        if (!AppState.survivalEliminatedTeams) {
+            AppState.survivalEliminatedTeams = [];
+        }
+        AppState.survivalEliminatedTeams.push(...(data.newly_eliminated || []));
+        UI.updateSurvivalTeamList(AppState.teams, AppState.survivalEliminatedTeams);
+    });
+
+    // Pixel Perfect handlers
+    AppState.socket.on('pixelperfect_locked', (data) => {
+        AppState.pixelperfectLockedBy = data.locked_by_team_id;
+        UI.updatePixelPerfectLocker(data.locked_by_team_name);
+    });
+
+    AppState.socket.on('pixelperfect_reset', () => {
+        AppState.pixelperfectLockedBy = null;
+        UI.updatePixelPerfectLocker(null);
+    });
+
+    // Round timer sync handler (global HUD timer)
+    AppState.socket.on('round_timer_sync', (data) => {
+        UI.updateRoundTimerDisplay(data.remaining_seconds, data.total_seconds, data.status);
     });
 }
 
@@ -839,6 +1307,49 @@ function initEventBindings() {
         AdminActions.resetTimer();
     });
 
+    // Round Timer controls (global HUD timer)
+    const roundTimerStartBtn = document.getElementById('round-timer-start-btn');
+    if (roundTimerStartBtn) {
+        roundTimerStartBtn.addEventListener('click', () => {
+            AdminActions.startRoundTimer();
+        });
+    }
+
+    const roundTimerPauseBtn = document.getElementById('round-timer-pause-btn');
+    if (roundTimerPauseBtn) {
+        roundTimerPauseBtn.addEventListener('click', () => {
+            AdminActions.pauseRoundTimer();
+        });
+    }
+
+    const roundTimerResumeBtn = document.getElementById('round-timer-resume-btn');
+    if (roundTimerResumeBtn) {
+        roundTimerResumeBtn.addEventListener('click', () => {
+            AdminActions.resumeRoundTimer();
+        });
+    }
+
+    const roundTimerStopBtn = document.getElementById('round-timer-stop-btn');
+    if (roundTimerStopBtn) {
+        roundTimerStopBtn.addEventListener('click', () => {
+            AdminActions.stopRoundTimer();
+        });
+    }
+
+    const roundTimerAdd30Btn = document.getElementById('round-timer-add30-btn');
+    if (roundTimerAdd30Btn) {
+        roundTimerAdd30Btn.addEventListener('click', () => {
+            AdminActions.addRoundTimerTime(30);
+        });
+    }
+
+    const roundTimerAdd60Btn = document.getElementById('round-timer-add60-btn');
+    if (roundTimerAdd60Btn) {
+        roundTimerAdd60Btn.addEventListener('click', () => {
+            AdminActions.addRoundTimerTime(60);
+        });
+    }
+
     // Music controller
     document.getElementById('music-toggle-btn').addEventListener('click', () => {
         AdminActions.musicToggle();
@@ -851,6 +1362,116 @@ function initEventBindings() {
     document.getElementById('music-prev-btn').addEventListener('click', () => {
         AdminActions.musicPrevious();
     });
+
+    // Price guess controls
+    document.getElementById('send-priceguess-btn').addEventListener('click', () => {
+        AdminActions.sendProduct();
+    });
+
+    document.getElementById('reveal-priceguess-btn').addEventListener('click', () => {
+        AdminActions.revealPrice();
+    });
+
+    // Price guess preset selector
+    const priceguessPresetSelect = document.getElementById('priceguess-preset-select');
+    if (priceguessPresetSelect) {
+        priceguessPresetSelect.addEventListener('change', (e) => {
+            const index = e.target.value;
+            if (index !== '' && AppState.priceProducts[index]) {
+                const p = AppState.priceProducts[index];
+                document.getElementById('priceguess-url-input').value = p.image_url;
+                document.getElementById('priceguess-hint-input').value = p.hint || '';
+                document.getElementById('priceguess-id').value = p.id;
+                document.getElementById('priceguess-actual-price').value = p.actual_price;
+            }
+        });
+    }
+
+    // Survival preset selector
+    const survivalPresetSelect = document.getElementById('survival-preset-select');
+    if (survivalPresetSelect) {
+        survivalPresetSelect.addEventListener('change', (e) => {
+            const index = e.target.value;
+            if (index !== '' && AppState.survivalQuestions[index]) {
+                const q = AppState.survivalQuestions[index];
+                document.getElementById('survival-question-input').value = q.question;
+                document.getElementById('survival-option-a').value = q.option_a;
+                document.getElementById('survival-option-b').value = q.option_b;
+            }
+        });
+    }
+
+    // Survival controls
+    const sendSurvivalBtn = document.getElementById('send-survival-btn');
+    if (sendSurvivalBtn) {
+        sendSurvivalBtn.addEventListener('click', () => {
+            AdminActions.sendSurvivalQuestion();
+        });
+    }
+
+    const survivalRevealBtn = document.getElementById('survival-reveal-btn');
+    if (survivalRevealBtn) {
+        survivalRevealBtn.addEventListener('click', () => {
+            AdminActions.survivalReveal();
+        });
+    }
+
+    const survivalResetBtn = document.getElementById('survival-reset-btn');
+    if (survivalResetBtn) {
+        survivalResetBtn.addEventListener('click', () => {
+            AdminActions.survivalResetRound();
+        });
+    }
+
+    const survivalReviveAllBtn = document.getElementById('survival-revive-all-btn');
+    if (survivalReviveAllBtn) {
+        survivalReviveAllBtn.addEventListener('click', () => {
+            AdminActions.survivalReviveAll();
+        });
+    }
+
+    // Pixel Perfect controls
+    const startPixelperfectBtn = document.getElementById('start-pixelperfect-btn');
+    if (startPixelperfectBtn) {
+        startPixelperfectBtn.addEventListener('click', () => {
+            AdminActions.startPixelPerfectRound();
+        });
+    }
+
+    const pixelperfectCorrectBtn = document.getElementById('pixelperfect-correct-btn');
+    if (pixelperfectCorrectBtn) {
+        pixelperfectCorrectBtn.addEventListener('click', () => {
+            AdminActions.judgePixelPerfect(true, 100);
+        });
+    }
+
+    const pixelperfectWrongBtn = document.getElementById('pixelperfect-wrong-btn');
+    if (pixelperfectWrongBtn) {
+        pixelperfectWrongBtn.addEventListener('click', () => {
+            AdminActions.judgePixelPerfect(false, 0);
+        });
+    }
+
+    const revealPixelperfectBtn = document.getElementById('reveal-pixelperfect-btn');
+    if (revealPixelperfectBtn) {
+        revealPixelperfectBtn.addEventListener('click', () => {
+            AdminActions.revealPixelPerfect();
+        });
+    }
+
+    // Pixel Perfect preset selector
+    const pixelperfectPresetSelect = document.getElementById('pixelperfect-preset-select');
+    if (pixelperfectPresetSelect) {
+        pixelperfectPresetSelect.addEventListener('change', (e) => {
+            const index = e.target.value;
+            if (index !== '' && AppState.pixelperfectImages[index]) {
+                const img = AppState.pixelperfectImages[index];
+                document.getElementById('pixelperfect-url-input').value = img.image_url;
+                document.getElementById('pixelperfect-correct-answer').value = img.answer;
+                document.getElementById('pixelperfect-round-id').value = img.id;
+            }
+        });
+    }
 }
 
 // ============================================================
@@ -866,17 +1487,26 @@ async function loadPresetContent() {
             AppState.timelinePuzzles = data.timeline_puzzles || [];
             AppState.audioTracks = data.audio_tracks || [];
             AppState.pictureGuesses = data.picture_guesses || [];
+            AppState.survivalQuestions = data.survival_questions || [];
+            AppState.pixelperfectImages = data.pixelperfect_images || [];
+            AppState.priceProducts = data.price_products || [];
 
             UI.populateTriviaPresets();
             UI.populateTimelinePresets();
             UI.populateAudioTracks();
             UI.populatePictureGuessPresets();
+            UI.populateSurvivalPresets();
+            UI.populatePixelPerfectPresets();
+            UI.populatePriceGuessPresets();
 
             console.log('[Admin] Loaded preset content:', {
                 trivia: AppState.triviaQuestions.length,
                 timeline: AppState.timelinePuzzles.length,
                 audio: AppState.audioTracks.length,
-                pictureGuesses: AppState.pictureGuesses.length
+                survival: AppState.survivalQuestions.length,
+                pictureGuesses: AppState.pictureGuesses.length,
+                pixelperfect: AppState.pixelperfectImages.length,
+                priceProducts: AppState.priceProducts.length
             });
         }
     } catch (err) {
@@ -892,7 +1522,7 @@ async function checkSpotifyStatus() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('spotify_success')) {
         statusText.textContent = 'Connected! (refresh TV page)';
-        statusText.style.color = 'var(--terminal-green)';
+        statusText.style.color = 'var(--baby-blue)';
         loginBtn.classList.add('hidden');
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
@@ -915,7 +1545,7 @@ async function checkSpotifyStatus() {
                 loginBtn.classList.add('hidden');
             } else if (data.connected) {
                 statusText.textContent = 'Connected (Web Playback SDK ready)';
-                statusText.style.color = 'var(--terminal-green)';
+                statusText.style.color = 'var(--baby-blue)';
                 loginBtn.classList.add('hidden');
             } else {
                 statusText.textContent = 'Not connected';
@@ -940,8 +1570,32 @@ document.addEventListener('DOMContentLoaded', () => {
     initEventBindings();
     loadPresetContent();
     checkSpotifyStatus();
+    initActivityTracking();
     console.log('[Admin] Ready');
 });
+
+// ============================================================
+// ACTIVITY TRACKING (keeps screensaver from activating)
+// ============================================================
+
+function initActivityTracking() {
+    let lastActivityPing = 0;
+    const PING_THROTTLE = 30000; // Only ping every 30 seconds max
+
+    function sendActivityPing() {
+        const now = Date.now();
+        if (now - lastActivityPing > PING_THROTTLE && AppState.socket && AppState.connected) {
+            AppState.socket.emit('screensaver_activity');
+            lastActivityPing = now;
+            console.log('[Admin] Activity ping sent');
+        }
+    }
+
+    // Track user interactions
+    ['click', 'keypress', 'mousemove', 'touchstart'].forEach(evt => {
+        document.addEventListener(evt, sendActivityPing);
+    });
+}
 
 // Expose for debugging
 window.AppState = AppState;

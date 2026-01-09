@@ -1,0 +1,88 @@
+---
+/**
+ * StorybookFrame.astro
+ * Decorative corner flourishes that frame the TV display
+ * Reinforces the fairy tale / storybook aesthetic
+ */
+---
+<div class="storybook-frame" aria-hidden="true">
+    <!-- Top Left Corner -->
+    <div class="storybook-frame__corner storybook-frame__corner--tl">
+        <svg viewBox="0 0 100 100" class="storybook-frame__flourish">
+            <defs>
+                <linearGradient id="corner-gradient-tl" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:currentColor;stop-opacity:0.6" />
+                    <stop offset="100%" style="stop-color:currentColor;stop-opacity:0.1" />
+                </linearGradient>
+            </defs>
+            <!-- Ornate corner flourish -->
+            <path d="M0,80 Q0,0 80,0 L60,0 Q10,0 0,60 Z" fill="url(#corner-gradient-tl)" />
+            <path d="M0,80 C0,40 40,10 80,0" stroke="currentColor" stroke-width="1" fill="none" opacity="0.4"/>
+            <path d="M0,60 C0,30 30,8 60,0" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.3"/>
+            <!-- Snowflake accent -->
+            <circle cx="20" cy="20" r="2" fill="currentColor" opacity="0.5">
+                <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="35" cy="12" r="1.5" fill="currentColor" opacity="0.4">
+                <animate attributeName="opacity" values="0.2;0.5;0.2" dur="4s" repeatCount="indefinite"/>
+            </circle>
+        </svg>
+    </div>
+
+    <!-- Top Right Corner -->
+    <div class="storybook-frame__corner storybook-frame__corner--tr">
+        <svg viewBox="0 0 100 100" class="storybook-frame__flourish">
+            <defs>
+                <linearGradient id="corner-gradient-tr" x1="100%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:currentColor;stop-opacity:0.6" />
+                    <stop offset="100%" style="stop-color:currentColor;stop-opacity:0.1" />
+                </linearGradient>
+            </defs>
+            <path d="M100,80 Q100,0 20,0 L40,0 Q90,0 100,60 Z" fill="url(#corner-gradient-tr)" />
+            <path d="M100,80 C100,40 60,10 20,0" stroke="currentColor" stroke-width="1" fill="none" opacity="0.4"/>
+            <path d="M100,60 C100,30 70,8 40,0" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.3"/>
+            <circle cx="80" cy="20" r="2" fill="currentColor" opacity="0.5">
+                <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="65" cy="12" r="1.5" fill="currentColor" opacity="0.4">
+                <animate attributeName="opacity" values="0.2;0.5;0.2" dur="4.5s" repeatCount="indefinite"/>
+            </circle>
+        </svg>
+    </div>
+
+    <!-- Bottom Left Corner -->
+    <div class="storybook-frame__corner storybook-frame__corner--bl">
+        <svg viewBox="0 0 100 100" class="storybook-frame__flourish">
+            <defs>
+                <linearGradient id="corner-gradient-bl" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:currentColor;stop-opacity:0.6" />
+                    <stop offset="100%" style="stop-color:currentColor;stop-opacity:0.1" />
+                </linearGradient>
+            </defs>
+            <path d="M0,20 Q0,100 80,100 L60,100 Q10,100 0,40 Z" fill="url(#corner-gradient-bl)" />
+            <path d="M0,20 C0,60 40,90 80,100" stroke="currentColor" stroke-width="1" fill="none" opacity="0.4"/>
+            <path d="M0,40 C0,70 30,92 60,100" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.3"/>
+            <circle cx="20" cy="80" r="2" fill="currentColor" opacity="0.5">
+                <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3.2s" repeatCount="indefinite"/>
+            </circle>
+        </svg>
+    </div>
+
+    <!-- Bottom Right Corner -->
+    <div class="storybook-frame__corner storybook-frame__corner--br">
+        <svg viewBox="0 0 100 100" class="storybook-frame__flourish">
+            <defs>
+                <linearGradient id="corner-gradient-br" x1="100%" y1="100%" x2="0%" y2="0%">
+                    <stop offset="0%" style="stop-color:currentColor;stop-opacity:0.6" />
+                    <stop offset="100%" style="stop-color:currentColor;stop-opacity:0.1" />
+                </linearGradient>
+            </defs>
+            <path d="M100,20 Q100,100 20,100 L40,100 Q90,100 100,40 Z" fill="url(#corner-gradient-br)" />
+            <path d="M100,20 C100,60 60,90 20,100" stroke="currentColor" stroke-width="1" fill="none" opacity="0.4"/>
+            <path d="M100,40 C100,70 70,92 40,100" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.3"/>
+            <circle cx="80" cy="80" r="2" fill="currentColor" opacity="0.5">
+                <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3.8s" repeatCount="indefinite"/>
+            </circle>
+        </svg>
+    </div>
+</div>

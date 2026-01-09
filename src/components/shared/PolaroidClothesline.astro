@@ -1,0 +1,91 @@
+---
+interface Props {
+    id?: string;
+    listId?: string;
+    class?: string;
+}
+
+const { id, listId, class: className } = Astro.props;
+---
+<div id={id} class:list={["polaroid-clothesline", className]}>
+    <ul id={listId} class="polaroid-list">
+        <slot />
+    </ul>
+</div>
+
+<style>
+    /* Clothesline container - the string */
+    .polaroid-clothesline {
+        position: relative;
+        padding: 2.5rem 1rem 1rem;
+        margin: 0 auto;
+        max-width: 95%;
+    }
+
+    /* The string across the top */
+    .polaroid-clothesline::before {
+        content: '';
+        position: absolute;
+        top: 0.5rem;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, transparent, #8b7355 5%, #8b7355 95%, transparent);
+    }
+
+    .polaroid-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 2rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .polaroid-list :global(li) {
+        background: #fffef8;
+        padding: 1.25rem 1.5rem 1.5rem;
+        box-shadow:
+            3px 4px 12px rgba(0, 0, 0, 0.2),
+            0 0 0 1px rgba(0, 0, 0, 0.05);
+        transform: rotate(-2deg);
+        display: inline-block;
+        font-family: var(--font-story);
+        color: var(--ink-black);
+        font-size: 1.6rem;
+        font-weight: 500;
+        min-width: 180px;
+        max-width: 280px;
+        text-align: center;
+        position: relative;
+        transition: transform 0.2s ease;
+    }
+
+    .polaroid-list :global(li:nth-child(even)) {
+        transform: rotate(2deg);
+    }
+
+    .polaroid-list :global(li:nth-child(3n)) {
+        transform: rotate(-1.5deg);
+    }
+
+    .polaroid-list :global(li:nth-child(5n)) {
+        transform: rotate(2.5deg);
+    }
+
+    /* Tape effect at top */
+    .polaroid-list :global(li::before) {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%) rotate(-3deg);
+        width: 60px;
+        height: 22px;
+        background: linear-gradient(180deg, rgba(255, 230, 150, 0.9), rgba(255, 220, 130, 0.85));
+        border: 1px solid rgba(200, 180, 100, 0.3);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+</style>

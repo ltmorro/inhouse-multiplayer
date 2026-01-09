@@ -1,50 +1,48 @@
 ---
+/**
+ * TimelineView.astro - Immersive TV display for timeline/ordering games
+ * Polaroid clothesline uses baby blue border glow
+ * HUD elements handled by TVHud + MoonTimer
+ */
 import ViewContainer from '../shared/ViewContainer.astro';
+import PolaroidClothesline from '../shared/PolaroidClothesline.astro';
 ---
 <ViewContainer id="view-timeline">
-    <div class="tv-layout">
-        <div class="tv-header">
-            <h1 class="tv-title glow-strong">TEMPORAL DATABASE CORRUPTED</h1>
-            <p class="tv-subtitle">PROTOCOL 5 - TIMELINE RESTORATION</p>
-        </div>
-        <div class="tv-content">
-            <div class="text-center">
-                <!-- Waiting state (shown when no timeline data) -->
-                <div id="timeline-waiting-tv" class="tv-waiting">
-                    <p class="tv-waiting">Awaiting temporal anomaly data...</p>
-                    <p class="tv-cursor blink mt-2">_</p>
+    <!-- STAGE ONLY - HUD and atmosphere handled by layout -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <p class="stage-subtitle">Chapter 3: Tiny Tracks in the Snow</p>
+            <h1 class="stage-title fairy-title--glow animate-breathe">Watch Me Grow</h1>
+
+            <!-- Waiting state (shown when no timeline data) -->
+            <div id="timeline-waiting-tv" class="mt-3">
+                <p class="stage-narrator animate-breathe">Preparing milestone cards...</p>
+                <p class="animate-twinkle mt-2 tv-text-large">*</p>
+            </div>
+
+            <!-- Active timeline content (hidden when waiting) -->
+            <div id="timeline-active-tv" class="hidden mt-3">
+                <!-- Display the scrambled timeline items as polaroids on a string -->
+                <PolaroidClothesline id="timeline-items-tv" listId="timeline-items-list-tv">
+                    <!-- Timeline items injected here dynamically -->
+                </PolaroidClothesline>
+
+                <div id="timeline-team-status" class="stage-narrator mt-2">
+                    <!-- Team progress indicators -->
                 </div>
 
-                <!-- Active timeline content (hidden when waiting) -->
-                <div id="timeline-active-tv" class="hidden">
-                    <!-- Display the scrambled timeline items -->
-                    <div id="timeline-items-tv" class="tv-table-container mt-2" style="text-align: left;">
-                        <p class="tv-section-heading text-center mb-2">SCRAMBLED EVENTS:</p>
-                        <ul id="timeline-items-list-tv" class="tv-list">
-                            <!-- Timeline items injected here -->
-                        </ul>
+                <div id="timeline-winner" class="mt-3 hidden">
+                    <div class="chapter-star">
+                        <span class="animate-twinkle">*</span>
                     </div>
-                    <div id="timeline-team-status" class="tv-status mt-3">
-                        <!-- Team progress indicators -->
-                    </div>
-                    <div id="timeline-winner" class="mt-3 hidden">
-                        <p class="tv-label">WINNER:</p>
-                        <p id="timeline-winner-name" class="tv-reveal glow-strong"></p>
-                    </div>
-                    <div id="timeline-team-submissions" class="tv-table-container mt-3 hidden">
-                        <!-- Team submissions table injected here -->
-                    </div>
+                    <p class="tv-label-text">Winner:</p>
+                    <p id="timeline-winner-name" class="stage-reveal glow-baby-blue-intense animate-float"></p>
+                </div>
+
+                <div id="timeline-team-submissions" class="tv-team-answers ethereal-scroll mt-3 hidden">
+                    <!-- Team submissions table injected here -->
                 </div>
             </div>
-        </div>
-        <div class="tv-instructions">
-            <div class="tv-instructions-box">
-                <p class="instruction-title">HISTORICAL RECORDS SCRAMBLED BY Y2K BUG</p>
-                <p class="instruction-text">Reality itself is at stake. <strong>Restore the timeline before it collapses!</strong> Drag events into chronological order. First correct restoration = maximum points.</p>
-            </div>
-        </div>
-        <div class="tv-footer">
-            <div id="timeline-scoreboard"></div>
         </div>
     </div>
 </ViewContainer>

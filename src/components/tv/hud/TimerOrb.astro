@@ -1,0 +1,16 @@
+---
+/**
+ * TimerOrb.astro
+ * Floating countdown timer orb - replaces rectangular timer pill
+ * Shows during active games with timers, pulses on warning/danger states
+ */
+---
+<div
+    id="timer-orb"
+    class="hud-orb hud-element timer-orb"
+    data-show-states="TRIVIA,TIMELINE,PICTUREGUESS,TIMER,BUZZER,PIXELPERFECT,PRICEGUESS,SURVIVAL,MINESWEEPER,MACGYVER"
+>
+    <div class="timer-orb__ring"></div>
+    <span class="timer-orb__value" id="timer-orb-value">--</span>
+    <span class="timer-orb__label">seconds</span>
+</div>

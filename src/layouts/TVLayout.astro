@@ -1,0 +1,63 @@
+---
+/**
+ * TVLayout.astro
+ * TV display variant of GameLayout.
+ * Provides TV-specific header (TVHud), overlays, and scripts.
+ *
+ * Immersive "Frost Window" architecture:
+ * - FrostedOverlay creates the frosted window pane effect
+ * - MoonTimer provides arc-based time visualization
+ * - Content appears in the "clear" center of the frost
+ */
+import GameLayout from './GameLayout.astro';
+import TVHud from '../components/tv/hud/TVHud.astro';
+import FrostedOverlay from '../components/tv/FrostedOverlay.astro';
+import WinterWoods from '../components/tv/WinterWoods.astro';
+import GameProgress from '../components/shared/GameProgress.astro';
+import TimerOverlay from '../components/shared/TimerOverlay.astro';
+import OverlayExtras from '../components/tv/OverlayExtras.astro';
+import '../styles/tv.css';
+import '../styles/frost.css';
+
+interface Props {
+    title?: string;
+}
+
+const { title = 'The Storybook' } = Astro.props;
+---
+
+<GameLayout title={title} variant="tv" bodyClass="tv-page">
+    <!-- Winter Woods Background - SVG trees for depth -->
+    <WinterWoods />
+
+    <!-- Frosted Window Effect - edges are frosted, center is clear -->
+    <FrostedOverlay />
+
+    <!-- TV Header/HUD (includes MoonTimer, ChapterSeal, ScoreRibbon) -->
+    <TVHud slot="header" />
+
+    <!-- Main Stage Content (passed through from page) -->
+    <slot />
+
+    <!-- TV Overlays -->
+    <Fragment slot="overlays">
+        <GameProgress />
+        <TimerOverlay />
+        <OverlayExtras />
+    </Fragment>
+
+    <!-- TV Scripts -->
+    <Fragment slot="scripts">
+        <script is:inline src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+        <script is:inline src="/js/hud-controller.js"></script>
+        <script is:inline>
+            // Spotify SDK callback
+            window.onSpotifyWebPlaybackSDKReady = () => {
+                console.log('[Spotify] SDK ready callback fired');
+                window.spotifySDKReady = true;
+            };
+        </script>
+        <script is:inline src="https://sdk.scdn.co/spotify-player.js"></script>
+        <script is:inline src="/js/tv.js" defer></script>
+    </Fragment>
+</GameLayout>

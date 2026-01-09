@@ -1,0 +1,31 @@
+---
+---
+<section id="priceguess-section" class="admin-section mt-3" style="display: none;">
+    <h3 class="glow">THE PRICE IS RIGHT</h3>
+    <div class="mt-1">
+        <label>Product:</label>
+        <select id="priceguess-preset-select" class="terminal-input w-full">
+            <option value="">-- Select product or enter custom --</option>
+        </select>
+    </div>
+    <div class="mt-1">
+        <label>Image URL:</label>
+        <input type="text" id="priceguess-url-input" class="terminal-input" placeholder="/images/product.jpg">
+    </div>
+    <div class="mt-1">
+        <label>Hint:</label>
+        <input type="text" id="priceguess-hint-input" class="terminal-input" placeholder="Optional hint...">
+    </div>
+    <div class="admin-controls items-center mt-1">
+        <label>P#:</label>
+        <input type="number" id="priceguess-id" class="terminal-input admin-input--narrow" value="1">
+        <button id="send-priceguess-btn" class="terminal-btn terminal-btn--primary">SEND TO SCREEN</button>
+    </div>
+    <h4 class="mt-2">GUESSES:</h4>
+    <ul id="priceguess-list" class="admin-list admin-list--scrollable mt-1"></ul>
+    <div class="admin-controls mt-2">
+        <label>Actual Price: $</label>
+        <input type="number" id="priceguess-actual-price" class="terminal-input" placeholder="0.00" step="0.01" min="0">
+        <button id="reveal-priceguess-btn" class="terminal-btn terminal-btn--primary">REVEAL & SCORE</button>
+    </div>
+</section>

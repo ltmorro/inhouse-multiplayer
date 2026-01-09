@@ -1,0 +1,27 @@
+---
+import ViewContainer from '../shared/ViewContainer.astro';
+import ChapterHeader from './storybook/ChapterHeader.astro';
+import StoryPageFrame from './storybook/StoryPageFrame.astro';
+import NarratorText from './storybook/NarratorText.astro';
+---
+<ViewContainer id="view-buzzer">
+    <div class="frost-viewport">
+        <ChapterHeader
+            chapter="A Musical Interlude"
+            title="Name That Lullaby"
+            narrator="Quick! Who will ring first?"
+        />
+
+        <StoryPageFrame withGlow={true}>
+            <NarratorText variant="whisper">Listen closely...</NarratorText>
+            <button id="buzzer-button" class="frost-buzzer frost-buzzer--active">
+                <span id="buzzer-text">Buzz In!</span>
+            </button>
+            <p id="buzzer-status" class="frost-status" style="margin-top: 1rem;"></p>
+        </StoryPageFrame>
+
+        <div class="frost-actions">
+            <!-- Buzzer needs no additional input -->
+        </div>
+    </div>
+</ViewContainer>

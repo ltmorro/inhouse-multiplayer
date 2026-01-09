@@ -2,13 +2,21 @@
 import ViewContainer from '../shared/ViewContainer.astro';
 ---
 <ViewContainer id="view-minesweeper">
-    <div class="flex-grow flex-center flex-column text-center">
-        <h2 class="glow">CHAPTER 3: THIN ICE</h2>
-        <p style="color: var(--terminal-amber); font-size: 0.9rem;">
-            NAVIGATE CAREFULLY
-        </p>
-        <p id="minesweeper-message" class="mt-2">
-            Cross the frozen lake. Do not crack the ice.
-        </p>
+    <div class="frost-viewport">
+        <header class="frost-header">
+            <p class="frost-header__chapter">A Frozen Crossing</p>
+            <h2 class="frost-header__title">Thin Ice</h2>
+        </header>
+
+        <div class="frost-card frost-card--glow">
+            <p id="minesweeper-message" class="frost-card__instruction">
+                Cross the frozen lake. Do not crack the ice.
+            </p>
+            <div class="frost-waiting__icon waiting-pulse">❄</div>
+        </div>
+
+        <div class="frost-actions">
+            <p class="frost-status">Watch the big screen for your path...</p>
+        </div>
     </div>
 </ViewContainer>

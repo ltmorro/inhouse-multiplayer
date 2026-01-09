@@ -1,6 +1,9 @@
 import time
 import re
+import logging
 from ..base_game import BaseGame, EventResponse, EventContext
+
+logger = logging.getLogger(__name__)
 
 class TimelineGame(BaseGame):
     GAME_ID = "TIMELINE"
@@ -16,6 +19,7 @@ class TimelineGame(BaseGame):
 
     def on_enter(self, state_data):
         self._state = {
+            'puzzle_id': state_data.get('puzzle_id'),
             'correct_order': state_data.get('correct_order', []),
             'winners': [],
             'submissions': {}, # team_id -> {order, player_id, player_name, timestamp}
@@ -108,7 +112,7 @@ class TimelineGame(BaseGame):
             response.to_specific_team[team_id]['timeline_result'] = {
                 'correct': False,
                 'attempt_number': 1,
-                'message': 'INDEX ERROR',
+                'message': 'Incorrect!',
                 'player_id': context.player_id,
                 'player_name': context.player_name
             }

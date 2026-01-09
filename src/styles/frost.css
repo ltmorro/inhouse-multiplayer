@@ -1,0 +1,1110 @@
+/* =============================================================
+   FROST - Aurora + Glassmorphism Mobile Design System
+   "Modern magic for a snowy baby shower"
+   ============================================================= */
+
+/* =============================================================
+   AURORA BACKGROUND
+   Subtle shifting gradients like northern lights
+   ============================================================= */
+
+.frost-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(
+        135deg,
+        #0a1628 0%,
+        #122a4a 25%,
+        #1a3d5c 50%,
+        #1e4a6f 75%,
+        #0f2847 100%
+    );
+    overflow: hidden;
+}
+
+/* Aurora glow layers */
+.frost-bg::before,
+.frost-bg::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    animation: aurora-drift 20s ease-in-out infinite;
+}
+
+.frost-bg::before {
+    width: 150%;
+    height: 60%;
+    top: -20%;
+    left: -25%;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(135, 206, 235, 0.4) 0%,
+        rgba(100, 180, 220, 0.2) 40%,
+        transparent 70%
+    );
+}
+
+.frost-bg::after {
+    width: 120%;
+    height: 50%;
+    bottom: -10%;
+    right: -30%;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(100, 180, 230, 0.35) 0%,
+        rgba(70, 150, 200, 0.2) 40%,
+        transparent 70%
+    );
+    animation-delay: -10s;
+    animation-direction: reverse;
+}
+
+@keyframes aurora-drift {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.4;
+    }
+    33% {
+        transform: translate(5%, 3%) scale(1.05);
+        opacity: 0.5;
+    }
+    66% {
+        transform: translate(-3%, -2%) scale(0.98);
+        opacity: 0.35;
+    }
+}
+
+/* Subtle snowfall particles */
+.frost-snow {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image:
+        radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(2px 2px at 30% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(2px 2px at 70% 40%, rgba(255,255,255,0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.45) 0%, transparent 100%),
+        radial-gradient(1px 1px at 20% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(2px 2px at 80% 15%, rgba(255,255,255,0.3) 0%, transparent 100%);
+    animation: snow-fall 30s linear infinite;
+}
+
+@keyframes snow-fall {
+    0% { transform: translateY(-5%); }
+    100% { transform: translateY(5%); }
+}
+
+/* =============================================================
+   STORYBOOK ATMOSPHERE LAYERS
+   Moonbeams, stars, and ethereal effects
+   ============================================================= */
+
+/* Moonbeam shafts - soft diagonal light */
+.frost-moonbeam {
+    position: fixed;
+    top: -20%;
+    width: 180px;
+    height: 120%;
+    background: linear-gradient(
+        180deg,
+        rgba(232, 244, 253, 0.06) 0%,
+        rgba(232, 244, 253, 0.02) 40%,
+        transparent 70%
+    );
+    pointer-events: none;
+    z-index: 1;
+    animation: moonbeam-drift 12s ease-in-out infinite;
+}
+
+.frost-moonbeam--left {
+    left: 5%;
+    transform: rotate(12deg);
+}
+
+.frost-moonbeam--right {
+    right: 8%;
+    transform: rotate(-10deg);
+    animation-delay: 6s;
+}
+
+@keyframes moonbeam-drift {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.8; }
+}
+
+/* Twinkling star field */
+.frost-stars {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image:
+        radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 22% 38%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(2px 2px at 35% 8%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 48% 65%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 62% 22%, rgba(255,255,255,0.55) 0%, transparent 100%),
+        radial-gradient(2px 2px at 78% 45%, rgba(255,255,255,0.45) 0%, transparent 100%),
+        radial-gradient(1px 1px at 88% 72%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 5%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(2px 2px at 92% 15%, rgba(255,255,255,0.4) 0%, transparent 100%);
+    animation: twinkle-field 6s ease-in-out infinite;
+}
+
+@keyframes twinkle-field {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* =============================================================
+   VIEWPORT CONTAINER
+   ============================================================= */
+
+.frost-viewport {
+    position: relative;
+    z-index: 2;
+    height: 100dvh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem;
+    padding-top: 56px; /* Status bar */
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* =============================================================
+   HEADER
+   ============================================================= */
+
+.frost-header {
+    flex: 0 0 auto;
+    text-align: center;
+    padding: 0.75rem 0;
+}
+
+.frost-header__chapter {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(255, 229, 180, 0.9);
+    margin: 0;
+}
+
+.frost-header__title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0.25rem 0 0 0;
+    text-shadow: 0 2px 20px rgba(135, 206, 235, 0.3);
+}
+
+/* =============================================================
+   FROSTED CARD - Main content container
+   ============================================================= */
+
+.frost-card {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0.5rem 0;
+    padding: 1.5rem;
+
+    /* Glassmorphism */
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+
+    /* Subtle inner glow */
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+        0 8px 32px rgba(0, 0, 0, 0.2);
+
+    /* Content layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow-y: auto;
+}
+
+/* Card content styling */
+.frost-card__question {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: #ffffff;
+    margin: 0;
+}
+
+.frost-card__instruction {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+.frost-card__hint {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-style: italic;
+    color: rgba(255, 229, 180, 0.8);
+    margin-top: 1rem;
+}
+
+/* Waiting state */
+.frost-waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.frost-waiting__text {
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+}
+
+.frost-waiting__icon {
+    font-size: 2rem;
+    animation: twinkle 2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* =============================================================
+   ACTION AREA - Inputs and buttons
+   ============================================================= */
+
+.frost-actions {
+    flex: 0 0 auto;
+    padding: 0.75rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+/* Input field */
+.frost-input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.frost-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.frost-input:focus {
+    border-color: rgba(77, 135, 191, 0.6);
+    box-shadow: 0 0 0 3px rgba(77, 135, 191, 0.2), 0 0 20px rgba(77, 135, 191, 0.15);
+}
+
+/* Primary button */
+.frost-btn {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0a1628;
+    background: linear-gradient(135deg, #ffffff 0%, #e8f4fc 100%);
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.frost-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.frost-btn:active {
+    transform: translateY(0);
+}
+
+.frost-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Status text */
+.frost-status {
+    text-align: center;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    min-height: 1.25rem;
+}
+
+.frost-status--error {
+    color: #ff8a80;
+}
+
+.frost-status--success {
+    color: #a5d6a7;
+}
+
+/* =============================================================
+   BUZZER BUTTON
+   ============================================================= */
+
+.frost-buzzer {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: linear-gradient(
+        145deg,
+        #ffffff 0%,
+        #e0f0fa 50%,
+        #c8e4f4 100%
+    );
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.1);
+
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0a1628;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.frost-buzzer:hover {
+    transform: scale(1.05);
+}
+
+.frost-buzzer:active {
+    transform: scale(0.95);
+}
+
+.frost-buzzer--active {
+    animation: buzzer-baby-blue-glow 2s ease-in-out infinite;
+}
+
+.frost-buzzer--locked {
+    background: linear-gradient(145deg, #b0bec5, #90a4ae);
+    color: #546e7a;
+    cursor: not-allowed;
+    animation: none;
+}
+
+.frost-buzzer--success {
+    background: linear-gradient(145deg, #fff59d, #ffd54f);
+    animation: buzzer-success 1s ease-in-out infinite;
+}
+
+@keyframes buzzer-glow {
+    0%, 100% {
+        box-shadow:
+            0 8px 30px rgba(0, 0, 0, 0.3),
+            0 0 40px rgba(135, 206, 235, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    }
+    50% {
+        box-shadow:
+            0 8px 30px rgba(0, 0, 0, 0.3),
+            0 0 60px rgba(135, 206, 235, 0.5),
+            inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    }
+}
+
+@keyframes buzzer-success {
+    0%, 100% {
+        box-shadow:
+            0 8px 30px rgba(0, 0, 0, 0.3),
+            0 0 30px rgba(255, 213, 79, 0.4);
+    }
+    50% {
+        box-shadow:
+            0 8px 30px rgba(0, 0, 0, 0.3),
+            0 0 50px rgba(255, 213, 79, 0.6);
+    }
+}
+
+/* =============================================================
+   CHOICE BUTTONS (A/B voting)
+   ============================================================= */
+
+.frost-choices {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.frost-choice {
+    flex: 1;
+    aspect-ratio: 1;
+    max-width: 140px;
+    border-radius: 20px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid;
+}
+
+.frost-choice--a {
+    border-color: #66bb6a;
+    color: #66bb6a;
+}
+
+.frost-choice--b {
+    border-color: #ffa726;
+    color: #ffa726;
+}
+
+.frost-choice:active {
+    transform: scale(0.95);
+}
+
+.frost-choice.selected {
+    transform: scale(1.05);
+    color: #ffffff;
+}
+
+.frost-choice--a.selected {
+    background: #66bb6a;
+}
+
+.frost-choice--b.selected {
+    background: #ffa726;
+}
+
+.frost-choice:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* =============================================================
+   TIMER DISPLAY
+   ============================================================= */
+
+.frost-timer {
+    font-family: var(--font-mono, monospace);
+    font-size: 4rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 0 40px rgba(135, 206, 235, 0.5);
+}
+
+/* =============================================================
+   PRICE INPUT
+   ============================================================= */
+
+.frost-price {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.frost-price__symbol {
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.frost-price__input {
+    flex: 1;
+    padding: 1rem 1rem 1rem 0;
+    font-family: var(--font-mono, monospace);
+    font-size: 1.5rem;
+    text-align: right;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    outline: none;
+}
+
+.frost-price__input::-webkit-outer-spin-button,
+.frost-price__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.frost-price__input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* =============================================================
+   REGISTER TABS
+   ============================================================= */
+
+.frost-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.frost-tab {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.frost-tab--active {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+}
+
+/* =============================================================
+   TIMELINE CARDS
+   ============================================================= */
+
+.frost-timeline {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    overflow-y: auto;
+    padding: 0.25rem;
+}
+
+.frost-timeline__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    counter-reset: timeline;
+}
+
+.frost-timeline__list :global(li) {
+    position: relative;
+    padding: 0.875rem 3rem 0.875rem 1rem;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: #ffffff;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    transition: all 0.15s ease;
+}
+
+.frost-timeline__list :global(li::after) {
+    content: counter(timeline);
+    counter-increment: timeline;
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.75rem;
+    height: 1.75rem;
+    background: rgba(135, 206, 235, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.frost-timeline__list :global(li:active),
+.frost-timeline__list :global(li.sortable-chosen) {
+    cursor: grabbing;
+    transform: scale(1.02);
+    background: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.frost-timeline__list :global(li.sortable-ghost) {
+    opacity: 0.3;
+}
+
+/* =============================================================
+   REACTION BAR
+   ============================================================= */
+
+.frost-reactions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0));
+    background: rgba(10, 22, 40, 0.8);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 100;
+}
+
+.frost-reactions__emoji {
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.frost-reactions__emoji:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.frost-reactions__emoji:active {
+    transform: scale(0.95);
+}
+
+.frost-reactions__chat {
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
+    background: rgba(255, 229, 180, 0.15);
+    border: 1px solid rgba(255, 229, 180, 0.25);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
+}
+
+.frost-reactions__chat:hover {
+    background: rgba(255, 229, 180, 0.25);
+    transform: scale(1.1);
+}
+
+/* =============================================================
+   CHAT DRAWER
+   ============================================================= */
+
+.frost-chat-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 499;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.frost-chat-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.frost-chat {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 55vh;
+    max-height: 400px;
+    background: rgba(10, 22, 40, 0.95);
+    backdrop-filter: blur(30px);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px 24px 0 0;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-out;
+}
+
+.frost-chat.open {
+    transform: translateY(0);
+}
+
+.frost-chat__header {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.frost-chat__title {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+}
+
+.frost-chat__close {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.frost-chat__close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.frost-chat__messages {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.frost-chat__input-area {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0));
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.frost-chat__input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.frost-chat__input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.frost-chat__send {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #ffffff, #e8f4fc);
+    border: none;
+    border-radius: 50%;
+    color: #0a1628;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.frost-chat__send:hover {
+    transform: scale(1.05);
+}
+
+/* =============================================================
+   FAIRY DUST PARTICLE SYSTEM
+   "Every interaction leaves a trail of wonder"
+   ============================================================= */
+
+.fairy-dust-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10000;
+    overflow: hidden;
+}
+
+.fairy-particle {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: fairy-burst ease-out forwards;
+    will-change: transform, opacity;
+}
+
+@keyframes fairy-burst {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform:
+            translate(
+                calc(cos(var(--angle)) * var(--distance)),
+                calc(sin(var(--angle)) * var(--distance))
+            )
+            scale(0);
+        opacity: 0;
+    }
+}
+
+/* Fallback for browsers without cos/sin support */
+@supports not (transform: translate(calc(cos(1rad) * 1px), 0)) {
+    @keyframes fairy-burst {
+        0% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-30px) scale(0);
+            opacity: 0;
+        }
+    }
+}
+
+/* =============================================================
+   PAGE TRANSITIONS
+   "Like turning pages in a storybook"
+   ============================================================= */
+
+.page-turning-out {
+    animation: page-turn-out 0.35s ease-in forwards;
+}
+
+.page-turning-in {
+    animation: page-turn-in 0.45s ease-out forwards;
+}
+
+@keyframes page-turn-out {
+    0% {
+        opacity: 1;
+        transform: perspective(1000px) rotateY(0deg) translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: perspective(1000px) rotateY(-15deg) translateX(-30px);
+    }
+}
+
+@keyframes page-turn-in {
+    0% {
+        opacity: 0;
+        transform: perspective(1000px) rotateY(15deg) translateX(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: perspective(1000px) rotateY(0deg) translateX(0);
+    }
+}
+
+/* =============================================================
+   BABY BLUE GLOW SYSTEM
+   "The magic of moonlight on frost"
+   Baby Blue (#4D87BF) as light source, not solid fill
+   ============================================================= */
+
+/* Baby Blue Glow Classes */
+.glow-baby-blue {
+    box-shadow: var(--baby-blue-glow-soft);
+}
+
+.glow-baby-blue-intense {
+    box-shadow: var(--baby-blue-glow-intense);
+}
+
+/* Text glow variants */
+.text-glow-baby-blue {
+    text-shadow: 0 0 20px rgba(77, 135, 191, 0.5);
+}
+
+.text-glow-baby-blue-intense {
+    text-shadow: 0 0 30px rgba(77, 135, 191, 0.7), 0 0 60px rgba(77, 135, 191, 0.4);
+}
+
+/* Frost card with baby blue glow */
+.frost-card--glow {
+    border-color: rgba(77, 135, 191, 0.4);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 0 30px rgba(77, 135, 191, 0.15);
+}
+
+/* Enchanted button with baby blue glow */
+.frost-btn--enchanted {
+    box-shadow:
+        0 6px 0 rgba(77, 135, 191, 0.35),
+        0 8px 24px rgba(0, 0, 0, 0.2),
+        0 0 20px rgba(77, 135, 191, 0.2);
+}
+
+.frost-btn--enchanted:hover:not(:disabled) {
+    box-shadow:
+        0 8px 0 rgba(77, 135, 191, 0.35),
+        0 12px 32px rgba(0, 0, 0, 0.25),
+        0 0 40px rgba(77, 135, 191, 0.3);
+}
+
+/* =============================================================
+   IMMERSIVE ANIMATIONS
+   ============================================================= */
+
+/* Drift-in animation for view transitions */
+.drift-in {
+    animation: drift-in 0.6s ease-out forwards;
+}
+
+@keyframes drift-in {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+        filter: blur(4px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+/* Ethereal scroll for lists */
+.ethereal-scroll {
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 5%,
+        black 95%,
+        transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 5%,
+        black 95%,
+        transparent 100%
+    );
+    scrollbar-width: thin;
+    scrollbar-color: rgba(77, 135, 191, 0.3) transparent;
+}
+
+/* Answer/content reveal glow */
+.reveal-glow {
+    text-shadow: 0 0 30px rgba(77, 135, 191, 0.6);
+    animation: reveal-pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes reveal-pulse {
+    0% { text-shadow: 0 0 30px rgba(77, 135, 191, 0.5); }
+    100% { text-shadow: 0 0 50px rgba(77, 135, 191, 0.8), 0 0 80px rgba(77, 135, 191, 0.3); }
+}
+
+/* Image clear animation (frost melting away) */
+.image-clearing {
+    animation: clear-frost 1s ease-out forwards;
+}
+
+@keyframes clear-frost {
+    0% { filter: blur(15px); opacity: 0.5; }
+    100% { filter: blur(0); opacity: 1; }
+}
+
+/* Baby blue buzzer glow animation */
+@keyframes buzzer-baby-blue-glow {
+    0%, 100% {
+        box-shadow:
+            0 8px 30px rgba(0, 0, 0, 0.3),
+            0 0 40px rgba(77, 135, 191, 0.4),
+            inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    }
+    50% {
+        box-shadow:
+            0 8px 30px rgba(0, 0, 0, 0.3),
+            0 0 60px rgba(77, 135, 191, 0.6),
+            inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    }
+}
+
+/* Timer urgency glow */
+.timer-urgent {
+    animation: timer-baby-blue-pulse 1s ease-in-out infinite;
+}
+
+@keyframes timer-baby-blue-pulse {
+    0%, 100% {
+        color: #ffffff;
+        text-shadow: none;
+    }
+    50% {
+        color: var(--baby-blue, #4D87BF);
+        text-shadow: 0 0 30px rgba(77, 135, 191, 0.7);
+    }
+}
+
+/* Waiting indicator pulse */
+.waiting-pulse {
+    animation: waiting-baby-blue 3s ease-in-out infinite;
+}
+
+@keyframes waiting-baby-blue {
+    0%, 100% {
+        opacity: 0.5;
+        text-shadow: none;
+    }
+    50% {
+        opacity: 1;
+        text-shadow: 0 0 20px rgba(77, 135, 191, 0.5);
+    }
+}

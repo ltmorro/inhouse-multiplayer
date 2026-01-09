@@ -8,6 +8,8 @@ import json
 import logging
 import secrets
 import base64
+import argparse
+import subprocess
 import requests
 from urllib.parse import urlencode
 from flask import Flask, render_template, jsonify, redirect, request, session, send_from_directory
@@ -123,7 +125,7 @@ def health():
 
 @app.route('/api/local-ip')
 def get_local_ip():
-    """Get the local IP address and mobile URL for QR code generation."""
+    """Get the local IP address, mobile URL, and optional WiFi config for QR code generation."""
     import socket
     try:
         # Create a socket to determine local IP
@@ -134,14 +136,24 @@ def get_local_ip():
     except Exception:
         local_ip = '127.0.0.1'
 
-    port = 13370
+    # Get port from request (reflects actual running port)
+    port = request.environ.get('SERVER_PORT', 13370)
     mobile_url = f'http://{local_ip}:{port}/mobile'
 
-    return jsonify({
+    response = {
         'local_ip': local_ip,
         'port': port,
         'mobile_url': mobile_url
-    })
+    }
+
+    # Include WiFi config if available
+    if wifi_config['ssid'] and wifi_config['password']:
+        response['wifi'] = {
+            'ssid': wifi_config['ssid'],
+            'password': wifi_config['password']
+        }
+
+    return jsonify(response)
 
 
 @app.route('/api/content')
@@ -306,21 +318,157 @@ def spotify_status():
 
 
 # =============================================================================
+# WIFI QR CODE CONFIGURATION
+# =============================================================================
+
+# WiFi configuration for QR code generation
+# Can be set via environment variables or command line arguments
+wifi_config = {
+    'ssid': None,
+    'password': None
+}
+
+
+def get_current_ssid():
+    """Attempt to get the current WiFi SSID (cross-platform)."""
+    import platform
+    system = platform.system()
+
+    try:
+        if system == 'Darwin':  # macOS
+            result = subprocess.run(
+                ['/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport', '-I'],
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            for line in result.stdout.split('\n'):
+                if ' SSID:' in line:
+                    return line.split(':')[1].strip()
+
+        elif system == 'Windows':
+            result = subprocess.run(
+                ['netsh', 'wlan', 'show', 'interfaces'],
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            for line in result.stdout.split('\n'):
+                if 'SSID' in line and 'BSSID' not in line:
+                    parts = line.split(':')
+                    if len(parts) >= 2:
+                        return parts[1].strip()
+
+        elif system == 'Linux':
+            # Try nmcli first (NetworkManager)
+            result = subprocess.run(
+                ['nmcli', '-t', '-f', 'active,ssid', 'dev', 'wifi'],
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            for line in result.stdout.split('\n'):
+                if line.startswith('yes:'):
+                    return line.split(':')[1]
+
+    except Exception as e:
+        logger.debug(f"Could not auto-detect SSID: {e}")
+
+    return None
+
+
+def init_wifi_config(args):
+    """Initialize WiFi configuration from env vars and CLI args."""
+    # Start with environment variables
+    ssid = os.environ.get('WIFI_SSID', '')
+    password = os.environ.get('WIFI_PASSWORD', '')
+
+    # CLI args override env vars
+    if args.wifi_ssid:
+        ssid = args.wifi_ssid
+    if args.wifi_password:
+        password = args.wifi_password
+
+    # Auto-detect SSID if not provided but password is
+    if not ssid and password:
+        detected = get_current_ssid()
+        if detected:
+            ssid = detected
+            logger.info(f"Auto-detected WiFi SSID: {ssid}")
+
+    wifi_config['ssid'] = ssid if ssid else None
+    wifi_config['password'] = password if password else None
+
+    if wifi_config['ssid'] and wifi_config['password']:
+        logger.info(f"WiFi QR code enabled for network: {wifi_config['ssid']}")
+    elif wifi_config['ssid'] or wifi_config['password']:
+        logger.warning("WiFi QR code disabled: both SSID and password are required")
+        wifi_config['ssid'] = None
+        wifi_config['password'] = None
+
+
+# =============================================================================
 # MAIN
 # =============================================================================
 
+def parse_args():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description='Y2K Party Game Server',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+WiFi QR Code Configuration:
+  The TV lobby can display a WiFi QR code alongside the game join QR code.
+  Configure via environment variables or command line arguments:
+
+  Environment variables:
+    WIFI_SSID      - WiFi network name
+    WIFI_PASSWORD  - WiFi password
+
+  If only WIFI_PASSWORD is set, the SSID will be auto-detected from the
+  current WiFi connection (works on macOS, Windows, and Linux with NetworkManager).
+        """
+    )
+    parser.add_argument(
+        '--wifi-ssid',
+        type=str,
+        help='WiFi network name for QR code'
+    )
+    parser.add_argument(
+        '--wifi-password',
+        type=str,
+        help='WiFi password for QR code'
+    )
+    parser.add_argument(
+        '--port',
+        type=int,
+        default=13370,
+        help='Server port (default: 13370)'
+    )
+    parser.add_argument(
+        '--no-debug',
+        action='store_true',
+        help='Disable debug mode'
+    )
+    return parser.parse_args()
+
+
 if __name__ == '__main__':
+    args = parse_args()
+
+    # Initialize WiFi configuration
+    init_wifi_config(args)
+
     # Run with host='0.0.0.0' to expose to local network
-    # Debug mode auto-reloads on code changes
     logger.info("Starting Y2K Party Game Server...")
-    logger.info("TV View: http://<your-ip>:13370/tv")
-    logger.info("Mobile: http://<your-ip>:13370/mobile")
-    logger.info("Admin: http://<your-ip>:13370/admin")
+    logger.info(f"TV View: http://<your-ip>:{args.port}/tv")
+    logger.info(f"Mobile: http://<your-ip>:{args.port}/mobile")
+    logger.info(f"Admin: http://<your-ip>:{args.port}/admin")
 
     socketio.run(
         app,
         host='0.0.0.0',
-        port=13370,
-        debug=True,
+        port=args.port,
+        debug=not args.no_debug,
         allow_unsafe_werkzeug=True
     )

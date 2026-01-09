@@ -1,34 +1,43 @@
 ---
+/**
+ * VictoryView.astro - Immersive TV display for game completion
+ * Winner reveal uses dramatic baby blue glow pulse
+ * HUD elements handled by TVHud
+ */
 import ViewContainer from '../shared/ViewContainer.astro';
 ---
 <ViewContainer id="view-victory">
-    <div class="tv-layout">
-        <div class="tv-header">
-            <h1 class="tv-title glow-strong">Y2K CRISIS AVERTED</h1>
-            <p class="tv-subtitle">CIVILIZATION HAS BEEN SAVED</p>
-        </div>
-        <div class="tv-content">
-            <div class="text-center">
-                <p class="tv-label">HUMANITY'S SAVIORS</p>
-                <p id="victory-winner" class="tv-reveal glow-strong"></p>
-                <div class="tv-table-container mt-3">
-                    <table class="scoreboard">
-                        <thead>
-                            <tr>
-                                <th>RANK</th>
-                                <th>TEAM</th>
-                                <th>SCORE</th>
-                            </tr>
-                        </thead>
-                        <tbody id="final-scoreboard">
-                            <!-- Final scores injected here -->
-                        </tbody>
-                    </table>
-                </div>
+    <!-- STAGE ONLY - HUD and atmosphere handled by layout -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <h1 class="stage-title fairy-title--glow animate-breathe">The End</h1>
+            <p class="stage-subtitle">And They All Lived Happily Ever After</p>
+
+            <div class="chapter-star mt-3">
+                <span class="animate-twinkle">*</span>
             </div>
-        </div>
-        <div class="tv-footer">
-            <p class="tv-footer-message text-center">The clocks have rolled over. Welcome to the year 2000. The future is now.</p>
+
+            <p class="tv-label-text">The Winning Family</p>
+            <p id="victory-winner" class="stage-reveal glow-baby-blue-intense animate-float winner-reveal"></p>
+
+            <div class="tv-team-answers ethereal-scroll mt-3">
+                <table class="scoreboard">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Family</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="final-scoreboard">
+                        <!-- Final scores injected here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="stage-narrator mt-3">
+                Thank you for celebrating with us. The story continues...
+            </p>
         </div>
     </div>
 </ViewContainer>

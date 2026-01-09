@@ -1,0 +1,62 @@
+---
+/**
+ * TVHud.astro
+ * Main HUD container - orchestrates all corner-anchored HUD elements
+ * Replaces the traditional TVHeader with an immersive game experience
+ *
+ * Immersive "Frost Window" HUD:
+ * - MoonTimer arcs across the top (replaces digital TimerOrb)
+ * - ChapterSeal in corner for game context
+ * - ScoreRibbon drifts in during transitions and score changes
+ */
+import MoonTimer from './MoonTimer.astro';
+import ChapterSeal from './ChapterSeal.astro';
+import ScoreRibbon from './ScoreRibbon.astro';
+import TeamCountOrb from './TeamCountOrb.astro';
+import TeamScoreboard from './TeamScoreboard.astro';
+import StorybookFrame from './StorybookFrame.astro';
+import FloatingNotes from './FloatingNotes.astro';
+---
+
+<div class="tv-hud" id="tv-hud">
+    <!-- Moon Timer - arcs across the top of screen -->
+    <MoonTimer />
+
+    <!-- Decorative frame (lowest layer) -->
+    <StorybookFrame />
+
+    <!-- Floating notes (replaces news ticker) -->
+    <FloatingNotes />
+
+    <!--&lt;!&ndash; Top Left: Chapter/Game indicator &ndash;&gt;-->
+    <!--<div class="tv-hud-corner tv-hud-corner&#45;&#45;top-left">-->
+    <!--    <ChapterSeal />-->
+    <!--</div>-->
+
+    <!-- Top Right: Reserved for future elements (moon timer spans full width) -->
+    <div class="tv-hud-corner tv-hud-corner--top-right">
+        <!-- MoonTimer is now full-width at top, no corner timer needed -->
+    </div>
+
+    <!-- Bottom Left: Team count (lobby only) -->
+    <div class="tv-hud-corner tv-hud-corner--bottom-left">
+        <TeamCountOrb />
+    </div>
+
+    <!-- Bottom Right: Scores (the lobby QR code already shows join info) -->
+    <div class="tv-hud-corner tv-hud-corner--bottom-right">
+        <ScoreRibbon />
+    </div>
+
+    <!-- Bottom Center: Persistent Team Scoreboard -->
+    <TeamScoreboard />
+</div>
+
+<style>
+    .tv-hud {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 100;
+    }
+</style>

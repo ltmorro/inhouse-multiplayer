@@ -1,0 +1,73 @@
+---
+---
+<div>
+    <section id="round-timer-section">
+        <h3 class="glow">ROUND TIMER</h3>
+        <p class="admin-hint mb-1">Global countdown timer for all game rounds</p>
+
+        <div class="admin-controls items-center mb-2">
+            <span class="admin-hint">Time:</span>
+            <span id="round-timer-display" class="round-timer-display">--:--</span>
+            <span id="round-timer-status" class="admin-hint">(stopped)</span>
+        </div>
+
+        <div class="admin-controls items-center mb-2">
+            <label class="admin-hint" for="round-timer-duration">Duration:</label>
+            <input
+                type="number"
+                id="round-timer-duration"
+                value="60"
+                min="10"
+                max="600"
+                class="terminal-input terminal-input--small"
+                style="width: 80px;"
+            />
+            <span class="admin-hint">seconds</span>
+        </div>
+
+        <div class="admin-controls items-center">
+            <button id="round-timer-start-btn" class="terminal-btn terminal-btn--primary" title="Start Timer">
+                START
+            </button>
+            <button id="round-timer-pause-btn" class="terminal-btn" title="Pause Timer">
+                PAUSE
+            </button>
+            <button id="round-timer-resume-btn" class="terminal-btn" title="Resume Timer">
+                RESUME
+            </button>
+            <button id="round-timer-stop-btn" class="terminal-btn" title="Stop Timer">
+                STOP
+            </button>
+        </div>
+
+        <div class="admin-controls items-center mt-1">
+            <button id="round-timer-add30-btn" class="terminal-btn terminal-btn--small" title="Add 30 seconds">
+                +30s
+            </button>
+            <button id="round-timer-add60-btn" class="terminal-btn terminal-btn--small" title="Add 60 seconds">
+                +60s
+            </button>
+        </div>
+    </section>
+</div>
+
+<style>
+.round-timer-display {
+    font-family: var(--font-mono, monospace);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--ice-whisper, #e0f7ff);
+    min-width: 80px;
+    text-align: center;
+}
+
+.terminal-input--small {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.9rem;
+}
+
+.terminal-btn--small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+}
+</style>

@@ -1,13 +1,14 @@
 ---
 // src/pages/admin.astro
 import GameLayout from '../layouts/GameLayout.astro';
+import '../styles/admin.css';
 import AdminHeader from '../components/admin/AdminHeader.astro';
 import AuthView from '../components/admin/AuthView.astro';
 import DashboardView from '../components/admin/DashboardView.astro';
 ---
 
-<GameLayout title="Storybook Control">
-    <div class="terminal-container" style="padding: 20px; max-width: 1200px; margin: 0 auto;">
+<GameLayout title="Storybook Control" bodyClass="admin-page">
+    <div class="admin-container" style="max-width: 1200px; margin: 0 auto;">
         <AdminHeader />
         <AuthView />
         <DashboardView />

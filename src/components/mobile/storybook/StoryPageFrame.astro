@@ -1,0 +1,135 @@
+---
+/**
+ * StoryPageFrame.astro
+ * Frosted glass card with storybook decorative elements
+ * Main content container for game views
+ */
+interface Props {
+    class?: string;
+    withCorners?: boolean;   // Show decorative corner flourishes
+    withAccent?: boolean;    // Show gold accent line at top
+    withGlow?: boolean;      // Add baby blue ambient glow
+}
+
+const { class: className = '', withCorners = true, withAccent = true, withGlow = false } = Astro.props;
+---
+
+<div class:list={['story-page', { 'story-page--corners': withCorners, 'story-page--accent': withAccent, 'story-page--glow': withGlow }, className]}>
+    {withCorners && (
+        <>
+            <svg class="story-page__corner story-page__corner--tl" viewBox="0 0 40 40" aria-hidden="true">
+                <path d="M4 36 Q4 4 36 4" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
+                <circle cx="20" cy="6" r="2" fill="currentColor" opacity="0.5"/>
+            </svg>
+            <svg class="story-page__corner story-page__corner--br" viewBox="0 0 40 40" aria-hidden="true">
+                <path d="M4 36 Q4 4 36 4" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
+                <circle cx="20" cy="6" r="2" fill="currentColor" opacity="0.5"/>
+            </svg>
+        </>
+    )}
+    <div class="story-page__content">
+        <slot />
+    </div>
+</div>
+
+<style>
+.story-page {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0.5rem 0;
+
+    /* Glassmorphism with slight warmth */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(135, 206, 235, 0.2);
+    border-radius: 24px;
+
+    /* Floating glow */
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 0 60px rgba(135, 206, 235, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    overflow: hidden;
+}
+
+/* Gold accent line at top */
+.story-page--accent::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 229, 180, 0.5),
+        transparent
+    );
+    border-radius: 0 0 2px 2px;
+    z-index: 1;
+}
+
+.story-page__content {
+    height: 100%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow-y: auto;
+}
+
+/* Corner flourishes */
+.story-page__corner {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    color: var(--ice-glow, #87CEEB);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.story-page__corner--tl {
+    top: 8px;
+    left: 8px;
+}
+
+.story-page__corner--br {
+    bottom: 8px;
+    right: 8px;
+    transform: rotate(180deg);
+}
+
+/* Baby blue ambient glow */
+.story-page--glow {
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 0 50px rgba(77, 135, 191, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border-color: rgba(77, 135, 191, 0.25);
+}
+
+.story-page--glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(77, 135, 191, 0.05) 0%,
+        transparent 70%
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+.story-page--glow .story-page__content {
+    position: relative;
+    z-index: 1;
+}
+</style>

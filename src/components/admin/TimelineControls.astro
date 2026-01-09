@@ -1,10 +1,11 @@
 ---
 ---
-<section id="timeline-section" class="mt-3" style="display: none;">
+<section id="timeline-section" class="admin-section mt-3" style="display: none;">
     <h3 class="glow">TIMELINE PUZZLE</h3>
+    <input type="hidden" id="timeline-puzzle-id" value="1" />
     <div class="mt-1">
         <label>Puzzle Preset:</label>
-        <select id="timeline-preset-select" class="terminal-input" style="width: 100%;">
+        <select id="timeline-preset-select" class="terminal-input w-full">
             <option value="">-- Select --</option>
         </select>
     </div>
@@ -19,5 +20,5 @@ Event 3"></textarea>
         <button id="complete-timeline-btn" class="terminal-btn">COMPLETE & REVEAL</button>
     </div>
     <h4 class="mt-2">SUBMISSIONS:</h4>
-    <ul id="timeline-submission-list" class="mt-1" style="list-style: none; padding: 0;"></ul>
+    <ul id="timeline-submission-list" class="list-none mt-1"></ul>
 </section>

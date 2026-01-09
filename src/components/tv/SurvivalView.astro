@@ -1,0 +1,273 @@
+---
+/**
+ * SurvivalView.astro - Immersive TV display for survival/elimination game
+ * A/B voting columns with team avatars and elimination states
+ * HUD elements handled by TVHud + MoonTimer
+ */
+import ViewContainer from '../shared/ViewContainer.astro';
+---
+<ViewContainer id="view-survival">
+    <!-- STAGE ONLY - HUD and atmosphere handled by layout -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <p class="stage-subtitle">Chapter 6: Voices from the Village</p>
+            <h1 class="stage-title fairy-title--glow animate-breathe">Parenting Pathways</h1>
+
+            <!-- Question Display -->
+            <p id="survival-question" class="stage-question survival-question animate-breathe mt-3">
+                Waiting for question...
+            </p>
+
+            <!-- Voting Columns -->
+            <div class="survival-voting-container">
+                <div class="survival-option survival-option-a" id="survival-option-a">
+                    <div class="survival-option-label">OPTION A</div>
+                    <div class="survival-option-votes" id="survival-votes-a">
+                        <!-- Team avatars/counts will be injected here -->
+                    </div>
+                    <div class="survival-vote-count" id="survival-count-a">0</div>
+                </div>
+                <div class="survival-vs">VS</div>
+                <div class="survival-option survival-option-b" id="survival-option-b">
+                    <div class="survival-option-label">OPTION B</div>
+                    <div class="survival-option-votes" id="survival-votes-b">
+                        <!-- Team avatars/counts will be injected here -->
+                    </div>
+                    <div class="survival-vote-count" id="survival-count-b">0</div>
+                </div>
+            </div>
+
+            <!-- Team Status Table -->
+            <div class="tv-team-answers ethereal-scroll mt-3">
+                <table class="scoreboard survival-scoreboard">
+                    <thead>
+                        <tr>
+                            <th>TEAM</th>
+                            <th>STATUS</th>
+                            <th>SCORE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="survival-teams">
+                        <!-- Team rows injected here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Remaining Counter -->
+            <p id="survival-remaining" class="stage-narrator survival-remaining mt-3">
+                <!-- "3 teams remaining" -->
+            </p>
+        </div>
+    </div>
+</ViewContainer>
+
+<style>
+    .survival-question {
+        font-size: var(--tv-text-large);
+        margin-bottom: 2rem;
+        text-shadow: var(--glow-text);
+    }
+
+    .survival-voting-container {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        gap: 2rem;
+        margin: 2rem 0;
+        min-height: 200px;
+    }
+
+    .survival-option {
+        flex: 1;
+        max-width: 300px;
+        border: 3px solid var(--ice-glow);
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(15, 40, 71, 0.6);
+        backdrop-filter: blur(8px);
+        transition: all 0.3s ease;
+    }
+
+    .survival-option-a {
+        border-color: var(--status-complete);
+        box-shadow: 0 0 20px rgba(127, 212, 163, 0.3);
+    }
+
+    .survival-option-b {
+        border-color: var(--gold-ember);
+        box-shadow: 0 0 20px rgba(255, 214, 153, 0.3);
+    }
+
+    .survival-option-label {
+        font-size: var(--tv-text-medium);
+        font-weight: bold;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .survival-option-a .survival-option-label {
+        color: var(--status-complete);
+    }
+
+    .survival-option-b .survival-option-label {
+        color: var(--gold-ember);
+    }
+
+    .survival-option-votes {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 0.5rem;
+        min-height: 80px;
+        width: 100%;
+    }
+
+    .survival-vote-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        animation: votePopIn 0.3s ease-out;
+    }
+
+    @keyframes votePopIn {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        70% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .survival-vote-count {
+        font-size: var(--tv-text-subtitle);
+        font-weight: bold;
+        margin-top: 1rem;
+        font-family: var(--font-story);
+        color: var(--ice-whisper);
+    }
+
+    .survival-vs {
+        display: flex;
+        align-items: center;
+        font-size: var(--tv-text-medium);
+        font-weight: bold;
+        color: var(--ice-soft);
+        text-shadow: var(--glow-text);
+    }
+
+    /* Majority/Minority result states */
+    .survival-option.is-majority {
+        border-color: var(--status-complete);
+        box-shadow: 0 0 30px rgba(127, 212, 163, 0.6);
+        animation: majorityPulse 1s ease-in-out infinite;
+    }
+
+    .survival-option.is-minority {
+        border-color: var(--status-oops);
+        box-shadow: 0 0 30px rgba(242, 139, 130, 0.6);
+        opacity: 0.7;
+        animation: minorityFade 0.5s ease-out;
+    }
+
+    @keyframes majorityPulse {
+        0%, 100% {
+            box-shadow: 0 0 30px rgba(127, 212, 163, 0.6);
+        }
+        50% {
+            box-shadow: 0 0 50px rgba(127, 212, 163, 0.9);
+        }
+    }
+
+    @keyframes minorityFade {
+        0% {
+            opacity: 1;
+            filter: none;
+        }
+        100% {
+            opacity: 0.7;
+            filter: grayscale(50%);
+        }
+    }
+
+    /* Scoreboard styles */
+    .survival-scoreboard tbody tr.eliminated {
+        opacity: 0.5;
+        text-decoration: line-through;
+        animation: eliminateRow 0.5s ease-out;
+    }
+
+    .survival-scoreboard tbody tr.eliminated td {
+        color: var(--status-oops);
+    }
+
+    @keyframes eliminateRow {
+        0% {
+            background-color: rgba(242, 139, 130, 0.5);
+        }
+        100% {
+            background-color: transparent;
+        }
+    }
+
+    .survival-scoreboard .status-eliminated {
+        color: var(--status-oops);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .survival-scoreboard .status-alive {
+        color: var(--status-complete);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    /* Remaining counter with blink/glow */
+    .survival-remaining {
+        font-size: var(--tv-text-body);
+        font-weight: bold;
+        animation: remainingGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes remainingGlow {
+        0%, 100% {
+            text-shadow: var(--glow-text);
+            opacity: 1;
+        }
+        50% {
+            text-shadow: var(--glow-ice-strong);
+            opacity: 0.85;
+        }
+    }
+
+    .survival-remaining.critical {
+        color: var(--status-oops);
+        animation: criticalBlink 0.5s ease-in-out infinite;
+    }
+
+    @keyframes criticalBlink {
+        0%, 100% {
+            opacity: 1;
+            text-shadow: 0 0 20px rgba(242, 139, 130, 0.8);
+        }
+        50% {
+            opacity: 0.6;
+            text-shadow: 0 0 40px rgba(242, 139, 130, 0.8);
+        }
+    }
+</style>

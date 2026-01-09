@@ -17,6 +17,8 @@ class PictureGuessGame(BaseGame):
     def on_enter(self, state_data):
         self._state = {
             'picture_id': state_data.get('picture_id'),
+            'image_url': state_data.get('image_url'),
+            'hint': state_data.get('hint'),
             'answers': {}  # team_id -> {guess_text, player_id, player_name, picture_id}
         }
         return EventResponse()

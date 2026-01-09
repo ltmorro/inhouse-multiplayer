@@ -1,30 +1,85 @@
 ---
 import ViewContainer from '../shared/ViewContainer.astro';
+import ChapterHeader from './storybook/ChapterHeader.astro';
+import StoryPageFrame from './storybook/StoryPageFrame.astro';
 ---
 <ViewContainer id="view-trivia">
-    <div class="flex-grow flex-column">
-        <h2 class="glow text-center">ALL SEARCH ENGINES OFFLINE</h2>
-        <p class="text-center" style="color: var(--terminal-amber);">THE INTERNET HAS COLLAPSED</p>
-        <p class="text-center" style="color: var(--terminal-green-dim); font-size: 0.85rem;">No lifelines. Just what's in your head.</p>
+    <div class="frost-viewport">
+        <ChapterHeader
+            chapter="A Riddle"
+            title="Parenting Pop Quiz"
+            narrator="Can you solve this puzzle?"
+        />
 
-        <div id="trivia-question" class="mt-3 text-center" style="font-size: 1.3rem;">
-            <!-- Question text injected here -->
-        </div>
+        <StoryPageFrame withGlow={true}>
+            <p id="trivia-question" class="trivia-question">
+                <!-- Question text injected here -->
+            </p>
+        </StoryPageFrame>
 
-        <form id="trivia-form" class="mt-3">
+        <div class="frost-actions">
             <input
                 type="text"
                 id="trivia-answer"
-                class="terminal-input"
-                placeholder="ENTER RESPONSE"
+                class="frost-input"
+                placeholder="Your answer..."
                 autocomplete="off"
                 autocapitalize="off"
             >
-            <button type="submit" id="trivia-submit" class="terminal-btn terminal-btn--primary mt-2" style="width: 100%;">
-                TRANSMIT
+            <button type="button" id="trivia-submit" class="enchanted-btn enchanted-btn--primary enchanted-btn--glow">
+                Submit Answer
             </button>
-        </form>
-
-        <p id="trivia-status" class="mt-2 text-center" style="color: var(--terminal-green-dim);"></p>
+            <p id="trivia-status" class="frost-status"></p>
+        </div>
     </div>
 </ViewContainer>
+
+<style>
+.trivia-question {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: #ffffff;
+    margin: 0;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.enchanted-btn {
+    appearance: none;
+    width: 100%;
+    padding: 1rem 2rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: #0a1628;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.98) 0%,
+        rgba(232, 244, 252, 0.95) 100%
+    );
+    box-shadow:
+        0 6px 0 rgba(135, 206, 235, 0.35),
+        0 8px 24px rgba(0, 0, 0, 0.2),
+        0 0 30px rgba(135, 206, 235, 0.12);
+}
+
+.enchanted-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.enchanted-btn:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow:
+        0 2px 0 rgba(135, 206, 235, 0.35),
+        0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.enchanted-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+</style>

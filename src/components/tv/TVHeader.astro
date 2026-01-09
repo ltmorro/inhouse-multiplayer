@@ -1,22 +1,118 @@
 ---
+/**
+ * TVHeader.astro
+ * @deprecated This component is replaced by hud/TVHud.astro
+ * The new immersive HUD uses corner-anchored orbs and seals instead of a header bar.
+ * This file is kept for rollback purposes - will be removed after verification.
+ *
+ * Previous: Top status bar for TV display - Winter Storybook theme
+ * Shows celebration status and family count
+ */
 ---
 <div class="top-header-bar" id="top-header-bar">
     <div class="top-header-bar__content">
         <div class="top-header-bar__status">
-            <span class="status-light status-light--ok" id="status-mainframe" title="MONITOR"></span>
-            <span class="status-light status-light--ok" id="status-network" title="WIPES"></span>
-            <span class="status-light status-light--ok" id="status-database" title="BOTTLES"></span>
-            <span class="status-light status-light--warning" id="status-shield" title="NAPS"></span>
+            <span class="status-light status-light--ok" id="status-mainframe" title="Bottles"></span>
+            <span class="status-light status-light--ok" id="status-network" title="Blankets"></span>
+            <span class="status-light status-light--ok" id="status-database" title="Diapers"></span>
+            <span class="status-light status-light--warning" id="status-shield" title="Sleep"></span>
         </div>
         <div class="top-header-bar__countdown">
-            <span class="top-header-bar__label">EXPECTED ARRIVAL</span>
-            <span class="top-header-bar__time" id="midnight-time"
-                >T-MINUS 30 DAYS</span
-            >
+            <span class="top-header-bar__label">BABY SHOWER</span>
+            <span class="top-header-bar__time" id="midnight-time">CELEBRATION</span>
         </div>
         <div class="top-header-bar__teams-count">
-            <span class="top-header-bar__teams-label">TEAMS</span>
+            <span class="top-header-bar__teams-label">FAMILIES</span>
             <span class="top-header-bar__teams-value" id="status-team-count">0</span>
         </div>
     </div>
 </div>
+
+<style>
+.top-header-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(15, 40, 71, 0.85);
+    border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+    padding: 10px 30px;
+    z-index: 1000;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.top-header-bar__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.top-header-bar__status {
+    display: flex;
+    gap: 10px;
+}
+
+.status-light {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-light--ok {
+    background: #27AE60;
+    box-shadow: 0 0 4px rgba(39, 174, 96, 0.4);
+}
+
+.status-light--warning {
+    background: var(--fireplace-orange);
+    box-shadow: 0 0 4px rgba(211, 84, 0, 0.4);
+}
+
+.status-light--error {
+    background: var(--holiday-gold);
+}
+
+.top-header-bar__countdown {
+    text-align: center;
+}
+
+.top-header-bar__label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--ice-soft);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.top-header-bar__time {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--ice-whisper);
+    text-shadow: 0 0 15px rgba(135, 206, 235, 0.3);
+}
+
+.top-header-bar__teams-count {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.top-header-bar__teams-label {
+    font-size: 0.75rem;
+    color: var(--ice-soft);
+    letter-spacing: 1px;
+}
+
+.top-header-bar__teams-value {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--ice-whisper);
+    text-shadow: 0 0 15px rgba(135, 206, 235, 0.3);
+}
+</style>

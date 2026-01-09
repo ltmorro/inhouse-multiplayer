@@ -1,0 +1,49 @@
+---
+/**
+ * NarratorText.astro
+ * Warm, italicized narrator voice for story-driven messaging
+ * Used for instructions, hints, and atmospheric text
+ */
+interface Props {
+    class?: string;
+    variant?: 'default' | 'whisper' | 'instruction';
+}
+
+const { class: className = '', variant = 'default' } = Astro.props;
+---
+
+<p class:list={['narrator-text', `narrator-text--${variant}`, className]}>
+    <slot />
+</p>
+
+<style>
+.narrator-text {
+    font-family: var(--font-serif);
+    font-style: italic;
+    line-height: 1.7;
+    text-align: center;
+    margin: 0;
+}
+
+/* Default - Warm gold narrator voice */
+.narrator-text--default {
+    font-size: 1rem;
+    color: var(--narrator-gold, rgba(255, 229, 180, 0.9));
+    text-shadow: var(--narrator-shadow, 0 0 20px rgba(255, 229, 180, 0.2));
+}
+
+/* Whisper - Softer, more subtle */
+.narrator-text--whisper {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    opacity: 0.85;
+}
+
+/* Instruction - Clearer, less decorative */
+.narrator-text--instruction {
+    font-size: 0.95rem;
+    font-style: normal;
+    font-family: var(--font-sans);
+    color: rgba(255, 255, 255, 0.75);
+}
+</style>

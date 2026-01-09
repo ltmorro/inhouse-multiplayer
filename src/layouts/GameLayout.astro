@@ -2,28 +2,42 @@
 /**
  * GameLayout.astro
  * Base layout for the "Winter Storybook" theme.
+ * Implements Frame/Stage pattern with named slots for header, footer, overlays.
  * Includes View Transitions, Socket.IO, and Wake Lock functionality.
  */
 import { ViewTransitions } from 'astro:transitions';
-import '../styles/global.css';
+import '../styles/shared.css';
 
 interface Props {
     title?: string;
-    bootStorageKey?: string; // Kept for interface compatibility but unused
+    variant?: 'mobile' | 'tv' | 'admin';
+    showSnow?: boolean;
+    showAurora?: boolean;
+    bodyClass?: string;
 }
 
-const { title = 'Winter Storybook' } = Astro.props;
+const {
+    title = 'Winter Storybook',
+    variant = 'mobile',
+    showSnow = true,
+    showAurora = true,
+    bodyClass = ''
+} = Astro.props;
+
+// Build body classes
+const bodyClasses = [bodyClass, `layout-${variant}`].filter(Boolean).join(' ');
 ---
 
 <!DOCTYPE html>
 <html lang="en">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Varela+Round&display=swap" rel="stylesheet">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#F0F4F8">
+    <meta name="theme-color" content="#0a1628">
     <title>{title}</title>
 
     <!-- Astro View Transitions for SPA-like navigation -->
@@ -32,16 +46,53 @@ const { title = 'Winter Storybook' } = Astro.props;
     <!-- Socket.IO Client Library -->
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js" integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4" crossorigin="anonymous"></script>
 
+    <!-- Shared Modules (exposes utilities to window for legacy JS) -->
+    <script>
+        import '../scripts/globals';
+    </script>
+
     <slot name="head" />
 </head>
-<body>
-    <!-- Falling Snow Container -->
+<body class={bodyClasses}>
+    <!-- ═══════════════════════════════════════════════════════════
+         ATMOSPHERE LAYER (Layout owns this - behind everything)
+         ═══════════════════════════════════════════════════════════ -->
+    {showAurora && <div class="frost-bg"></div>}
+
+    {variant === 'mobile' && (
+        <>
+            <div class="frost-stars"></div>
+            <div class="frost-moonbeam frost-moonbeam--left"></div>
+            <div class="frost-moonbeam frost-moonbeam--right"></div>
+        </>
+    )}
+
+    {showSnow && <div class="frost-snow"></div>}
+
+    <!-- Falling Snow Container (JS-generated snowflakes) -->
     <div id="snow-container"></div>
 
-    <!-- Main Content -->
-    <main>
+    <!-- ═══════════════════════════════════════════════════════════
+         HEADER SLOT (Provided by variant layouts)
+         ═══════════════════════════════════════════════════════════ -->
+    <slot name="header" />
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MAIN STAGE (Game views go here)
+         ═══════════════════════════════════════════════════════════ -->
+    <main class="stage">
         <slot />
     </main>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FOOTER SLOT (Provided by variant layouts)
+         ═══════════════════════════════════════════════════════════ -->
+    <slot name="footer" />
+
+    <!-- ═══════════════════════════════════════════════════════════
+         OVERLAYS SLOT (HUD elements, modals, etc.)
+         ═══════════════════════════════════════════════════════════ -->
+    <slot name="overlays" />
 
     <!-- Wake Lock: Hidden video loop to prevent screen sleep -->
     <video
@@ -150,7 +201,7 @@ const { title = 'Winter Storybook' } = Astro.props;
         function startSnow() {
             const container = document.getElementById('snow-container');
             if (!container) return;
-            
+
             // Clear existing if any (on page transition)
             container.innerHTML = '';
 
@@ -162,18 +213,18 @@ const { title = 'Winter Storybook' } = Astro.props;
                 snow.style.height = snow.style.width;
                 snow.style.animationDuration = Math.random() * 3 + 4 + 's'; // Slower, more gentle
                 snow.style.opacity = (Math.random() * 0.5 + 0.3).toString();
-                
+
                 container.appendChild(snow);
-                
+
                 // Remove after animation
                 setTimeout(() => {
                     snow.remove();
-                }, 7000); 
+                }, 7000);
             };
 
             // Create snow periodically
             const interval = setInterval(createSnowflake, 300);
-            
+
             // Cleanup function if needed (though ViewTransitions might handle full page reloads)
             document.addEventListener('astro:before-swap', () => {
                 clearInterval(interval);
@@ -183,6 +234,153 @@ const { title = 'Winter Storybook' } = Astro.props;
         // Run on load and on transition
         document.addEventListener('DOMContentLoaded', startSnow);
         document.addEventListener('astro:after-swap', startSnow);
+    </script>
+
+    <!-- Server-Controlled Screensaver -->
+    <div id="sleep-screensaver" class="sleep-screensaver hidden"></div>
+
+    <script>
+        /**
+         * Server-Controlled Screensaver
+         * Listens for screensaver_sleep/screensaver_wake events from the server.
+         * Admin and TV clients send activity pings to keep the server awake.
+         */
+        (function() {
+            const FAIRY_ICONS = [
+                '<path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z" fill="currentColor"/>',
+                '<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>',
+                '<path d="M9 2c-1.05 0-2.05.16-3 .46 4.06 1.27 7 5.06 7 9.54 0 4.48-2.94 8.27-7 9.54.95.3 1.95.46 3 .46 5.52 0 10-4.48 10-10S14.52 2 9 2z" fill="currentColor"/>',
+                '<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" fill="currentColor"/>'
+            ];
+
+            function createElement(className: string, innerHTML = '') {
+                const el = document.createElement('div');
+                el.className = className;
+                if (innerHTML) el.innerHTML = innerHTML;
+                return el;
+            }
+
+            function initScreensaverContent(screensaver: HTMLElement) {
+                if (!screensaver) return;
+                screensaver.innerHTML = '';
+
+                // Central Text
+                const content = createElement('sleep-content');
+                content.innerHTML = `
+                    <div class="sleep-logo">
+                        <svg viewBox="0 0 24 24" width="80" height="80" fill="white">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                    </div>
+                    <h1 class="sleep-title">Dreaming</h1>
+                    <p class="sleep-hint">The story is waiting...</p>
+                `;
+                screensaver.appendChild(content);
+
+                // Snow Layer
+                for (let i = 0; i < 20; i++) {
+                    const flake = createElement('dream-flake');
+                    flake.style.left = Math.random() * 100 + '%';
+                    flake.style.animationDuration = (5 + Math.random() * 10) + 's';
+                    flake.style.animationDelay = (Math.random() * 5) + 's';
+                    flake.style.opacity = String(Math.random() * 0.5 + 0.1);
+                    screensaver.appendChild(flake);
+                }
+
+                // Balloon Layer
+                for (let i = 0; i < 6; i++) {
+                    const balloon = createElement('dream-balloon');
+                    balloon.style.left = Math.random() * 100 + '%';
+                    balloon.style.animationDuration = (15 + Math.random() * 10) + 's';
+                    balloon.style.animationDelay = (Math.random() * 10) + 's';
+                    const colors = ['#A9CCE3', '#D4E6F1', '#EBF5FB', '#D6EAF8'];
+                    balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    screensaver.appendChild(balloon);
+                }
+
+                // Chaos Layer (SVG Icons)
+                for (let i = 0; i < 8; i++) {
+                    const iconContainer = createElement('dream-icon-wrapper');
+                    const svgString = `<svg viewBox="0 0 24 24" width="60" height="60">${FAIRY_ICONS[Math.floor(Math.random() * FAIRY_ICONS.length)]}</svg>`;
+                    iconContainer.innerHTML = svgString;
+                    iconContainer.style.left = (Math.random() * 90) + '%';
+                    iconContainer.style.top = (Math.random() * 90) + '%';
+                    iconContainer.style.animationDuration = (15 + Math.random() * 15) + 's';
+                    iconContainer.style.animationDelay = (Math.random() * 5) + 's';
+                    screensaver.appendChild(iconContainer);
+                }
+            }
+
+            function showScreensaver() {
+                const screensaver = document.getElementById('sleep-screensaver');
+                if (screensaver && screensaver.classList.contains('hidden')) {
+                    initScreensaverContent(screensaver);
+                    screensaver.classList.remove('hidden');
+                    document.body.classList.add('sleeping');
+                    console.log('[Screensaver] Sleep mode activated');
+                }
+            }
+
+            function hideScreensaver() {
+                const screensaver = document.getElementById('sleep-screensaver');
+                if (screensaver && !screensaver.classList.contains('hidden')) {
+                    screensaver.classList.add('hidden');
+                    document.body.classList.remove('sleeping');
+                    setTimeout(() => { screensaver.innerHTML = ''; }, 1000);
+                    console.log('[Screensaver] Woke up');
+                }
+            }
+
+            // Expose global functions for socket handlers
+            (window as any).showScreensaver = showScreensaver;
+            (window as any).hideScreensaver = hideScreensaver;
+
+            // Initialize once socket is available
+            function initScreensaverSocket() {
+                const socket = (window as any).socket;
+                if (!socket) {
+                    // Retry after a short delay if socket not ready
+                    setTimeout(initScreensaverSocket, 500);
+                    return;
+                }
+
+                // Listen for server-controlled sleep/wake events
+                socket.on('screensaver_sleep', () => {
+                    console.log('[Screensaver] Server triggered sleep');
+                    showScreensaver();
+                });
+
+                socket.on('screensaver_wake', () => {
+                    console.log('[Screensaver] Server triggered wake');
+                    hideScreensaver();
+                });
+
+                // Request current screensaver status on connect
+                socket.on('connect', () => {
+                    socket.emit('request_screensaver_status');
+                });
+
+                socket.on('screensaver_status', (data: { is_sleeping: boolean }) => {
+                    if (data.is_sleeping) {
+                        showScreensaver();
+                    } else {
+                        hideScreensaver();
+                    }
+                });
+
+                // Request status now in case we connected after socket was ready
+                socket.emit('request_screensaver_status');
+
+                console.log('[Screensaver] Socket handlers registered');
+            }
+
+            // Note: Only admin and TV can wake the screensaver (handled in their respective JS files)
+            // Mobile clients just display the screensaver but cannot wake it
+
+            // Initialize socket handlers when DOM is ready
+            document.addEventListener('DOMContentLoaded', initScreensaverSocket);
+            document.addEventListener('astro:page-load', initScreensaverSocket);
+        })();
     </script>
 
     <slot name="scripts" />

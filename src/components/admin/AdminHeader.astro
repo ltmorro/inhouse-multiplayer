@@ -1,6 +1,37 @@
 ---
+/**
+ * AdminHeader.astro
+ * Admin console header bar - Winter Storybook theme
+ */
 ---
-<div class="status-bar">
-    <span>PARENTAL OVERRIDE CONSOLE</span>
-    <span id="current-state">STATUS: WAITING ROOM</span>
+<div class="admin-header">
+    <span class="admin-header__title">Storybook Host Controls</span>
+    <span id="current-state" class="admin-header__status">STATUS: WAITING ROOM</span>
 </div>
+
+<style>
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(15, 40, 71, 0.85);
+    border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.admin-header__title {
+    color: var(--ice-whisper);
+    font-family: var(--font-serif);
+    font-weight: 700;
+    text-shadow: 0 0 15px rgba(135, 206, 235, 0.3);
+}
+
+.admin-header__status {
+    color: var(--ice-soft);
+    font-size: 0.9rem;
+}
+</style>

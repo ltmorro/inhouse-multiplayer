@@ -1,15 +1,36 @@
 ---
 import ViewContainer from '../shared/ViewContainer.astro';
+import ChapterHeader from './storybook/ChapterHeader.astro';
+import StoryPageFrame from './storybook/StoryPageFrame.astro';
+import WaitingVignette from './storybook/WaitingVignette.astro';
 ---
 <ViewContainer id="view-lobby">
-    <div class="flex-grow flex-center flex-column text-center">
-        <h1 class="glow-strong">WELCOME</h1>
-        <p class="mt-2" style="color: var(--terminal-amber);">
-            THE GUEST BOOK IS OPEN...
-        </p>
-        <p class="mt-1" style="color: var(--terminal-green-dim);">
-            Waiting for the story to begin...
-        </p>
-        <div class="blink mt-3">_</div>
+    <div class="frost-viewport">
+        <ChapterHeader
+            chapter="The Gathering"
+            title="Welcome!"
+            narrator="The guests gather beneath the stars..."
+        />
+
+        <StoryPageFrame>
+            <WaitingVignette
+                icon="*"
+                text="Waiting for the story to begin..."
+                variant="stars"
+                class="waiting-pulse"
+            />
+        </StoryPageFrame>
+
+        <div class="frost-actions">
+            <p class="frost-status frost-status--narrator">The pages are turning...</p>
+        </div>
     </div>
 </ViewContainer>
+
+<style>
+.frost-status--narrator {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--narrator-gold, rgba(255, 229, 180, 0.8));
+}
+</style>

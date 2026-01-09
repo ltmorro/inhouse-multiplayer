@@ -1,10 +1,10 @@
 ---
 ---
-<section id="pictureguess-section" class="mt-3" style="display: none;">
+<section id="pictureguess-section" class="admin-section mt-3" style="display: none;">
     <h3 class="glow">GUESS THE BABY ITEM</h3>
     <div class="mt-1">
         <label>Picture:</label>
-        <select id="pictureguess-preset-select" class="terminal-input" style="width: 100%;">
+        <select id="pictureguess-preset-select" class="terminal-input w-full">
             <option value="">-- Select item photo --</option>
         </select>
     </div>
@@ -16,12 +16,14 @@
         <label>Hint:</label>
         <input type="text" id="pictureguess-hint-input" class="terminal-input" placeholder="Hint...">
     </div>
-    <div class="mt-2">
+    <div class="admin-controls items-center mt-1">
+        <label>P#:</label>
+        <input type="number" id="pictureguess-id" class="terminal-input admin-input--narrow" value="1">
         <button id="send-picture-btn" class="terminal-btn terminal-btn--primary">SEND TO SCREEN</button>
     </div>
     <h4 class="mt-2">GUESSES:</h4>
-    <ul id="pictureguess-list" class="mt-1" style="list-style: none; padding: 0; max-height: 200px; overflow-y: auto;"></ul>
-    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" class="mt-2">
+    <ul id="pictureguess-list" class="admin-list admin-list--scrollable mt-1"></ul>
+    <div class="admin-controls mt-2">
         <input type="text" id="pictureguess-correct-answer" class="terminal-input" placeholder="CORRECT ANSWER">
         <button id="reveal-picture-btn" class="terminal-btn terminal-btn--primary">REVEAL</button>
     </div>

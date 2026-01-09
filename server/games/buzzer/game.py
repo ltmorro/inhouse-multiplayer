@@ -13,13 +13,12 @@ class BuzzerGame(BaseGame):
         'play_audio': 'handle_play_audio',
         'stop_audio': 'handle_stop_audio',
         'reveal_audio': 'handle_reveal_audio',
-        'music_toggle': 'handle_music_toggle',
-        'music_next': 'handle_music_next',
-        'music_previous': 'handle_music_previous'
     }
 
     def on_enter(self, state_data):
         self._state = {
+            'round_id': state_data.get('round_id'),
+            'audio_hint': state_data.get('audio_hint', ''),
             'locked_by': None, # {team_id, team_name, player_id, player_name}
             'frozen_teams': {} # team_id -> expires_at (timestamp)
         }
@@ -136,21 +135,6 @@ class BuzzerGame(BaseGame):
         }
         return response
 
-    def handle_music_toggle(self, data, context: EventContext) -> EventResponse:
-        response = EventResponse()
-        response.broadcast['music_toggle'] = {}
-        return response
-        
-    def handle_music_next(self, data, context: EventContext) -> EventResponse:
-        response = EventResponse()
-        response.broadcast['music_next'] = {}
-        return response
-
-    def handle_music_previous(self, data, context: EventContext) -> EventResponse:
-        response = EventResponse()
-        response.broadcast['music_previous'] = {}
-        return response
-
     def _freeze_team(self, team_id, duration):
         self._state['frozen_teams'][team_id] = time.time() + duration
 
@@ -161,3 +145,9 @@ class BuzzerGame(BaseGame):
             del self._state['frozen_teams'][team_id]
             return False
         return True
+
+    def get_sanitized_state_data(self) -> dict:
+        return {
+            'round_id': self._state.get('round_id'),
+            'audio_hint': self._state.get('audio_hint', '')
+        }

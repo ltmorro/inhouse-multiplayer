@@ -1,25 +1,25 @@
 ---
+/**
+ * MacGyverView.astro - Immersive TV display for creative survival challenges
+ * Blizzard/storm narrative with mist effects
+ * HUD elements handled by TVHud + MoonTimer
+ */
 import ViewContainer from '../shared/ViewContainer.astro';
 ---
 <ViewContainer id="view-macgyver">
-    <div class="tv-layout">
-        <div class="tv-header">
-            <h1 class="tv-title glow-strong">THE BLIZZARD</h1>
-            <p class="tv-subtitle">CHAPTER 1</p>
-        </div>
-        <div class="tv-content">
-            <div class="text-center">
-                <p id="macgyver-message" class="tv-main-message glow-strong">THE STORM HAS TRAPPED US INSIDE.</p>
+    <!-- STAGE ONLY - HUD and atmosphere handled by layout -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <h1 class="stage-title fairy-title--glow animate-breathe">The Blizzard</h1>
+            <p class="stage-subtitle">Chapter One</p>
+
+            <div class="chapter-star mt-3">
+                <span class="animate-twinkle">*</span>
             </div>
-        </div>
-        <div class="tv-instructions">
-            <div class="tv-instructions-box">
-                <p class="instruction-title">KEEP THE COLD OUT</p>
-                <p class="instruction-text">The power is out and the fire is dying. <strong>Create something warm using ONLY these salvaged materials!</strong> The host will judge your creation.</p>
-            </div>
-        </div>
-        <div class="tv-footer">
-            <div id="macgyver-scoreboard"></div>
+
+            <p id="macgyver-message" class="stage-question animate-breathe">
+                The storm has trapped us inside...
+            </p>
         </div>
     </div>
 </ViewContainer>

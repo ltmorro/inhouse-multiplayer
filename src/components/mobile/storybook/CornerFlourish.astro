@@ -1,0 +1,71 @@
+---
+/**
+ * CornerFlourish.astro
+ * Decorative SVG corner element for storybook feel
+ * Positioned in corners of cards/pages
+ */
+interface Props {
+    position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+    size?: number;
+}
+
+const { position = 'top-left', size = 40 } = Astro.props;
+
+const transforms: Record<string, string> = {
+    'top-left': '',
+    'top-right': 'scaleX(-1)',
+    'bottom-left': 'scaleY(-1)',
+    'bottom-right': 'scale(-1)'
+};
+---
+
+<svg
+    class:list={['corner-flourish', `corner-flourish--${position}`]}
+    viewBox="0 0 40 40"
+    width={size}
+    height={size}
+    style={`transform: ${transforms[position]}`}
+    aria-hidden="true"
+>
+    <!-- Curved line -->
+    <path
+        d="M4 36 Q4 4 36 4"
+        stroke="currentColor"
+        stroke-width="1.5"
+        fill="none"
+        opacity="0.35"
+    />
+    <!-- Small accent dot -->
+    <circle cx="20" cy="6" r="1.5" fill="currentColor" opacity="0.5"/>
+    <!-- Snowflake accent -->
+    <text x="6" y="32" font-size="8" fill="currentColor" opacity="0.25">*</text>
+</svg>
+
+<style>
+.corner-flourish {
+    position: absolute;
+    color: var(--ice-glow, #87CEEB);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.corner-flourish--top-left {
+    top: 6px;
+    left: 6px;
+}
+
+.corner-flourish--top-right {
+    top: 6px;
+    right: 6px;
+}
+
+.corner-flourish--bottom-left {
+    bottom: 6px;
+    left: 6px;
+}
+
+.corner-flourish--bottom-right {
+    bottom: 6px;
+    right: 6px;
+}
+</style>

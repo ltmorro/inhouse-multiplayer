@@ -89,6 +89,13 @@ class BaseGame(ABC):
     EVENTS: Dict[str, str] = {}
     ADMIN_EVENTS: Dict[str, str] = {}
 
+    # Global admin events available in all game states
+    GLOBAL_ADMIN_EVENTS: Dict[str, str] = {
+        'music_toggle': 'handle_music_toggle',
+        'music_next': 'handle_music_next',
+        'music_previous': 'handle_music_previous',
+    }
+
     def __init__(self, session_manager: 'SessionManager'):
         """
         Initialize the game with access to the session manager.
@@ -152,7 +159,7 @@ class BaseGame(ABC):
         """
         Route an incoming event to the appropriate handler.
 
-        Looks up the handler in EVENTS or ADMIN_EVENTS and calls it.
+        Looks up the handler in EVENTS, ADMIN_EVENTS, or GLOBAL_ADMIN_EVENTS and calls it.
 
         Args:
             event_name: The Socket.IO event name
@@ -162,8 +169,12 @@ class BaseGame(ABC):
         Returns:
             EventResponse indicating what to emit
         """
-        # Check player events first, then admin events
-        handler_name = self.EVENTS.get(event_name) or self.ADMIN_EVENTS.get(event_name)
+        # Check player events, then admin events, then global admin events
+        handler_name = (
+            self.EVENTS.get(event_name) or
+            self.ADMIN_EVENTS.get(event_name) or
+            self.GLOBAL_ADMIN_EVENTS.get(event_name)
+        )
 
         if handler_name and hasattr(self, handler_name):
             handler = getattr(self, handler_name)
@@ -173,9 +184,35 @@ class BaseGame(ABC):
             error={'code': 'UNKNOWN_EVENT', 'message': f'Unknown event: {event_name}'}
         )
 
+    # =========================================================================
+    # Global Music Control Handlers (available in all game states)
+    # =========================================================================
+
+    def handle_music_toggle(self, data: Dict[str, Any], context: EventContext) -> EventResponse:
+        """Toggle play/pause for background music."""
+        response = EventResponse()
+        response.broadcast['music_toggle'] = {}
+        return response
+
+    def handle_music_next(self, data: Dict[str, Any], context: EventContext) -> EventResponse:
+        """Skip to next track."""
+        response = EventResponse()
+        response.broadcast['music_next'] = {}
+        return response
+
+    def handle_music_previous(self, data: Dict[str, Any], context: EventContext) -> EventResponse:
+        """Go to previous track."""
+        response = EventResponse()
+        response.broadcast['music_previous'] = {}
+        return response
+
     def get_all_event_names(self) -> List[str]:
-        """Get all event names this game handles."""
-        return list(self.EVENTS.keys()) + list(self.ADMIN_EVENTS.keys())
+        """Get all event names this game handles (including global events)."""
+        return (
+            list(self.EVENTS.keys()) +
+            list(self.ADMIN_EVENTS.keys()) +
+            list(self.GLOBAL_ADMIN_EVENTS.keys())
+        )
 
     def serialize(self) -> Dict[str, Any]:
         """

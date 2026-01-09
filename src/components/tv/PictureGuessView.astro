@@ -1,49 +1,46 @@
 ---
+/**
+ * PictureGuessView.astro - Immersive TV display for picture guessing games
+ * Image clears into focus with frost-clearing animation
+ * HUD elements handled by TVHud + MoonTimer
+ */
 import ViewContainer from '../shared/ViewContainer.astro';
 ---
 <ViewContainer id="view-pictureguess">
-    <div class="tv-layout">
-        <div class="tv-header">
-            <h1 class="tv-title glow-strong">VISUAL ARCHIVES CORRUPTED</h1>
-            <p class="tv-subtitle">PROTOCOL 7 - Y2K IMAGE RECOVERY</p>
-        </div>
-        <div class="tv-content">
-            <div class="text-center" style="max-width: 90%;">
-                <!-- Picture display container -->
-                <div id="pictureguess-image-container" class="tv-image-container">
-                    <img id="pictureguess-image" src="" alt="Mystery Picture" style="display: none;">
-                    <p id="pictureguess-no-image" class="tv-waiting">Awaiting image transmission...</p>
-                </div>
+    <!-- STAGE ONLY - HUD and atmosphere handled by layout -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <p class="stage-subtitle">Chapter 4: Through the Frosty Window</p>
+            <h1 class="stage-title fairy-title--glow animate-breathe">Peek-a-Boo Puzzle</h1>
 
-                <!-- Hint display -->
-                <p id="pictureguess-hint-tv" class="tv-hint mt-2">
-                    <!-- Hint text injected here -->
-                </p>
-
-                <div id="pictureguess-submission-status" class="tv-status mt-2">
-                    <!-- "3/4 teams submitted" -->
-                </div>
-
-                <!-- Answer reveal -->
-                <div id="pictureguess-answer-reveal" class="mt-3 hidden">
-                    <p class="tv-label">THE ANSWER:</p>
-                    <p id="pictureguess-correct-answer" class="tv-reveal glow-strong"></p>
-                </div>
-
-                <!-- Team guesses table -->
-                <div id="pictureguess-team-guesses" class="tv-table-container mt-3 hidden">
-                    <!-- Team guesses table injected here -->
-                </div>
+            <!-- Picture display container - with image clearing animation -->
+            <div id="pictureguess-image-container" class="tv-image-container glass-panel--glowing animate-fade-in mt-3">
+                <img id="pictureguess-image" src="" alt="Mystery Picture" class="hidden image-clearing">
+                <p id="pictureguess-no-image" class="stage-narrator animate-breathe">Preparing the picture...</p>
             </div>
-        </div>
-        <div class="tv-instructions" id="pictureguess-instructions">
-            <div class="tv-instructions-box">
-                <p class="instruction-title">Y2K IMAGE DATABASE FRAGMENTED</p>
-                <p class="instruction-text">The millennium bug has scrambled our visual archives. <strong>IDENTIFY this artifact!</strong> Submit your analysis before the data degrades completely.</p>
+
+            <!-- Hint display -->
+            <p id="pictureguess-hint-tv" class="stage-narrator mt-2">
+                <!-- Hint text injected here -->
+            </p>
+
+            <div id="pictureguess-submission-status" class="stage-narrator mt-2">
+                <!-- "3/4 families submitted" -->
             </div>
-        </div>
-        <div class="tv-footer">
-            <div id="pictureguess-scoreboard"></div>
+
+            <!-- Answer reveal - Enhanced with baby blue glow -->
+            <div id="pictureguess-answer-reveal" class="mt-3 hidden">
+                <div class="chapter-star">
+                    <span class="animate-twinkle">*</span>
+                </div>
+                <p class="tv-label-text">The Answer:</p>
+                <p id="pictureguess-correct-answer" class="stage-reveal glow-baby-blue-intense animate-float"></p>
+            </div>
+
+            <!-- Team guesses table - Ethereal scroll -->
+            <div id="pictureguess-team-guesses" class="tv-team-answers ethereal-scroll mt-3 hidden">
+                <!-- Team guesses table injected here -->
+            </div>
         </div>
     </div>
 </ViewContainer>

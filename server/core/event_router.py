@@ -64,8 +64,10 @@ class EventRouter:
             logger.error(f"Active game {self.current_game_id} not found in registry!")
             return
 
-        # Check if game handles this event
-        if event_name not in game.EVENTS and event_name not in game.ADMIN_EVENTS:
+        # Check if game handles this event (including global events)
+        if (event_name not in game.EVENTS and
+            event_name not in game.ADMIN_EVENTS and
+            event_name not in game.GLOBAL_ADMIN_EVENTS):
              logger.debug(f"Event {event_name} not handled by current game {self.current_game_id}")
              return
 

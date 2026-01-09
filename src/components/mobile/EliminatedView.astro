@@ -2,9 +2,22 @@
 import ViewContainer from '../shared/ViewContainer.astro';
 ---
 <ViewContainer id="view-eliminated">
-    <div class="flex-grow flex-center flex-column text-center">
-        <h1 style="color: var(--terminal-red); font-size: 3rem;">OFF DUTY</h1>
-        <p class="mt-2" style="color: var(--terminal-red);">YOUR PARENTAL CLEARANCE HAS BEEN SUSPENDED</p>
-        <p class="mt-1" style="color: var(--terminal-red); opacity: 0.7; font-size: 0.9rem;">[ DATA UNRECOVERABLE ]</p>
+    <div class="frost-viewport">
+        <header class="frost-header">
+            <p class="frost-header__chapter">A Cold Turn</p>
+            <h2 class="frost-header__title">Eliminated</h2>
+        </header>
+
+        <div class="frost-card frost-card--glow">
+            <p class="frost-card__instruction" style="color: #ff8a80;">You've been frozen out!</p>
+            <div class="frost-waiting__icon" style="opacity: 0.5;">❄</div>
+            <p class="frost-card__hint" style="margin-top: 1rem; opacity: 0.6;">
+                Watch the big screen to see who wins...
+            </p>
+        </div>
+
+        <div class="frost-actions">
+            <p class="frost-status">Better luck next round!</p>
+        </div>
     </div>
 </ViewContainer>

@@ -1,0 +1,189 @@
+---
+/**
+ * TeamScoreboard.astro
+ * Persistent footer scoreboard for TV display
+ * Shows all teams with names, members, and scores
+ * Lights up when a team scores
+ */
+---
+<div
+    id="team-scoreboard"
+    class="team-scoreboard hud-element"
+    data-show-states="TRIVIA,TIMELINE,PICTUREGUESS,BUZZER,TIMER,PIXELPERFECT,PRICEGUESS,SURVIVAL,MACGYVER,MUSICGUESSING,VICTORY"
+>
+    <div class="team-scoreboard__container">
+        <div class="team-scoreboard__teams" id="scoreboard-teams">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+</div>
+
+<style>
+.team-scoreboard {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.team-scoreboard.hud-visible {
+    opacity: 1;
+}
+
+.team-scoreboard__container {
+    background: rgba(10, 22, 40, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(77, 135, 191, 0.25);
+    border-radius: 20px;
+    padding: 12px 24px;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.team-scoreboard__teams {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    min-width: 200px;
+}
+
+/* Individual team box */
+:global(.scoreboard-team-box) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 20px;
+    min-width: 140px;
+    max-width: 200px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Team header row (color dot + name + score) */
+:global(.scoreboard-team-box__header) {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* Color indicator dot */
+:global(.scoreboard-team-box__color) {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Team name */
+:global(.scoreboard-team-box__name) {
+    font-family: var(--font-story, 'Cormorant Garamond', serif);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--ice-whisper, #E8F4FC);
+    flex-grow: 1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Score */
+:global(.scoreboard-team-box__score) {
+    font-family: var(--font-whimsy, 'Quicksand', sans-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* Members list */
+:global(.scoreboard-team-box__members) {
+    font-family: var(--font-whimsy, 'Quicksand', sans-serif);
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 6px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* Light-up animation when team scores */
+:global(.scoreboard-team-box.scoring) {
+    animation: team-score-glow 1.2s ease-out;
+}
+
+@keyframes team-score-glow {
+    0% {
+        box-shadow: 0 0 0 rgba(77, 135, 191, 0);
+        transform: scale(1);
+        background: rgba(255, 255, 255, 0.05);
+    }
+    15% {
+        box-shadow:
+            0 0 30px rgba(77, 135, 191, 0.8),
+            0 0 60px rgba(77, 135, 191, 0.4),
+            inset 0 0 20px rgba(77, 135, 191, 0.3);
+        transform: scale(1.08);
+        background: rgba(77, 135, 191, 0.25);
+    }
+    50% {
+        box-shadow:
+            0 0 20px rgba(77, 135, 191, 0.5),
+            0 0 40px rgba(77, 135, 191, 0.2);
+        transform: scale(1.03);
+        background: rgba(77, 135, 191, 0.15);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(77, 135, 191, 0);
+        transform: scale(1);
+        background: rgba(255, 255, 255, 0.05);
+    }
+}
+
+/* Score bump animation */
+:global(.scoreboard-team-box__score.bumping) {
+    animation: score-value-bump 0.6s ease-out;
+}
+
+@keyframes score-value-bump {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.4); color: var(--baby-blue, #4D87BF); }
+    100% { transform: scale(1); }
+}
+
+/* Leading team highlight */
+:global(.scoreboard-team-box.leading) {
+    background: rgba(77, 135, 191, 0.15);
+    border-color: rgba(77, 135, 191, 0.4);
+}
+
+/* Responsive: stack vertically on smaller screens */
+@media (max-width: 1200px) {
+    .team-scoreboard__container {
+        max-width: 90vw;
+    }
+
+    .team-scoreboard__teams {
+        gap: 12px;
+    }
+
+    :global(.scoreboard-team-box) {
+        min-width: 120px;
+        padding: 10px 16px;
+    }
+}
+</style>

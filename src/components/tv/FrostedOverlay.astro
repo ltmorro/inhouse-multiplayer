@@ -1,0 +1,142 @@
+---
+/**
+ * FrostedOverlay.astro
+ * Creates the "Frost Window" effect for the TV display.
+ *
+ * The screen appears as a frosted window pane, with a clear "wiped" area
+ * in the center where the game content is visible. Uses mask-image to
+ * create the effect without obscuring the center content.
+ *
+ * Frost intensity: Medium (blur 16px) as per user preference.
+ */
+---
+<div class="frost-overlay" id="frost-overlay">
+    <!-- The frosted edges -->
+    <div class="frost-overlay__frost"></div>
+
+    <!-- Frost crystal decorations at corners -->
+    <div class="frost-overlay__crystal frost-overlay__crystal--tl"></div>
+    <div class="frost-overlay__crystal frost-overlay__crystal--tr"></div>
+    <div class="frost-overlay__crystal frost-overlay__crystal--bl"></div>
+    <div class="frost-overlay__crystal frost-overlay__crystal--br"></div>
+
+    <!-- Subtle ice particles drifting -->
+    <div class="frost-overlay__particles"></div>
+</div>
+
+<style>
+.frost-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* The frosted area with clear center */
+.frost-overlay__frost {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    /* Create clear center using mask */
+    mask-image: radial-gradient(
+        ellipse 50% 55% at 50% 50%,
+        transparent 0%,
+        transparent 55%,
+        rgba(0, 0, 0, 0.3) 70%,
+        black 85%
+    );
+    -webkit-mask-image: radial-gradient(
+        ellipse 50% 55% at 50% 50%,
+        transparent 0%,
+        transparent 55%,
+        rgba(0, 0, 0, 0.3) 70%,
+        black 85%
+    );
+
+    /* Subtle frost tint */
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Frost crystal decorations */
+.frost-overlay__crystal {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(200, 220, 240, 0.04) 40%,
+        transparent 70%
+    );
+    opacity: 0.6;
+    animation: crystal-shimmer 8s ease-in-out infinite;
+}
+
+.frost-overlay__crystal--tl {
+    top: -30px;
+    left: -30px;
+    animation-delay: 0s;
+}
+
+.frost-overlay__crystal--tr {
+    top: -30px;
+    right: -30px;
+    animation-delay: 2s;
+}
+
+.frost-overlay__crystal--bl {
+    bottom: -30px;
+    left: -30px;
+    animation-delay: 4s;
+}
+
+.frost-overlay__crystal--br {
+    bottom: -30px;
+    right: -30px;
+    animation-delay: 6s;
+}
+
+@keyframes crystal-shimmer {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+}
+
+/* Subtle ice particles */
+.frost-overlay__particles {
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(1px 1px at 5% 10%, rgba(255, 255, 255, 0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 15% 85%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+        radial-gradient(2px 2px at 25% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 85% 15%, rgba(255, 255, 255, 0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 80%, rgba(255, 255, 255, 0.25) 0%, transparent 100%),
+        radial-gradient(2px 2px at 75% 60%, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+    animation: particles-drift 30s linear infinite;
+    opacity: 0.5;
+}
+
+@keyframes particles-drift {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(-20px, 20px);
+    }
+}
+
+/* Allow frost to be toggled off for certain views if needed */
+.frost-overlay.frost-disabled {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+</style>

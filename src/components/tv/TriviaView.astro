@@ -1,36 +1,43 @@
 ---
+/**
+ * TriviaView.astro - Immersive TV display for trivia games
+ * HUD elements (timer, scores) are now handled by TVHud + MoonTimer
+ * Atmosphere (moonbeams, frost) handled by TVLayout
+ */
 import ViewContainer from '../shared/ViewContainer.astro';
 ---
 <ViewContainer id="view-trivia">
-    <div class="tv-layout">
-        <div class="tv-header">
-            <h1 class="tv-title glow-strong">ALL SEARCH ENGINES OFFLINE</h1>
-            <p class="tv-subtitle">PROTOCOL 2 - GOOGLE IS DOWN</p>
-        </div>
-        <div class="tv-content">
-            <div class="text-center" style="max-width: 85%;">
-                <p id="trivia-question" class="tv-main-message glow-strong">
-                    Waiting for question...
-                </p>
-                <div id="trivia-submission-status" class="tv-status mt-3">
-                    <!-- "3/4 teams submitted" -->
-                </div>
-                <div id="trivia-answer-reveal" class="tv-label mt-3 hidden">
-                    <!-- Revealed answer -->
-                </div>
-                <div id="trivia-team-answers" class="tv-table-container mt-3 hidden">
-                    <!-- Team answers table injected here -->
-                </div>
+    <!-- STAGE ONLY - HUD and atmosphere handled by layout -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <p class="stage-subtitle">Chapter 1: Whispers in the Woods</p>
+            <h1 class="stage-title fairy-title--glow animate-breathe">Nursery Wisdom</h1>
+
+            <div class="chapter-star mt-2 mb-2">
+                <span class="animate-twinkle">*</span>
             </div>
-        </div>
-        <div class="tv-instructions" id="trivia-instructions">
-            <div class="tv-instructions-box">
-                <p class="instruction-title">THE INTERNET HAS COLLAPSED</p>
-                <p class="instruction-text">No lifelines. No connections. Just what's left in your head. <strong>TRANSMIT your answer</strong> before timeout. Wrong answers cannot be un-sent.</p>
+
+            <p id="trivia-question" class="stage-question">
+                Waiting for question...
+            </p>
+
+            <div id="trivia-submission-status" class="stage-narrator mt-2">
+                <!-- "3/4 families submitted" -->
             </div>
-        </div>
-        <div class="tv-footer">
-            <div id="trivia-scoreboard"></div>
+
+            <!-- Answer Reveal - Enhanced with baby blue glow -->
+            <div id="trivia-answer-reveal" class="mt-3 hidden">
+                <div class="chapter-star">
+                    <span class="animate-twinkle">*</span>
+                </div>
+                <p class="tv-label-text">The Answer:</p>
+                <p id="trivia-answer-text" class="stage-reveal glow-baby-blue-intense animate-float"></p>
+            </div>
+
+            <!-- Team Answers - Ethereal scroll -->
+            <div id="trivia-team-answers" class="tv-team-answers ethereal-scroll mt-3 hidden">
+                <!-- Team answers table injected here -->
+            </div>
         </div>
     </div>
 </ViewContainer>

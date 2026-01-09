@@ -1,39 +1,36 @@
 ---
+/**
+ * MinesweeperView.astro - Immersive TV display for thin ice/minesweeper game
+ * Team status table with elimination states
+ * HUD elements handled by TVHud + MoonTimer
+ */
 import ViewContainer from '../shared/ViewContainer.astro';
 ---
 <ViewContainer id="view-minesweeper">
-    <div class="tv-layout">
-        <div class="tv-header">
-            <h1 class="tv-title glow-strong">THIN ICE</h1>
-            <p class="tv-subtitle">CHAPTER 3</p>
-        </div>
-        <div class="tv-content">
-            <div class="text-center">
-                <div class="tv-table-container">
-                    <table class="scoreboard">
-                        <thead>
-                            <tr>
-                                <th>TEAM</th>
-                                <th>STATUS</th>
-                                <th>SCORE</th>
-                            </tr>
-                        </thead>
-                        <tbody id="minesweeper-teams">
-                            <!-- Team rows injected here -->
-                        </tbody>
-                    </table>
-                </div>
-                <p id="minesweeper-remaining" class="tv-status mt-3">
-                    <!-- "3 teams remaining" -->
-                </p>
+    <!-- STAGE ONLY - HUD and atmosphere handled by layout -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <h1 class="stage-title fairy-title--glow animate-breathe">Thin Ice</h1>
+            <p class="stage-subtitle">Chapter Three</p>
+
+            <div class="tv-team-answers ethereal-scroll mt-3">
+                <table class="scoreboard">
+                    <thead>
+                        <tr>
+                            <th>TEAM</th>
+                            <th>STATUS</th>
+                            <th>SCORE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="minesweeper-teams">
+                        <!-- Team rows injected here -->
+                    </tbody>
+                </table>
             </div>
+
+            <p id="minesweeper-remaining" class="stage-narrator mt-3">
+                <!-- "3 teams remaining" -->
+            </p>
         </div>
-        <div class="tv-instructions">
-            <div class="tv-instructions-box">
-                <p class="instruction-title">CROSS THE FROZEN LAKE</p>
-                <p class="instruction-text">Navigate the ice. <strong>One wrong step = FALLING INTO THE FREEZING WATER.</strong> Safe paths award points. Last family dry wins!</p>
-            </div>
-        </div>
-        <div class="tv-footer"></div>
     </div>
 </ViewContainer>

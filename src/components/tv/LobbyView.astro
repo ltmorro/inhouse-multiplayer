@@ -1,35 +1,109 @@
 ---
+/**
+ * LobbyView.astro - Immersive TV display for lobby/welcome screen
+ * Teams drift in with animation when joining
+ * HUD elements handled by TVHud
+ */
 import ViewContainer from '../shared/ViewContainer.astro';
 ---
 <ViewContainer id="view-lobby" active={true}>
-    <div class="tv-layout">
-        <div class="tv-header">
-            <h1 class="tv-title glow-strong">THE WINTER STORYBOOK</h1>
-            <p class="tv-subtitle mt-2">CHAPTER 0: PROLOGUE</p>
-        </div>
-        <div class="tv-content">
-            <div class="text-center">
-                <div id="qr-code" class="mt-3 hidden">
-                    <canvas
-                        id="qr-canvas"
-                        style="border: 4px solid var(--terminal-green); background: white; width: 350px; height: 350px;"
-                    ></canvas>
-                    <p id="qr-url" class="tv-hint mt-2"></p>
-                    <p class="tv-status">Scan to sign the guest book</p>
-                </div>
+    <!-- STAGE ONLY - HUD and atmosphere handled by layout -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <p class="stage-subtitle">Prologue: A Winter Celebration</p>
+            <h1 class="stage-title fairy-title--glow animate-breathe">Baby It's Cold Outside</h1>
 
-                <div class="mt-3">
-                    <h3 class="tv-section-heading">GUESTS PRESENT</h3>
-                    <div id="lobby-teams" class="tv-status mt-2">
-                        <p class="tv-status">Waiting for guests...</p>
+            <div id="qr-code" class="qr-container mt-3 hidden">
+                <div class="qr-codes-row">
+                    <!-- WiFi QR Code (shown only when configured) -->
+                    <div id="qr-wifi-container" class="qr-code-item hidden">
+                        <div class="qr-frame glass-panel--glowing">
+                            <canvas id="qr-wifi-canvas" class="qr-canvas"></canvas>
+                        </div>
+                        <p id="qr-wifi-label" class="tv-hint mt-2"></p>
+                        <p class="stage-narrator mt-1">1. Join the WiFi</p>
+                    </div>
+                    <!-- Game URL QR Code -->
+                    <div id="qr-game-container" class="qr-code-item">
+                        <div class="qr-frame glass-panel--glowing">
+                            <canvas id="qr-canvas" class="qr-canvas"></canvas>
+                        </div>
+                        <p id="qr-url" class="tv-hint mt-2"></p>
+                        <p id="qr-game-step" class="stage-narrator mt-1">Scan to sign the guest book</p>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="tv-footer">
-            <div id="scoreboard-mini" class="text-center">
-                <!-- Mini scoreboard -->
+
+            <div class="mt-3">
+                <div class="chapter-star">
+                    <span class="animate-twinkle">*</span>
+                </div>
+                <h3 class="tv-label-text">Families Present</h3>
+                <div id="lobby-teams" class="lobby-teams-grid mt-2">
+                    <p class="stage-narrator animate-breathe">Waiting for guests to arrive...</p>
+                </div>
             </div>
         </div>
     </div>
 </ViewContainer>
+
+<style>
+/* QR Code Frame - Storybook Style */
+.qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Dual QR code layout */
+.qr-codes-row {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.qr-code-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.qr-frame {
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--book-shadow);
+    border: 3px solid var(--void-twilight);
+    position: relative;
+}
+
+/* Decorative corners */
+.qr-frame::before,
+.qr-frame::after {
+    content: '*';
+    position: absolute;
+    font-size: 1.5rem;
+    color: var(--gold-candle);
+}
+
+.qr-frame::before {
+    top: 5px;
+    left: 10px;
+}
+
+.qr-frame::after {
+    bottom: 5px;
+    right: 10px;
+}
+
+/* Lobby Teams Grid */
+.lobby-teams-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+</style>

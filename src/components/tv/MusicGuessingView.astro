@@ -1,0 +1,58 @@
+---
+/**
+ * MusicGuessingView.astro - Immersive TV display for buzzer/music games
+ * Audio bars now use baby blue gradient
+ * HUD elements handled by TVHud + MoonTimer
+ */
+import ViewContainer from '../shared/ViewContainer.astro';
+---
+<ViewContainer id="view-buzzer">
+    <!-- STAGE ONLY - HUD and atmosphere handled by layout -->
+    <div class="tv-stage">
+        <div class="stage-book stage-book--wide immersive-pane">
+            <p class="stage-subtitle">Chapter 2: A Winter Lullaby</p>
+            <h1 class="stage-title fairy-title--glow animate-breathe">Name That Tune</h1>
+
+            <!-- HTML5 Audio Player (controllable) -->
+            <div id="audio-player-container" class="hidden mt-3">
+                <audio id="audio-player" class="hidden"></audio>
+                <div id="audio-visualizer" class="tv-audio-visualizer glass-panel--glowing">
+                    <div class="audio-bar audio-bar--1"></div>
+                    <div class="audio-bar audio-bar--2"></div>
+                    <div class="audio-bar audio-bar--3"></div>
+                    <div class="audio-bar audio-bar--4"></div>
+                    <div class="audio-bar audio-bar--5"></div>
+                    <div class="audio-bar audio-bar--6"></div>
+                    <div class="audio-bar audio-bar--7"></div>
+                    <div class="audio-bar audio-bar--8"></div>
+                </div>
+                <div id="audio-paused-indicator" class="tv-paused hidden">
+                    [ Paused ]
+                </div>
+            </div>
+
+            <!-- Track reveal - Enhanced with baby blue glow -->
+            <div id="audio-reveal" class="hidden mt-3">
+                <div class="chapter-star">
+                    <span class="animate-twinkle">*</span>
+                </div>
+                <p class="tv-label-text">The Answer:</p>
+                <p id="audio-track-title" class="stage-reveal glow-baby-blue-intense animate-float"></p>
+                <p id="audio-artist" class="stage-narrator"></p>
+            </div>
+
+            <p id="buzzer-hint" class="stage-narrator animate-breathe mt-3">
+                Listen closely... Can you name the song?
+            </p>
+
+            <div id="buzzer-locked-display" class="mt-3 hidden locked-display-glow">
+                <p class="tv-label-text">Locked by:</p>
+                <p id="buzzer-locked-team" class="stage-reveal text-glow-baby-blue"></p>
+            </div>
+
+            <div id="buzzer-ready-display" class="mt-3">
+                <p class="tv-active-indicator tv-ready-indicator animate-twinkle">Buzzer Ready</p>
+            </div>
+        </div>
+    </div>
+</ViewContainer>

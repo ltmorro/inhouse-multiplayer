@@ -1,0 +1,29 @@
+---
+/**
+ * FloatingNotes.astro
+ * Ethereal drifting messages that replace the scrolling news ticker
+ * Notes spawn at the bottom and float upward through clouds
+ */
+
+// Notes content - same fun facts as the original ticker
+const notes = [
+    "Every family has a story worth telling...",
+    "The best adventures begin with tiny footsteps",
+    "Love grows stronger with each new chapter",
+    "Some heroes come in very small packages",
+    "The greatest gifts come wrapped in blankets",
+    "New beginnings are always the sweetest",
+    "Family: where life begins and love never ends",
+    "Little hands make the biggest impressions",
+    "The adventure of a lifetime starts now",
+    "Welcome to the most wonderful chapter yet"
+];
+---
+<div class="floating-notes" id="floating-notes" aria-hidden="true">
+    <!-- Notes are spawned dynamically by JavaScript -->
+</div>
+
+<script define:vars={{ notes }}>
+    // Store notes in global scope for the controller
+    window.floatingNotesContent = notes;
+</script>

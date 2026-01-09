@@ -13,6 +13,9 @@ from .trivia.game import TriviaGame
 from .pictureguess.game import PictureGuessGame
 from .timeline.game import TimelineGame
 from .buzzer.game import BuzzerGame
+from .survival.game import SurvivalGame
+from .pixelperfect.game import PixelPerfectGame
+from .priceguess.game import PriceGuessGame
 
 # All available games in registration order
 ALL_GAMES = [
@@ -23,14 +26,17 @@ ALL_GAMES = [
     MinesweeperGame,
     TriviaGame,
     PictureGuessGame,
+    PriceGuessGame,
     TimelineGame,
     BuzzerGame,
+    SurvivalGame,
+    PixelPerfectGame,
 ]
 
 __all__ = [
     'BaseGame', 'EventResponse', 'EventContext', 'GameRegistry',
     'ALL_GAMES',
     'LobbyGame', 'VictoryGame', 'MacGyverGame', 'TimerGame',
-    'MinesweeperGame', 'TriviaGame', 'PictureGuessGame',
-    'TimelineGame', 'BuzzerGame',
+    'MinesweeperGame', 'TriviaGame', 'PictureGuessGame', 'PriceGuessGame',
+    'TimelineGame', 'BuzzerGame', 'SurvivalGame', 'PixelPerfectGame',
 ]

@@ -4,11 +4,11 @@ import ViewContainer from '../shared/ViewContainer.astro';
 <ViewContainer id="auth-view" active={true}>
     <div class="flex-grow flex-center flex-column">
         <h2 class="glow">SECURITY CLEARANCE REQUIRED</h2>
-        <p style="color: var(--terminal-green-dim); margin-bottom: 1rem;">DOCTOR / PARENT ACCESS ONLY</p>
-        <form id="auth-form" class="mt-3" style="width: 100%; max-width: 400px;">
+        <p class="admin-hint mb-2">DOCTOR / PARENT ACCESS ONLY</p>
+        <form id="auth-form" class="admin-form mt-3">
             <input type="password" id="admin-password" class="terminal-input" placeholder="ACCESS CODE" autocomplete="off">
-            <button type="submit" class="terminal-btn terminal-btn--primary mt-2" style="width: 100%;">AUTHORIZE</button>
+            <button type="submit" class="terminal-btn terminal-btn--primary mobile-form__submit mt-2">AUTHORIZE</button>
         </form>
-        <p id="auth-error" class="mt-2" style="color: var(--terminal-red); display: none;"></p>
+        <p id="auth-error" class="status-text status-text--error mt-2 hidden"></p>
     </div>
 </ViewContainer>

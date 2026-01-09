@@ -1,10 +1,10 @@
 ---
 ---
-<section id="trivia-section" class="mt-3" style="display: none;">
+<section id="trivia-section" class="admin-section mt-3" style="display: none;">
     <h3 class="glow">TRIVIA MASTER</h3>
     <div class="mt-1">
         <label>Pre-loaded Questions:</label>
-        <select id="trivia-preset-select" class="terminal-input" style="width: 100%;">
+        <select id="trivia-preset-select" class="terminal-input w-full">
             <option value="">-- Select a question --</option>
         </select>
     </div>
@@ -12,14 +12,14 @@
         <label>Question:</label>
         <textarea id="trivia-question-input" class="terminal-input" rows="2" placeholder="Enter custom question..."></textarea>
     </div>
-    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;" class="mt-1">
+    <div class="admin-controls items-center mt-1">
         <label>Q#:</label>
-        <input type="number" id="trivia-question-id" class="terminal-input" value="1" style="width: 60px;">
+        <input type="number" id="trivia-question-id" class="terminal-input admin-input--narrow" value="1">
         <button id="send-trivia-btn" class="terminal-btn terminal-btn--primary">SEND QUESTION</button>
     </div>
     <h4 class="mt-2">ANSWERS:</h4>
-    <ul id="answer-list" class="mt-1" style="list-style: none; padding: 0; max-height: 200px; overflow-y: auto; border: 1px solid #333;"></ul>
-    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" class="mt-2">
+    <ul id="answer-list" class="admin-list admin-list--scrollable mt-1"></ul>
+    <div class="admin-controls mt-2">
         <input type="text" id="correct-answer" class="terminal-input" placeholder="CORRECT ANSWER">
         <button id="reveal-btn" class="terminal-btn terminal-btn--primary">REVEAL</button>
     </div>

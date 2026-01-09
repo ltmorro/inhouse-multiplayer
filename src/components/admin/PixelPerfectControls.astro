@@ -1,0 +1,32 @@
+---
+---
+<section id="pixelperfect-section" class="admin-section mt-3" style="display: none;">
+    <h3 class="glow">PIXEL PERFECT CONTROLS</h3>
+    <div class="mt-1">
+        <label>Select Picture:</label>
+        <select id="pixelperfect-preset-select" class="terminal-input w-full">
+            <option value="">-- Select a picture or enter custom URL --</option>
+        </select>
+    </div>
+    <div class="mt-1">
+        <label>Picture URL:</label>
+        <input type="text" id="pixelperfect-url-input" class="terminal-input w-full" placeholder="https://example.com/image.jpg">
+    </div>
+    <div class="mt-1">
+        <label>Answer:</label>
+        <input type="text" id="pixelperfect-correct-answer" class="terminal-input w-full" placeholder="Correct answer">
+        <input type="hidden" id="pixelperfect-round-id" value="1">
+    </div>
+    <div class="admin-controls mt-1">
+        <button id="start-pixelperfect-btn" class="terminal-btn terminal-btn--primary">START ROUND</button>
+        <button id="reveal-pixelperfect-btn" class="terminal-btn">REVEAL ANSWER</button>
+    </div>
+    <hr class="admin-divider">
+    <p class="mt-1">Locked by: <span id="pixelperfect-locker" class="glow">---</span></p>
+    <div class="admin-controls mt-1">
+        <button id="pixelperfect-correct-btn" class="terminal-btn admin-btn--success">CORRECT +100</button>
+        <button id="pixelperfect-wrong-btn" class="terminal-btn admin-btn--danger">WRONG</button>
+    </div>
+    <hr class="admin-divider">
+    <p class="admin-hint mt-1">Timer: <span id="pixelperfect-timer-status">Not started</span></p>
+</section>

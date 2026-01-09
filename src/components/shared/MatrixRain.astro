@@ -1,8 +1,32 @@
 ---
+/**
+ * SnowScreensaver.astro (formerly MatrixRain)
+ * A gentle falling snow screensaver that activates during idle periods.
+ * Replaces the Y2K Matrix rain effect with a cozy winter scene.
+ */
 ---
-<canvas id="matrix-rain" class="matrix-rain-canvas"></canvas>
+
+<canvas id="matrix-rain" class="snow-screensaver-canvas"></canvas>
 
 <style>
+.snow-screensaver-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+    background: linear-gradient(180deg, #34495E 0%, #2C3E50 50%, #1a252f 100%);
+}
+
+.snow-screensaver-canvas.active {
+    opacity: 1;
+}
+
+/* For backwards compatibility with any JS checking for matrix-rain-canvas */
 .matrix-rain-canvas {
     position: fixed;
     top: 0;
@@ -13,8 +37,156 @@
     pointer-events: none;
     opacity: 0;
     transition: opacity 2s ease-in-out;
+    background: linear-gradient(180deg, #34495E 0%, #2C3E50 50%, #1a252f 100%);
 }
+
 .matrix-rain-canvas.active {
     opacity: 1;
 }
 </style>
+
+<script>
+    /**
+     * Snow Screensaver - Gentle falling snow animation
+     * Activates when the 'active' class is added to the canvas
+     */
+    class SnowScreensaver {
+        private canvas: HTMLCanvasElement | null = null;
+        private ctx: CanvasRenderingContext2D | null = null;
+        private snowflakes: Snowflake[] = [];
+        private animationId: number | null = null;
+        private isRunning: boolean = false;
+
+        constructor() {
+            this.init();
+        }
+
+        init(): void {
+            this.canvas = document.getElementById('matrix-rain') as HTMLCanvasElement;
+            if (!this.canvas) return;
+
+            this.ctx = this.canvas.getContext('2d');
+            this.resize();
+            window.addEventListener('resize', () => this.resize());
+
+            // Watch for the 'active' class to start/stop animation
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'class') {
+                        const isActive = this.canvas?.classList.contains('active');
+                        if (isActive && !this.isRunning) {
+                            this.start();
+                        } else if (!isActive && this.isRunning) {
+                            this.stop();
+                        }
+                    }
+                });
+            });
+
+            observer.observe(this.canvas, { attributes: true });
+        }
+
+        resize(): void {
+            if (!this.canvas) return;
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+            this.createSnowflakes();
+        }
+
+        createSnowflakes(): void {
+            this.snowflakes = [];
+            const count = Math.floor((this.canvas?.width || 800) / 8);
+
+            for (let i = 0; i < count; i++) {
+                this.snowflakes.push(this.createSnowflake());
+            }
+        }
+
+        createSnowflake(): Snowflake {
+            return {
+                x: Math.random() * (this.canvas?.width || 800),
+                y: Math.random() * (this.canvas?.height || 600),
+                radius: Math.random() * 3 + 1,
+                speed: Math.random() * 1 + 0.5,
+                wind: Math.random() * 0.5 - 0.25,
+                opacity: Math.random() * 0.5 + 0.3,
+            };
+        }
+
+        start(): void {
+            if (this.isRunning) return;
+            this.isRunning = true;
+            this.createSnowflakes();
+            this.animate();
+        }
+
+        stop(): void {
+            this.isRunning = false;
+            if (this.animationId !== null) {
+                cancelAnimationFrame(this.animationId);
+                this.animationId = null;
+            }
+        }
+
+        animate(): void {
+            if (!this.isRunning || !this.ctx || !this.canvas) return;
+
+            // Clear with a subtle fade effect
+            this.ctx.fillStyle = 'rgba(26, 37, 47, 0.1)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+            // Draw snowflakes
+            this.snowflakes.forEach((flake) => {
+                if (!this.ctx) return;
+
+                this.ctx.beginPath();
+                this.ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+                this.ctx.fillStyle = `rgba(255, 255, 255, ${flake.opacity})`;
+                this.ctx.fill();
+
+                // Add subtle glow
+                this.ctx.shadowBlur = flake.radius * 2;
+                this.ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
+
+                // Update position
+                flake.y += flake.speed;
+                flake.x += flake.wind + Math.sin(flake.y * 0.01) * 0.3;
+
+                // Reset if off screen
+                if (flake.y > (this.canvas?.height || 600)) {
+                    flake.y = -10;
+                    flake.x = Math.random() * (this.canvas?.width || 800);
+                }
+                if (flake.x > (this.canvas?.width || 800)) {
+                    flake.x = 0;
+                }
+                if (flake.x < 0) {
+                    flake.x = this.canvas?.width || 800;
+                }
+            });
+
+            this.ctx.shadowBlur = 0;
+
+            this.animationId = requestAnimationFrame(() => this.animate());
+        }
+    }
+
+    interface Snowflake {
+        x: number;
+        y: number;
+        radius: number;
+        speed: number;
+        wind: number;
+        opacity: number;
+    }
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        new SnowScreensaver();
+    });
+
+    // Also handle Astro View Transitions
+    document.addEventListener('astro:page-load', () => {
+        new SnowScreensaver();
+    });
+</script>

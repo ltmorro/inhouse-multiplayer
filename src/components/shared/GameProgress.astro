@@ -1,7 +1,7 @@
 ---
 ---
 <div class="game-progress" id="game-progress">
-    <div class="game-progress__round" id="progress-round">Round 1 of 7</div>
+    <div class="game-progress__round" id="progress-round">Chapter 1 of 7</div>
     <div class="game-progress__bar">
         <div class="game-progress__fill" id="progress-fill" style="width: 0%;"></div>
     </div>
@@ -22,27 +22,27 @@
     display: block;
 }
 .game-progress__round {
-    color: var(--terminal-green);
-    font-family: 'VT323', monospace;
+    color: var(--baby-blue);
+    font-family: --font-story,serif;
     font-size: 1.2rem;
     text-align: center;
     margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-shadow: 0 0 5px var(--terminal-green-glow);
+    text-shadow: 0 0 5px var(--baby-blue);
 }
 .game-progress__bar {
     height: 6px;
     background: rgba(0, 255, 0, 0.15);
-    border: 1px solid var(--terminal-green-dim);
+    border: 1px solid var(--baby-blue);
     border-radius: 0;
     overflow: hidden;
     position: relative;
 }
 .game-progress__fill {
     height: 100%;
-    background: var(--terminal-green);
-    box-shadow: 0 0 10px var(--terminal-green), 0 0 20px var(--terminal-green-glow);
+    background: var(--baby-blue);
+    box-shadow: 0 0 10px var(--baby-blue), 0 0 20px var(--baby-blue-glow);
     transition: width 0.5s ease-out;
     position: relative;
 }

@@ -1,0 +1,100 @@
+---
+/**
+ * WaitingVignette.astro
+ * Illustrated waiting state with gentle animation and narrator text
+ * Replaces loading spinners with storybook atmosphere
+ */
+interface Props {
+    icon?: string;           // Emoji or text icon
+    text?: string;           // Narrator text
+    variant?: 'snow' | 'stars' | 'quill';
+}
+
+const {
+    icon = '...',
+    text = 'The story unfolds...',
+    variant = 'snow'
+} = Astro.props;
+---
+
+<div class="waiting-vignette">
+    <div class:list={['waiting-vignette__icon', `waiting-vignette__icon--${variant}`]}>
+        {icon}
+    </div>
+    <p class="waiting-vignette__text">{text}</p>
+</div>
+
+<style>
+.waiting-vignette {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.waiting-vignette__icon {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+/* Snow variant - gentle twinkle */
+.waiting-vignette__icon--snow {
+    animation: waiting-twinkle 2s ease-in-out infinite;
+}
+
+/* Stars variant - soft pulse */
+.waiting-vignette__icon--stars {
+    animation: waiting-pulse 3s ease-in-out infinite;
+    text-shadow: 0 0 20px rgba(255, 229, 180, 0.4);
+}
+
+/* Quill variant - writing motion */
+.waiting-vignette__icon--quill {
+    animation: waiting-write 2s ease-in-out infinite;
+}
+
+.waiting-vignette__text {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    text-align: center;
+}
+
+@keyframes waiting-twinkle {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes waiting-pulse {
+    0%, 100% {
+        opacity: 0.6;
+        filter: brightness(1);
+    }
+    50% {
+        opacity: 1;
+        filter: brightness(1.2);
+    }
+}
+
+@keyframes waiting-write {
+    0%, 100% {
+        transform: translateX(0) rotate(0deg);
+    }
+    25% {
+        transform: translateX(3px) rotate(5deg);
+    }
+    75% {
+        transform: translateX(-3px) rotate(-5deg);
+    }
+}
+</style>

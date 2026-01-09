@@ -1,0 +1,559 @@
+/* =============================================================
+   MOBILE.CSS - Mobile/Client Specific Styles
+   "Baby It's Cold Outside" - Ethereal Storybook
+   ============================================================= */
+
+/* Mobile page - Deep winter night sky (same as TV) */
+body:not(.tv-page):not(.admin-page) {
+    background: linear-gradient(180deg,
+        #050a14 0%,
+        #0a1628 20%,
+        #0f2847 50%,
+        #1a3a5f 80%,
+        #1e4a6f 100%
+    );
+    min-height: 100vh;
+}
+
+/* Subtle starfield for mobile */
+body:not(.tv-page):not(.admin-page)::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 45% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 30%, rgba(255,255,255,0.45) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 80%, rgba(255,255,255,0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 85% 70%, rgba(255,255,255,0.4) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Mobile views - fixed viewport, no scrolling (app-like experience) */
+body:not(.tv-page):not(.admin-page) .view {
+    padding-top: 50px; /* Account for fixed status bar */
+    padding-bottom: 80px; /* Account for reaction bar */
+    overflow: hidden;
+}
+
+/* =============================================================
+   ACTION CARD LAYOUT - "Websites scroll; Apps do not."
+   The viewport locks to screen height for a game controller feel.
+   Top = Display (looking), Bottom = Controls (touching)
+   ============================================================= */
+
+/* The Container - locks to dynamic viewport height */
+.mobile-viewport {
+    height: 100dvh; /* Dynamic height handles mobile browser bars */
+    width: 100vw;
+    overflow: hidden; /* No scrolling allowed! */
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    padding-top: 60px; /* Account for status bar */
+    gap: 1rem;
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+}
+
+/* ZONE 1: THE DISPLAY (Top) */
+/* This is where the user LOOKS */
+.mobile-deck-display {
+    flex: 1; /* Grow to fill space */
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    overflow-y: auto; /* Internal scroll only if absolutely needed */
+}
+
+/* ZONE 2: THE CONTROLS (Bottom) */
+/* This is where the user TOUCHES */
+.mobile-deck-controls {
+    flex: 0 0 auto; /* Do not shrink */
+    min-height: 200px; /* Guarantee touch space */
+    background: var(--surface-snow);
+    border-radius: 30px 30px 0 0; /* Rounded top like a dashboard */
+    margin: 0 -1rem -1rem -1rem; /* Stretch to edges */
+    padding: 2rem 1.5rem;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 10;
+}
+
+/* =============================================================
+   MOBILE GAME ROUND HEADER
+   Used in all game views (Trivia, Timeline, PictureGuess, Buzzer, etc.)
+   ============================================================= */
+
+.game-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.game-header__title {
+    font-family: var(--font-serif);
+    color: var(--ice-whisper);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+}
+
+.game-header__subtitle {
+    color: var(--gold-candle);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px rgba(255, 229, 180, 0.3);
+}
+
+.game-header__description {
+    color: var(--ice-soft);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* =============================================================
+   MOBILE PAGE HEADER
+   Used in Lobby, Victory, Register
+   ============================================================= */
+
+.page-header {
+    text-align: center;
+}
+
+.page-header__icon {
+    font-size: 1.5rem;
+    color: var(--ice-glow);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 15px rgba(135, 206, 235, 0.5);
+}
+
+.page-header__icon--gold {
+    color: var(--gold-candle);
+    text-shadow: 0 0 15px rgba(255, 229, 180, 0.5);
+}
+
+.page-header__title {
+    font-family: var(--font-serif);
+    color: var(--ice-whisper);
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 0 25px rgba(135, 206, 235, 0.4);
+}
+
+.page-header__subtitle {
+    color: var(--gold-candle);
+    font-weight: 600;
+    margin: 0.5rem 0;
+    text-shadow: 0 0 15px rgba(255, 229, 180, 0.3);
+}
+
+.page-header__description {
+    color: var(--ice-soft);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.page-header__description--italic {
+    font-style: italic;
+}
+
+/* =============================================================
+   MOBILE FORM
+   ============================================================= */
+
+.mobile-form {
+    width: 100%;
+    max-width: 400px;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mobile-form__submit {
+    width: 100%;
+}
+
+/* =============================================================
+   MOBILE TAB BUTTONS
+   ============================================================= */
+
+.mobile-tabs {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+.mobile-tabs__btn {
+    flex: 1;
+}
+
+/* =============================================================
+   STATUS TEXT
+   Used for game status messages
+   ============================================================= */
+
+.status-text {
+    color: var(--ice-soft);
+    text-align: center;
+}
+
+.status-text--amber {
+    color: var(--status-warning);
+}
+
+.status-text--error {
+    color: var(--status-error);
+}
+
+/* =============================================================
+   HINT TEXT
+   Used for game hints
+   ============================================================= */
+
+.hint-text {
+    color: var(--ice-soft);
+    font-size: 0.9rem;
+    font-style: italic;
+    text-align: center;
+    opacity: 0.9;
+}
+
+/* =============================================================
+   WAITING STATE
+   Used when waiting for game data
+   ============================================================= */
+
+.waiting-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.waiting-state__text {
+    color: var(--ice-soft);
+}
+
+.waiting-state__indicator {
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+/* =============================================================
+   JOIN CODE INPUT
+   Special styling for join code
+   ============================================================= */
+
+.join-code-input {
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+/* =============================================================
+   STATUS BAR HEADER - Floating glass panel
+   ============================================================= */
+
+.status-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 20px;
+    background: rgba(15, 40, 71, 0.85);
+    border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+    font-size: 0.9rem;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.status-bar__team {
+    font-family: var(--font-serif);
+    font-weight: bold;
+    color: var(--ice-whisper);
+}
+
+.status-bar__player {
+    color: var(--ice-soft);
+    margin-left: 0.5rem;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background-color: rgba(135, 206, 235, 0.3);
+}
+
+.status-indicator--connected {
+    background-color: var(--status-complete);
+    box-shadow: 0 0 8px rgba(127, 212, 163, 0.6);
+}
+
+.status-indicator--disconnected {
+    background-color: var(--status-oops);
+    box-shadow: 0 0 8px rgba(242, 139, 130, 0.6);
+}
+
+/* =============================================================
+   TIMER PROGRESS CONTAINER
+   ============================================================= */
+
+.timer-progress-container {
+    max-width: 400px;
+    width: 100%;
+}
+
+/* =============================================================
+   REACTION FEED (Mobile)
+   ============================================================= */
+
+body:not(.tv-page) .reaction-feed {
+    position: fixed;
+    bottom: 0;
+    left: 20px;
+    width: 100px;
+    height: 300px;
+    pointer-events: none;
+    z-index: 50;
+}
+
+body:not(.tv-page) .reaction-feed .emoji {
+    position: absolute;
+    bottom: 0;
+    animation: float-up 3s ease-out forwards;
+    font-size: 2rem;
+}
+
+@keyframes float-up {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-200px) scale(0.5);
+    }
+}
+
+/* =============================================================
+   CHAT INPUT BAR (Mobile) - Glass panel
+   ============================================================= */
+
+.chat-input-bar {
+    position: fixed;
+    bottom: 75px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 200;
+    background: rgba(15, 40, 71, 0.85);
+    padding: 8px 12px;
+    border-radius: 25px;
+    border: 1px solid rgba(135, 206, 235, 0.3);
+    width: calc(100% - 30px);
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.chat-input-bar.hidden {
+    display: none;
+}
+
+.chat-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--ice-whisper);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    padding: 8px 12px;
+    outline: none;
+    min-width: 0;
+}
+
+.chat-input::placeholder {
+    color: var(--ice-soft);
+    opacity: 0.6;
+    font-style: italic;
+}
+
+.chat-input:disabled {
+    opacity: 0.5;
+}
+
+.chat-send-btn {
+    width: 36px;
+    height: 36px;
+    background: var(--ice-glow);
+    border: none;
+    border-radius: 50%;
+    color: var(--void-deep);
+    font-family: var(--font-sans);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(135, 206, 235, 0.4);
+}
+
+.chat-send-btn:hover {
+    background: var(--ice-bright);
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(135, 206, 235, 0.6);
+}
+
+.chat-send-btn:active {
+    transform: scale(0.95);
+}
+
+.chat-send-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.chat-send-icon {
+    font-weight: bold;
+}
+
+/* =============================================================
+   EMOJI REACTION BAR (Mobile) - Glass panel
+   ============================================================= */
+
+.reaction-bar {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 200;
+    background: rgba(15, 40, 71, 0.85);
+    padding: 8px 15px;
+    border-radius: 25px;
+    border: 1px solid rgba(135, 206, 235, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.reaction-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.4rem;
+    background: rgba(135, 206, 235, 0.1);
+    border: 1px solid rgba(135, 206, 235, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reaction-btn:hover {
+    background: rgba(135, 206, 235, 0.25);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(135, 206, 235, 0.3);
+}
+
+.reaction-btn:active {
+    transform: scale(0.95);
+    background: rgba(135, 206, 235, 0.35);
+}
+
+.reaction-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.reaction-btn:disabled:hover {
+    background: rgba(135, 206, 235, 0.1);
+    box-shadow: none;
+}
+
+/* =============================================================
+   BABY BLUE GLOW UTILITIES (Mobile-specific)
+   ============================================================= */
+
+/* Baby blue text glow */
+.mobile-glow-text {
+    text-shadow: 0 0 20px rgba(77, 135, 191, 0.4);
+}
+
+/* Baby blue border accent */
+.mobile-accent-border {
+    border-color: rgba(77, 135, 191, 0.4) !important;
+}
+
+/* Submitted state with baby blue */
+.frost-status--submitted {
+    color: var(--baby-blue, #4D87BF);
+    text-shadow: 0 0 15px rgba(77, 135, 191, 0.4);
+}
+
+/* Enhanced game header title with baby blue glow */
+.game-header__title--glow {
+    text-shadow: 0 0 25px rgba(77, 135, 191, 0.5);
+}
+
+/* Baby blue selection state for choices */
+.frost-choice.selected {
+    box-shadow: 0 0 25px rgba(77, 135, 191, 0.4);
+}
+
+/* Enhanced status bar connection indicator */
+.status-indicator--connected {
+    background-color: var(--baby-blue, #4D87BF);
+    box-shadow: 0 0 10px rgba(77, 135, 191, 0.6);
+}
+
+/* Enchanted button style (matches frost.css) */
+.enchanted-btn--glow {
+    box-shadow:
+        0 6px 0 rgba(77, 135, 191, 0.35),
+        0 8px 24px rgba(0, 0, 0, 0.2),
+        0 0 25px rgba(77, 135, 191, 0.2);
+}
+
+.enchanted-btn--glow:hover:not(:disabled) {
+    box-shadow:
+        0 8px 0 rgba(77, 135, 191, 0.35),
+        0 12px 32px rgba(0, 0, 0, 0.25),
+        0 0 40px rgba(77, 135, 191, 0.3);
+}

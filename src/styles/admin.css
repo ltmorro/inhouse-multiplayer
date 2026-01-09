@@ -1,0 +1,252 @@
+/* =============================================================
+   ADMIN.CSS - Admin Panel Specific Styles
+   "Baby It's Cold Outside" - Ethereal Storybook
+   ============================================================= */
+
+/* Admin page - Deep winter night sky */
+body.admin-page {
+    background: linear-gradient(180deg,
+        #050a14 0%,
+        #0a1628 20%,
+        #0f2847 50%,
+        #1a3a5f 80%,
+        #1e4a6f 100%
+    );
+    min-height: 100vh;
+}
+
+/* Subtle starfield for admin */
+body.admin-page::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 45%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 25%, rgba(255,255,255,0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 80% 65%, rgba(255,255,255,0.3) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* =============================================================
+   ADMIN HEADER
+   ============================================================= */
+
+.admin-header__title {
+    font-family: var(--font-serif);
+    font-weight: bold;
+    color: var(--ice-whisper);
+    text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+}
+
+.admin-header__status {
+    color: var(--ice-soft);
+}
+
+/* =============================================================
+   ADMIN CONTAINER
+   ============================================================= */
+
+.admin-container {
+    padding: 1rem;
+    padding-top: 20px; /* Spacing below header */
+    position: relative;
+    z-index: 1;
+}
+
+/* =============================================================
+   ADMIN SECTION - Glass panels
+   ============================================================= */
+
+.admin-section {
+    margin-bottom: 1.5rem;
+    background: rgba(15, 40, 71, 0.5);
+    border: 1px solid rgba(135, 206, 235, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    backdrop-filter: blur(8px);
+}
+
+.admin-section__title {
+    font-family: var(--font-serif);
+    color: var(--ice-bright);
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(135, 206, 235, 0.3);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 15px rgba(135, 206, 235, 0.3);
+}
+
+/* =============================================================
+   ADMIN CONTROLS
+   ============================================================= */
+
+.admin-controls {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.admin-controls--column {
+    flex-direction: column;
+}
+
+/* =============================================================
+   ADMIN STATUS
+   ============================================================= */
+
+.admin-status {
+    color: var(--ice-soft);
+    font-size: 0.9rem;
+}
+
+.admin-status--success {
+    color: var(--status-complete);
+    text-shadow: 0 0 10px rgba(127, 212, 163, 0.4);
+}
+
+.admin-status--warning {
+    color: var(--gold-candle);
+    text-shadow: 0 0 10px rgba(255, 229, 180, 0.4);
+}
+
+.admin-status--error {
+    color: var(--status-error);
+    text-shadow: 0 0 10px rgba(242, 139, 130, 0.4);
+}
+
+/* =============================================================
+   ADMIN TEAM LIST
+   ============================================================= */
+
+.admin-team-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.admin-team-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(15, 40, 71, 0.6);
+    border: 1px solid rgba(135, 206, 235, 0.25);
+    border-radius: 8px;
+}
+
+.admin-team-item__name {
+    font-family: var(--font-serif);
+    font-weight: bold;
+    color: var(--ice-whisper);
+}
+
+.admin-team-item__info {
+    color: var(--ice-soft);
+    font-size: 0.9rem;
+}
+
+/* =============================================================
+   ADMIN FORM
+   ============================================================= */
+
+.admin-form {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* =============================================================
+   ADMIN HINTS & WARNINGS
+   ============================================================= */
+
+.admin-hint {
+    color: var(--ice-soft);
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.admin-warning {
+    color: var(--status-warning);
+    font-size: 0.85rem;
+}
+
+/* =============================================================
+   ADMIN DIVIDER
+   ============================================================= */
+
+.admin-divider {
+    border-color: rgba(135, 206, 235, 0.2);
+    margin-top: 1rem;
+}
+
+.admin-divider--section {
+    border-color: rgba(135, 206, 235, 0.3);
+    margin: 20px 0;
+}
+
+/* =============================================================
+   ADMIN LIST
+   ============================================================= */
+
+.admin-list {
+    list-style: none;
+    padding: 10px;
+    border: 1px solid rgba(135, 206, 235, 0.25);
+    border-radius: 8px;
+    min-height: 100px;
+    background: rgba(15, 40, 71, 0.4);
+    color: var(--ice-soft);
+}
+
+.admin-list--scrollable {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* =============================================================
+   ADMIN INPUT VARIANTS
+   ============================================================= */
+
+.admin-input--narrow {
+    width: 80px;
+}
+
+.admin-input--auto {
+    width: auto;
+    flex-grow: 1;
+}
+
+/* =============================================================
+   ADMIN BUTTON COLORS
+   ============================================================= */
+
+.admin-btn--success {
+    background: var(--status-success);
+    color: var(--void-deep);
+}
+
+.admin-btn--success-dim {
+    background: rgba(135, 206, 235, 0.3);
+    color: var(--ice-whisper);
+}
+
+.admin-btn--danger {
+    background: var(--status-error);
+    color: white;
+}
+
+/* =============================================================
+   ADMIN GRID LAYOUT
+   ============================================================= */
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}

@@ -1,10 +1,14 @@
 /**
  * TV.JS - TV Display View Manager
  * Handles view switching and socket events for the main display
+ *
+ * Uses shared modules from src/scripts/ (exposed via window globals):
+ * - window.STATE_VIEW_MAP, window.GAME_PHASES, window.AVATAR_EMOJIS
+ * - window.TeamColors, window.VHSTransition, window.TimerEffects
  */
 
 // ============================================================
-// CONFIGURATION
+// CONFIGURATION (uses shared modules from globals)
 // ============================================================
 
 const CONFIG = {
@@ -14,29 +18,39 @@ const CONFIG = {
     // Mock mode delay (ms) for simulated responses
     MOCK_DELAY: 500,
 
-    // States mapping to views
-    STATE_VIEW_MAP: {
-        'LOBBY': 'view-lobby',
-        'MACGYVER': 'view-macgyver',
-        'TRIVIA': 'view-trivia',
-        'TIMER': 'view-timer',
-        'BUZZER': 'view-buzzer',
-        'TIMELINE': 'view-timeline',
-        'MINESWEEPER': 'view-minesweeper',
-        'PICTUREGUESS': 'view-pictureguess',
-        'VICTORY': 'view-victory'
+    // States mapping to views - use shared config with fallback
+    get STATE_VIEW_MAP() {
+        return window.STATE_VIEW_MAP || {
+            'LOBBY': 'view-lobby',
+            'MACGYVER': 'view-macgyver',
+            'TRIVIA': 'view-trivia',
+            'TIMER': 'view-timer',
+            'BUZZER': 'view-buzzer',
+            'TIMELINE': 'view-timeline',
+            'MINESWEEPER': 'view-minesweeper',
+            'PICTUREGUESS': 'view-pictureguess',
+            'PIXELPERFECT': 'view-pixelperfect',
+            'PRICEGUESS': 'view-priceguess',
+            'SURVIVAL': 'view-survival',
+            'VICTORY': 'view-victory'
+        };
     },
 
-    // Game phases in order (excludes LOBBY and VICTORY which are not gameplay rounds)
-    GAME_PHASES: [
-        'MACGYVER',
-        'TRIVIA',
-        'TIMER',
-        'BUZZER',
-        'TIMELINE',
-        'MINESWEEPER',
-        'PICTUREGUESS'
-    ]
+    // Game phases - use shared config with fallback
+    get GAME_PHASES() {
+        return window.GAME_PHASES || [
+            'MACGYVER',
+            'TRIVIA',
+            'TIMER',
+            'BUZZER',
+            'TIMELINE',
+            'MINESWEEPER',
+            'PICTUREGUESS',
+            'PIXELPERFECT',
+            'PRICEGUESS',
+            'SURVIVAL'
+        ];
+    }
 };
 
 // ============================================================
@@ -60,6 +74,15 @@ const AppState = {
     currentSpotifyUri: null,
     // Audio unlock state (browser autoplay policy)
     audioUnlocked: false
+};
+
+// ============================================================
+// BOOT SEQUENCE STUB (actual boot handled by Astro component)
+// ============================================================
+
+const BootSequence = {
+    hasPlayed: true, // Boot sequence handled by Astro component
+    skip() { this.hasPlayed = true; }
 };
 
 // ============================================================
@@ -143,7 +166,7 @@ const GameProgress = {
             const totalRounds = CONFIG.GAME_PHASES.length;
             const progressPercent = (currentRound / totalRounds) * 100;
 
-            roundEl.textContent = `Round ${currentRound} of ${totalRounds}`;
+            roundEl.textContent = `Chapter ${currentRound} of ${totalRounds}`;
             fillEl.style.width = `${progressPercent}%`;
             progressEl.classList.add('visible');
         } else if (state === 'VICTORY') {
@@ -170,13 +193,18 @@ const UI = {
         const container = document.getElementById('lobby-teams');
         const teamIds = Object.keys(AppState.teams);
 
+        // Update HUD team count orb
+        if (window.hudController) {
+            window.hudController.updateTeamCount(teamIds.length);
+        }
+
         if (teamIds.length === 0) {
-            container.innerHTML = '<p style="color: var(--terminal-green-dim);">No teams connected</p>';
+            container.innerHTML = '<p style="color: var(--baby-blue-dim);">No teams connected</p>';
             return;
         }
 
-        // Avatar emoji lookup
-        const avatarEmojis = {
+        // Avatar emoji lookup - use shared module
+        const avatarEmojis = window.AVATAR_EMOJIS || {
             'bottle': '🍼', 'pacifier': '👶', 'bear': '🧸', 'duck': '🦆',
             'rattle': '🪇', 'stroller': '🛒', 'footprint': '👣', 'angel': '👼'
         };
@@ -286,12 +314,15 @@ const UI = {
         const container = document.getElementById('trivia-team-answers');
         if (!container) return;
 
+        // Add the scrollable wrapper class
+        container.classList.add('tv-team-answers');
+
         let html = `
-            <table class="scoreboard" style="width: 100%;">
+            <table class="scoreboard">
                 <thead>
                     <tr>
-                        <th style="text-align: left;">TEAM</th>
-                        <th style="text-align: left;">ANSWER</th>
+                        <th>TEAM</th>
+                        <th>ANSWER</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -302,8 +333,8 @@ const UI = {
             const colorClass = item.team_id ? TeamColors.getColorClass(item.team_id) : '';
             html += `
                 <tr>
-                    <td class="${colorClass}" style="font-size: 1.5rem; font-weight: bold;">${item.team_name}</td>
-                    <td style="font-size: 1.5rem; color: var(--terminal-green);">${item.answer_text || '(no answer)'}</td>
+                    <td class="${colorClass}">${item.team_name}</td>
+                    <td>${item.answer_text || '(no answer)'}</td>
                 </tr>
             `;
         });
@@ -367,6 +398,46 @@ const UI = {
             display.classList.remove('timer-display--warning', 'timer-display--critical');
             progressBar.classList.remove('timer-progress__bar--warning', 'timer-progress__bar--critical');
         }
+    },
+
+    /**
+     * Update all HUD timer pills across all views (global round timer)
+     * @param {number} remainingSeconds - Seconds remaining
+     * @param {number} totalSeconds - Total duration
+     * @param {string} status - Timer status: 'running', 'paused', 'stopped', 'finished'
+     */
+    updateHUDTimer(remainingSeconds, totalSeconds, status) {
+        const timerPills = document.querySelectorAll('.hud-pill--timer');
+
+        // Format time as MM:SS
+        const mins = Math.floor(remainingSeconds / 60);
+        const secs = remainingSeconds % 60;
+        const timeDisplay = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+        timerPills.forEach(pill => {
+            // Update display text
+            if (status === 'stopped') {
+                pill.textContent = '--:--';
+                pill.classList.remove('hud-pill--warning', 'hud-pill--critical', 'hud-pill--paused');
+            } else {
+                pill.textContent = timeDisplay;
+
+                // Update visual state based on time remaining
+                const percent = (remainingSeconds / totalSeconds) * 100;
+
+                pill.classList.remove('hud-pill--warning', 'hud-pill--critical', 'hud-pill--paused');
+
+                if (status === 'paused') {
+                    pill.classList.add('hud-pill--paused');
+                } else if (status === 'finished' || remainingSeconds <= 0) {
+                    pill.classList.add('hud-pill--critical');
+                } else if (percent <= 20) {
+                    pill.classList.add('hud-pill--critical');
+                } else if (percent <= 50) {
+                    pill.classList.add('hud-pill--warning');
+                }
+            }
+        });
     },
 
     /**
@@ -493,7 +564,7 @@ const UI = {
             const team = AppState.teams[teamId];
             if (!team) return;
 
-            let color = 'var(--terminal-green)';
+            let color = 'var(--baby-blue)';
             let icon = '...';
             if (status === 'failed') {
                 color = 'var(--terminal-red)';
@@ -527,12 +598,15 @@ const UI = {
         const container = document.getElementById('timeline-team-submissions');
         if (!container) return;
 
+        // Add the scrollable wrapper class
+        container.classList.add('tv-team-answers');
+
         let html = `
-            <table class="scoreboard" style="width: 100%;">
+            <table class="scoreboard">
                 <thead>
                     <tr>
-                        <th style="text-align: left;">TEAM</th>
-                        <th style="text-align: left;">SUBMITTED ORDER</th>
+                        <th>TEAM</th>
+                        <th>SUBMITTED ORDER</th>
                         <th style="text-align: center;">STATUS</th>
                     </tr>
                 </thead>
@@ -552,21 +626,22 @@ const UI = {
                 orderDisplay = '(no submission)';
             }
 
-            let statusColor = 'var(--terminal-green-dim)';
+            let statusClass = 'timeline-status-pending';
             let statusText = item.status || 'thinking';
             if (item.status === 'winner') {
-                statusColor = 'var(--terminal-amber)';
+                statusClass = 'timeline-status-correct';
                 statusText = 'CORRECT';
             } else if (item.status === 'failed') {
-                statusColor = 'var(--terminal-red)';
+                statusClass = 'timeline-status-wrong';
                 statusText = 'WRONG';
             }
 
+            const colorClass = item.team_id ? TeamColors.getColorClass(item.team_id) : '';
             html += `
                 <tr>
-                    <td style="font-size: 1.5rem;">${item.team_name}</td>
-                    <td style="font-size: 1.25rem; color: var(--terminal-green);">${orderDisplay}</td>
-                    <td style="font-size: 1.25rem; color: ${statusColor}; text-align: center;">${statusText}</td>
+                    <td class="${colorClass}">${item.team_name}</td>
+                    <td class="timeline-order">${orderDisplay}</td>
+                    <td class="${statusClass}" style="text-align: center;">${statusText}</td>
                 </tr>
             `;
         });
@@ -616,8 +691,8 @@ const UI = {
         if (!list) return;
 
         list.innerHTML = items.map((item, index) => {
-            return `<li style="padding: 0.5rem 1rem; margin: 0.5rem 0; border: 1px solid var(--terminal-green-dim); background: rgba(0, 255, 65, 0.05);">
-                <span style="color: var(--terminal-green-dim); margin-right: 0.75rem;">${String.fromCharCode(65 + index)}.</span>${item}
+            return `<li style="padding: 0.5rem 1rem; margin: 0.5rem 0; border: 1px solid var(--baby-blue-dim); background: rgba(0, 255, 65, 0.05);">
+                <span style="color: var(--baby-blue-dim); margin-right: 0.75rem;">${String.fromCharCode(65 + index)}.</span>${item}
             </li>`;
         }).join('');
     },
@@ -720,8 +795,8 @@ const UI = {
         const noImage = document.getElementById('pictureguess-no-image');
         if (img && imageUrl) {
             img.src = imageUrl;
-            img.style.display = 'block';
-            if (noImage) noImage.style.display = 'none';
+            img.classList.remove('hidden');
+            if (noImage) noImage.classList.add('hidden');
         }
     },
 
@@ -733,9 +808,9 @@ const UI = {
         const noImage = document.getElementById('pictureguess-no-image');
         if (img) {
             img.src = '';
-            img.style.display = 'none';
+            img.classList.add('hidden');
         }
-        if (noImage) noImage.style.display = 'block';
+        if (noImage) noImage.classList.remove('hidden');
     },
 
     /**
@@ -781,28 +856,32 @@ const UI = {
 
     /**
      * Show team guesses table for picture guess
-     * @param {Array} teamGuesses - Array of {team_name, guess_text}
+     * @param {Array} teamGuesses - Array of {team_name, guess_text, team_id}
      */
     showPictureGuessTeamAnswers(teamGuesses) {
         const container = document.getElementById('pictureguess-team-guesses');
         if (!container) return;
 
+        // Add the scrollable wrapper class
+        container.classList.add('tv-team-answers');
+
         let html = `
-            <table class="scoreboard" style="width: 100%;">
+            <table class="scoreboard">
                 <thead>
                     <tr>
-                        <th style="text-align: left;">TEAM</th>
-                        <th style="text-align: left;">GUESS</th>
+                        <th>TEAM</th>
+                        <th>GUESS</th>
                     </tr>
                 </thead>
                 <tbody>
         `;
 
         teamGuesses.forEach(item => {
+            const colorClass = item.team_id ? TeamColors.getColorClass(item.team_id) : '';
             html += `
                 <tr>
-                    <td style="font-size: 1.5rem;">${item.team_name}</td>
-                    <td style="font-size: 1.5rem; color: var(--terminal-green);">${item.guess_text || '(no guess)'}</td>
+                    <td class="${colorClass}">${item.team_name}</td>
+                    <td>${item.guess_text || '(no guess)'}</td>
                 </tr>
             `;
         });
@@ -824,6 +903,321 @@ const UI = {
             teamGuessesEl.classList.add('hidden');
             teamGuessesEl.innerHTML = '';
         }
+    },
+
+    // ========== PRICE GUESS ==========
+
+    /**
+     * Show price product image
+     * @param {string} imageUrl - URL of the product image
+     */
+    showPriceGuessImage(imageUrl) {
+        const img = document.getElementById('priceguess-image');
+        const noImage = document.getElementById('priceguess-no-image');
+        if (img && imageUrl) {
+            img.src = imageUrl;
+            img.classList.remove('hidden');
+            if (noImage) noImage.classList.add('hidden');
+        }
+    },
+
+    /**
+     * Hide price guess image
+     */
+    hidePriceGuessImage() {
+        const img = document.getElementById('priceguess-image');
+        const noImage = document.getElementById('priceguess-no-image');
+        if (img) {
+            img.src = '';
+            img.classList.add('hidden');
+        }
+        if (noImage) noImage.classList.remove('hidden');
+    },
+
+    /**
+     * Update price guess hint
+     * @param {string} hint
+     */
+    updatePriceGuessHint(hint) {
+        const el = document.getElementById('priceguess-hint-tv');
+        if (el) {
+            el.textContent = hint || '';
+        }
+    },
+
+    /**
+     * Update price guess submission count
+     * @param {number} submitted
+     * @param {number} total
+     */
+    updatePriceGuessSubmissions(submitted, total) {
+        const el = document.getElementById('priceguess-submission-status');
+        if (el) {
+            el.textContent = `${submitted}/${total} teams submitted`;
+        }
+    },
+
+    /**
+     * Update price tag display value
+     * @param {string} value - The price value (e.g., "???" or "$129.99")
+     */
+    updatePriceTagValue(value) {
+        const el = document.getElementById('priceguess-price-value');
+        if (el) {
+            el.textContent = value;
+        }
+    },
+
+    /**
+     * Reveal price answer and show team guesses
+     * @param {number} actualPrice - The actual price
+     * @param {Array} teamGuesses - Array of {team_name, guess_amount, status}
+     */
+    revealPriceAnswer(actualPrice, teamGuesses) {
+        const revealEl = document.getElementById('priceguess-answer-reveal');
+        const answerEl = document.getElementById('priceguess-correct-answer');
+
+        // Format price as currency
+        const formattedPrice = `$${parseFloat(actualPrice).toFixed(2)}`;
+
+        if (answerEl) answerEl.textContent = formattedPrice;
+        if (revealEl) revealEl.classList.remove('hidden');
+
+        // Update price tag
+        this.updatePriceTagValue(formattedPrice);
+
+        // Show sorted team guesses
+        if (teamGuesses && teamGuesses.length > 0) {
+            this.showPriceGuessTeamAnswers(teamGuesses, actualPrice);
+        }
+    },
+
+    /**
+     * Show sorted team guesses for price guess (number line display)
+     * @param {Array} teamGuesses - Array of {team_name, guess_amount, status}
+     * @param {number} actualPrice - The actual price for reference
+     */
+    showPriceGuessTeamAnswers(teamGuesses, actualPrice) {
+        const container = document.getElementById('priceguess-team-guesses');
+        if (!container) return;
+
+        let html = '<div class="priceguess-number-line">';
+
+        teamGuesses.forEach(item => {
+            const formattedAmount = parseFloat(item.guess_amount).toFixed(2);
+            let statusClass = 'valid';
+            if (item.status === 'winner') {
+                statusClass = 'winner';
+            } else if (item.status === 'bust') {
+                statusClass = 'bust';
+            }
+
+            html += `<div class="priceguess-guess-row ${statusClass}">
+                <span class="team-name">${item.team_name}</span>
+                <span class="guess-amount">$${formattedAmount}</span>
+            </div>`;
+        });
+
+        html += '</div>';
+        container.innerHTML = html;
+        container.classList.remove('hidden');
+    },
+
+    /**
+     * Hide price guess answer reveal
+     */
+    hidePriceGuessAnswer() {
+        const revealEl = document.getElementById('priceguess-answer-reveal');
+        const teamGuessesEl = document.getElementById('priceguess-team-guesses');
+
+        if (revealEl) revealEl.classList.add('hidden');
+        if (teamGuessesEl) {
+            teamGuessesEl.classList.add('hidden');
+            teamGuessesEl.innerHTML = '';
+        }
+
+        // Reset price tag
+        this.updatePriceTagValue('???');
+    },
+
+    // ========== SURVIVAL MODE ==========
+
+    /**
+     * Update survival question text
+     * @param {string} question
+     */
+    updateSurvivalQuestion(question) {
+        const el = document.getElementById('survival-question');
+        if (el) el.textContent = question || 'Waiting for question...';
+    },
+
+    /**
+     * Update survival option labels
+     * @param {string} optionA
+     * @param {string} optionB
+     */
+    updateSurvivalOptions(optionA, optionB) {
+        const labelA = document.getElementById('survival-option-a')?.querySelector('.survival-option-label');
+        const labelB = document.getElementById('survival-option-b')?.querySelector('.survival-option-label');
+        if (labelA) labelA.textContent = optionA || 'OPTION A';
+        if (labelB) labelB.textContent = optionB || 'OPTION B';
+    },
+
+    /**
+     * Update survival vote counts display
+     * @param {Object} voteCounts - { A: number, B: number }
+     */
+    updateSurvivalVoteCounts(voteCounts) {
+        const countA = document.getElementById('survival-count-a');
+        const countB = document.getElementById('survival-count-b');
+        if (countA) countA.textContent = voteCounts.A || 0;
+        if (countB) countB.textContent = voteCounts.B || 0;
+    },
+
+    /**
+     * Show survival reveal results
+     * @param {Object} data - Reveal data from server
+     */
+    showSurvivalReveal(data) {
+        const optionA = document.getElementById('survival-option-a');
+        const optionB = document.getElementById('survival-option-b');
+
+        // Clear previous states
+        optionA?.classList.remove('is-majority', 'is-minority');
+        optionB?.classList.remove('is-majority', 'is-minority');
+
+        if (!data.is_tie) {
+            // Mark majority/minority
+            if (data.majority === 'A') {
+                optionA?.classList.add('is-majority');
+                optionB?.classList.add('is-minority');
+            } else {
+                optionB?.classList.add('is-majority');
+                optionA?.classList.add('is-minority');
+            }
+        }
+
+        // Update vote counts
+        this.updateSurvivalVoteCounts(data.vote_counts);
+
+        // Update remaining count
+        const remainingEl = document.getElementById('survival-remaining');
+        if (remainingEl) {
+            remainingEl.textContent = `${data.remaining_count} teams remaining`;
+            if (data.remaining_count <= 2) {
+                remainingEl.classList.add('critical');
+            } else {
+                remainingEl.classList.remove('critical');
+            }
+        }
+
+        // Update team statuses in scoreboard
+        this.updateSurvivalTeamTable(data.majority_teams, data.minority_teams, data.newly_eliminated);
+    },
+
+    /**
+     * Update survival teams scoreboard table
+     * @param {Array} majorityTeams
+     * @param {Array} minorityTeams
+     * @param {Array} newlyEliminated - team IDs
+     */
+    updateSurvivalTeamTable(majorityTeams, minorityTeams, newlyEliminated) {
+        const tbody = document.getElementById('survival-teams');
+        if (!tbody) return;
+
+        const allTeams = [...(majorityTeams || []), ...(minorityTeams || [])];
+        const eliminatedSet = new Set(newlyEliminated || []);
+
+        let html = '';
+        allTeams.forEach(team => {
+            const isEliminated = eliminatedSet.has(team.team_id);
+            const colorClass = TeamColors ? TeamColors.getColorClass(team.team_id) : '';
+            const status = isEliminated ? 'ELIMINATED' : 'ALIVE';
+            const statusClass = isEliminated ? 'status-eliminated' : 'status-alive';
+            const rowClass = isEliminated ? 'eliminated' : '';
+            const score = AppState.scores[team.team_id] || 0;
+
+            html += `<tr class="${rowClass}">
+                <td class="${colorClass}">${team.team_name}</td>
+                <td class="${statusClass}">${status}</td>
+                <td>${score}</td>
+            </tr>`;
+        });
+
+        tbody.innerHTML = html;
+    },
+
+    /**
+     * Reset survival round (for new question)
+     * @param {Object} data
+     */
+    resetSurvivalRound(data) {
+        // Clear vote displays
+        this.updateSurvivalVoteCounts({ A: 0, B: 0 });
+
+        // Clear majority/minority states
+        const optionA = document.getElementById('survival-option-a');
+        const optionB = document.getElementById('survival-option-b');
+        optionA?.classList.remove('is-majority', 'is-minority');
+        optionB?.classList.remove('is-majority', 'is-minority');
+
+        // Clear vote avatars
+        const votesA = document.getElementById('survival-votes-a');
+        const votesB = document.getElementById('survival-votes-b');
+        if (votesA) votesA.innerHTML = '';
+        if (votesB) votesB.innerHTML = '';
+
+        // Update question and options
+        if (data.question_text) this.updateSurvivalQuestion(data.question_text);
+        if (data.option_a || data.option_b) this.updateSurvivalOptions(data.option_a, data.option_b);
+
+        // Update remaining count
+        const remainingEl = document.getElementById('survival-remaining');
+        if (remainingEl) {
+            remainingEl.textContent = `${data.remaining_count} teams remaining`;
+        }
+    },
+
+    /**
+     * Revive all survival teams
+     * @param {Object} data
+     */
+    reviveSurvivalTeams(data) {
+        // Clear all eliminated states in the table
+        const tbody = document.getElementById('survival-teams');
+        if (tbody) {
+            tbody.querySelectorAll('tr.eliminated').forEach(row => {
+                row.classList.remove('eliminated');
+                const statusTd = row.querySelector('.status-eliminated');
+                if (statusTd) {
+                    statusTd.classList.remove('status-eliminated');
+                    statusTd.classList.add('status-alive');
+                    statusTd.textContent = 'ALIVE';
+                }
+            });
+        }
+
+        // Update remaining count
+        const remainingEl = document.getElementById('survival-remaining');
+        if (remainingEl) {
+            remainingEl.textContent = `${data.remaining_count} teams remaining`;
+            remainingEl.classList.remove('critical');
+        }
+    },
+
+    /**
+     * Initialize survival view with state data
+     * @param {Object} stateData
+     */
+    initSurvivalView(stateData) {
+        this.updateSurvivalQuestion(stateData?.question_text);
+        this.updateSurvivalOptions(stateData?.option_a, stateData?.option_b);
+        this.updateSurvivalVoteCounts({ A: 0, B: 0 });
+
+        const remainingEl = document.getElementById('survival-remaining');
+        if (remainingEl && stateData?.remaining_count !== undefined) {
+            remainingEl.textContent = `${stateData.remaining_count} teams remaining`;
+        }
     }
 };
 
@@ -843,6 +1237,8 @@ const SocketHandlers = {
         }
 
         AppState.socket = io();
+        // Expose socket globally for screensaver and other shared components
+        window.socket = AppState.socket;
 
         // Connection events
         AppState.socket.on('connect', () => {
@@ -850,6 +1246,8 @@ const SocketHandlers = {
             AppState.connected = true;
             // Request full state sync for TV (includes scores, teams, current state)
             AppState.socket.emit('request_tv_sync');
+            // Notify server of activity on connect
+            AppState.socket.emit('screensaver_activity');
         });
 
         AppState.socket.on('disconnect', () => {
@@ -861,7 +1259,17 @@ const SocketHandlers = {
         AppState.socket.on('sync_state', (data) => {
             console.log('[Socket] State sync received:', data);
             if (data.scores) AppState.scores = data.scores;
+            if (data.teams) {
+                Object.entries(data.teams).forEach(([id, team]) => {
+                    AppState.teams[id] = team;
+                });
+            }
             this.handleStateChange(data);
+
+            // Initialize footer scoreboard with current teams
+            if (window.teamScoreboardController) {
+                window.teamScoreboardController.updateTeams(AppState.teams, AppState.scores);
+            }
         });
 
         // Global state change
@@ -878,13 +1286,17 @@ const SocketHandlers = {
             const previousScores = { ...AppState.scores };
             AppState.scores = data.scores;
 
-            // Find the biggest score gain and celebrate
+            // Find teams that scored and the biggest gain
             let maxGain = 0;
+            const scoringTeams = [];
             Object.entries(data.scores).forEach(([teamId, score]) => {
                 const prev = previousScores[teamId] || 0;
                 const gain = score - prev;
-                if (gain > maxGain) {
-                    maxGain = gain;
+                if (gain > 0) {
+                    scoringTeams.push(teamId);
+                    if (gain > maxGain) {
+                        maxGain = gain;
+                    }
                 }
             });
 
@@ -898,6 +1310,14 @@ const SocketHandlers = {
                 });
             }
             this.refreshScoreboards();
+
+            // Update footer scoreboard and highlight scoring teams
+            if (window.teamScoreboardController) {
+                window.teamScoreboardController.updateTeams(AppState.teams, AppState.scores);
+                scoringTeams.forEach(teamId => {
+                    window.teamScoreboardController.highlightTeam(teamId);
+                });
+            }
         });
 
         // Avatar updates
@@ -922,6 +1342,11 @@ const SocketHandlers = {
         // Timer events
         AppState.socket.on('timer_sync', (data) => {
             this.handleTimerSync(data);
+        });
+
+        // Round timer events (global HUD timer)
+        AppState.socket.on('round_timer_sync', (data) => {
+            this.handleRoundTimerSync(data);
         });
 
         // Buzzer events
@@ -1021,6 +1446,24 @@ const SocketHandlers = {
             UI.revealPictureAnswer(data.correct_answer, data.team_guesses);
         });
 
+        // Price Guess events
+        AppState.socket.on('show_price_product', (data) => {
+            console.log('[TV] Received show_price_product event:', data);
+            UI.hidePriceGuessAnswer();
+            UI.updatePriceTagValue('???');
+            if (data.image_url) {
+                UI.showPriceGuessImage(data.image_url);
+            }
+            if (data.hint) {
+                UI.updatePriceGuessHint(data.hint);
+            }
+        });
+
+        AppState.socket.on('price_revealed', (data) => {
+            console.log('[TV] Received price_revealed event:', data);
+            UI.revealPriceAnswer(data.actual_price, data.team_guesses, data.winner_team_id);
+        });
+
         // Minesweeper events
         AppState.socket.on('elimination_update', (data) => {
             if (AppState.teams[data.team_id]) {
@@ -1056,6 +1499,73 @@ const SocketHandlers = {
             }
         });
 
+        // Survival events
+        AppState.socket.on('survival_vote_update', (data) => {
+            UI.updateSurvivalVoteCounts(data.vote_counts);
+        });
+
+        AppState.socket.on('survival_reveal', (data) => {
+            UI.showSurvivalReveal(data);
+        });
+
+        AppState.socket.on('survival_round_reset', (data) => {
+            UI.resetSurvivalRound(data);
+        });
+
+        AppState.socket.on('survival_revive_all', (data) => {
+            UI.reviveSurvivalTeams(data);
+        });
+
+        // Pixel Perfect events
+        AppState.socket.on('pixelperfect_round_start', (data) => {
+            console.log('[TV] Received pixelperfect_round_start event:', data);
+            // Initialize the view with the image
+            if (window.pixelPerfectController) {
+                window.pixelPerfectController.reset();
+                const img = document.getElementById('pixel-image');
+                const noImg = document.getElementById('pixelperfect-no-image');
+                if (img && data.image_url) {
+                    img.src = data.image_url;
+                    img.classList.remove('hidden');
+                    if (noImg) noImg.classList.add('hidden');
+                    // Start the clearing animation
+                    window.pixelPerfectController.start();
+                }
+            }
+            // Reset buzzer state
+            const lockedDisplay = document.getElementById('pixelperfect-locked-display');
+            const readyDisplay = document.getElementById('pixelperfect-ready-display');
+            if (lockedDisplay) lockedDisplay.classList.add('hidden');
+            if (readyDisplay) readyDisplay.classList.remove('hidden');
+            // Hide answer reveal
+            const answerReveal = document.getElementById('pixelperfect-answer-reveal');
+            if (answerReveal) answerReveal.classList.add('hidden');
+        });
+
+        AppState.socket.on('pixelperfect_locked', (data) => {
+            console.log('[TV] Received pixelperfect_locked event:', data);
+            if (window.pixelPerfectController) {
+                window.pixelPerfectController.showLocked(data.locked_by_team_name);
+            }
+        });
+
+        AppState.socket.on('pixelperfect_reset', (data) => {
+            console.log('[TV] Received pixelperfect_reset event:', data);
+            if (window.pixelPerfectController) {
+                window.pixelPerfectController.showReady();
+            }
+        });
+
+        AppState.socket.on('pixelperfect_reveal', (data) => {
+            console.log('[TV] Received pixelperfect_reveal event:', data);
+            const answerReveal = document.getElementById('pixelperfect-answer-reveal');
+            const answerEl = document.getElementById('pixelperfect-correct-answer');
+            if (answerReveal && answerEl) {
+                answerEl.textContent = data.correct_answer;
+                answerReveal.classList.remove('hidden');
+            }
+        });
+
         // Error handling
         AppState.socket.on('error', (data) => {
             console.error('[Socket] Error:', data);
@@ -1072,6 +1582,28 @@ const SocketHandlers = {
 
         // Update game progress indicator
         GameProgress.update(state);
+
+        // Update immersive HUD visibility and chapter name
+        if (window.hudController) {
+            window.hudController.setState(state);
+
+            // Map state to friendly chapter names
+            const chapterNames = {
+                'LOBBY': 'Lobby',
+                'MACGYVER': 'MacGyver',
+                'TRIVIA': 'Trivia',
+                'TIMER': 'Challenge',
+                'BUZZER': 'Buzzer',
+                'TIMELINE': 'Timeline',
+                'MINESWEEPER': 'Minesweeper',
+                'PICTUREGUESS': 'Picture',
+                'PIXELPERFECT': 'Pixel',
+                'PRICEGUESS': 'Price',
+                'SURVIVAL': 'Survival',
+                'VICTORY': 'Victory'
+            };
+            window.hudController.updateChapter(chapterNames[state] || state);
+        }
 
         // Sync status dashboard with game state
         StatusDashboard.syncWithGameState(state);
@@ -1157,6 +1689,60 @@ const SocketHandlers = {
                 UI.updateScoreboard('pictureguess-scoreboard');
                 break;
 
+            case 'PIXELPERFECT':
+                // Initialize pixel perfect controller
+                if (window.pixelPerfectController) {
+                    window.pixelPerfectController.init();
+                    window.pixelPerfectController.reset();
+                }
+                // Reset image state
+                const pixelImg = document.getElementById('pixel-image');
+                const noPixelImg = document.getElementById('pixelperfect-no-image');
+                if (pixelImg) {
+                    pixelImg.classList.add('hidden');
+                    pixelImg.src = '';
+                }
+                if (noPixelImg) noPixelImg.classList.remove('hidden');
+                // Reset buzzer state
+                const ppLockedDisplay = document.getElementById('pixelperfect-locked-display');
+                const ppReadyDisplay = document.getElementById('pixelperfect-ready-display');
+                if (ppLockedDisplay) ppLockedDisplay.classList.add('hidden');
+                if (ppReadyDisplay) ppReadyDisplay.classList.remove('hidden');
+                // Hide answer reveal
+                const ppAnswerReveal = document.getElementById('pixelperfect-answer-reveal');
+                if (ppAnswerReveal) ppAnswerReveal.classList.add('hidden');
+                // If state data includes image_url, start the round
+                if (data.state_data?.image_url && window.pixelPerfectController) {
+                    if (pixelImg) {
+                        pixelImg.src = data.state_data.image_url;
+                        pixelImg.classList.remove('hidden');
+                        if (noPixelImg) noPixelImg.classList.add('hidden');
+                        window.pixelPerfectController.start();
+                    }
+                }
+                UI.updateScoreboard('pixelperfect-scoreboard');
+                break;
+
+            case 'PRICEGUESS':
+                UI.hidePriceGuessImage();
+                UI.hidePriceGuessAnswer();
+                UI.updatePriceTagValue('???');
+                if (data.state_data?.image_url) {
+                    UI.showPriceGuessImage(data.state_data.image_url);
+                }
+                if (data.state_data?.hint) {
+                    UI.updatePriceGuessHint(data.state_data.hint);
+                } else {
+                    UI.updatePriceGuessHint('');
+                }
+                document.getElementById('priceguess-submission-status').textContent = '';
+                UI.updateScoreboard('priceguess-scoreboard');
+                break;
+
+            case 'SURVIVAL':
+                UI.initSurvivalView(data.state_data);
+                break;
+
             case 'VICTORY':
                 if (data.state_data) {
                     // Try to get winner name from local teams, fall back to state_data
@@ -1194,10 +1780,18 @@ const SocketHandlers = {
                 if (AppState.timerRemaining <= 0) {
                     clearInterval(AppState.timerInterval);
                     UI.updateTimer(0, AppState.timerTotal);
+                    if (window.hudController) window.hudController.updateTimer(0);
                 } else {
                     UI.updateTimer(AppState.timerRemaining, AppState.timerTotal);
+                    if (window.hudController) window.hudController.updateTimer(AppState.timerRemaining);
                 }
             }, 1000);
+
+            // Update HUD timer orb
+            if (window.hudController) {
+                window.hudController.showTimer();
+                window.hudController.updateTimer(AppState.timerRemaining);
+            }
 
         } else if (data.action === 'pause') {
             if (AppState.timerInterval) {
@@ -1221,6 +1815,24 @@ const SocketHandlers = {
     },
 
     /**
+     * Handle round timer sync event (global HUD timer)
+     * @param {Object} data - { remaining_seconds, total_seconds, status, is_running, is_paused }
+     */
+    handleRoundTimerSync(data) {
+        UI.updateHUDTimer(data.remaining_seconds, data.total_seconds, data.status);
+
+        // Update HUD timer orb
+        if (window.hudController) {
+            if (data.status === 'running') {
+                window.hudController.showTimer();
+                window.hudController.updateTimer(data.remaining_seconds);
+            } else if (data.status === 'stopped' || data.status === 'idle') {
+                window.hudController.hideTimer();
+            }
+        }
+    },
+
+    /**
      * Refresh all scoreboards
      */
     refreshScoreboards() {
@@ -1230,8 +1842,28 @@ const SocketHandlers = {
         UI.updateScoreboard('buzzer-scoreboard');
         UI.updateScoreboard('timeline-scoreboard');
         UI.updateScoreboard('pictureguess-scoreboard');
-        UI.updateMinesweeperTeams();
+        UI.updateScoreboard('priceguess-scoreboard');
         UI.updateLobbyTeams();
+
+        // Update HUD score ribbon
+        this.updateHUDScores();
+    },
+
+    /**
+     * Update HUD score ribbon with current team scores
+     */
+    updateHUDScores() {
+        if (!window.hudController) return;
+
+        // Build teams array with scores for HUD
+        const teamsWithScores = Object.entries(AppState.teams).map(([id, team]) => ({
+            id,
+            name: team.name || 'Team',
+            score: AppState.scores[id] || 0,
+            color: TeamColors.getColor(id)
+        }));
+
+        window.hudController.updateScores(teamsWithScores);
     }
 };
 
@@ -1982,80 +2614,46 @@ const MidnightCountdown = {
 };
 
 // ============================================================
-// TEAM COLORS
-// Assigns and manages distinct colors for each team
+// TEAM COLORS - Use shared module, bind to AppState.teams
 // ============================================================
 
-const TeamColors = {
-    fallbackColorIndex: 1,
-    maxColors: 8,
-    colors: [
-        '#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3',
-        '#DDA0DD', '#87CEEB', '#F4A460', '#98D8C8'
-    ],
+// TeamColors loaded from src/scripts/teamColors.js via globals
+// We wrap it to use AppState.teams for color lookups
+const TeamColors = (() => {
+    const base = window.TeamColors || {
+        colors: ['#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#DDA0DD', '#87CEEB', '#F4A460', '#98D8C8'],
+        maxColors: 8,
+        getColorIndex(teamId, teams) {
+            const team = teams?.[teamId];
+            if (team?.color) return team.color;
+            const idx = Object.keys(teams || {}).indexOf(teamId);
+            return idx >= 0 ? ((idx % 8) + 1) : 1;
+        },
+        getColorClass(teamId, teams) { return `team-color-${this.getColorIndex(teamId, teams)}`; },
+        getGlowClass(teamId, teams) { return `team-glow-${this.getColorIndex(teamId, teams)}`; },
+        getBgClass(teamId, teams) { return `team-bg-${this.getColorIndex(teamId, teams)}`; },
+        getBorderClass(teamId, teams) { return `team-card-${this.getColorIndex(teamId, teams)}`; },
+        getRowClass(teamId, teams) { return `team-row-${this.getColorIndex(teamId, teams)}`; },
+        getIndicatorClass(teamId, teams) { return `team-ind-${this.getColorIndex(teamId, teams)}`; },
+        getColorValue(teamId, teams) { return this.colors[this.getColorIndex(teamId, teams) - 1]; },
+        getColor(idx) { return this.colors[(idx - 1) % 8]; }
+    };
 
-    /**
-     * Get color index for a team (uses server-assigned color, or falls back to local assignment)
-     */
-    getColorIndex(teamId) {
-        // Use server-assigned color from AppState.teams if available
-        const team = AppState.teams[teamId];
-        if (team && team.color) {
-            return team.color;
-        }
-        // Fallback: cycle through colors
-        return ((Object.keys(AppState.teams).indexOf(teamId) + 1) % this.maxColors) || 1;
-    },
-
-    /**
-     * Get CSS class for team color
-     */
-    getColorClass(teamId) {
-        return `team-color-${this.getColorIndex(teamId)}`;
-    },
-
-    /**
-     * Get CSS class for team glow
-     */
-    getGlowClass(teamId) {
-        return `team-glow-${this.getColorIndex(teamId)}`;
-    },
-
-    /**
-     * Get CSS class for team background
-     */
-    getBgClass(teamId) {
-        return `team-bg-${this.getColorIndex(teamId)}`;
-    },
-
-    /**
-     * Get CSS class for team border
-     */
-    getBorderClass(teamId) {
-        return `team-card-${this.getColorIndex(teamId)}`;
-    },
-
-    /**
-     * Get CSS class for team row (scoreboard)
-     */
-    getRowClass(teamId) {
-        return `team-row-${this.getColorIndex(teamId)}`;
-    },
-
-    /**
-     * Get CSS class for team indicator
-     */
-    getIndicatorClass(teamId) {
-        return `team-ind-${this.getColorIndex(teamId)}`;
-    },
-
-    /**
-     * Get the actual color value for a team
-     */
-    getColorValue(teamId) {
-        return this.colors[this.getColorIndex(teamId) - 1];
-    }
-};
+    // Return wrapper that auto-injects AppState.teams
+    return {
+        colors: base.colors,
+        maxColors: base.maxColors,
+        getColorIndex(teamId) { return base.getColorIndex(teamId, AppState.teams); },
+        getColorClass(teamId) { return base.getColorClass(teamId, AppState.teams); },
+        getGlowClass(teamId) { return base.getGlowClass(teamId, AppState.teams); },
+        getBgClass(teamId) { return base.getBgClass(teamId, AppState.teams); },
+        getBorderClass(teamId) { return base.getBorderClass(teamId, AppState.teams); },
+        getRowClass(teamId) { return base.getRowClass(teamId, AppState.teams); },
+        getIndicatorClass(teamId) { return base.getIndicatorClass(teamId, AppState.teams); },
+        getColorValue(teamId) { return base.getColorValue(teamId, AppState.teams); },
+        getColor(idx) { return base.getColor(idx); }
+    };
+})();
 
 /*
 // ============================================================
@@ -2522,38 +3120,33 @@ const GlitchEffects = {
 
 const NewsTickerManager = {
     headlines: [
-        "BREAKING: DIAPER PRICES SKYROCKET AMIDST GLOBAL SHORTAGE",
-        "SCIENTISTS CONFIRM: BABY SMELL IS ADDICTIVE",
-        "LOCAL DAD PRACTICES INSTALLING CAR SEAT FOR 8TH TIME",
-        "GRANDMA BUYING ENTIRE TOY STORE INVENTORY",
-        "NURSERY PAINT DRYING AT RECORD SPEEDS",
-        "EXPERTS WARN: SLEEP DEPRIVATION IS REAL",
-        "BABY NAMES: 'ASHER' AND 'OLIVIA' STILL TOP CHARTS",
-        "STROLLER TRAFFIC JAM REPORTED IN PARK",
-        "PACIFIER FOUND UNDER COUCH AFTER 3 WEEK SEARCH",
-        "DAD JOKE DATABASE UPDATED WITH NEW MATERIAL",
-        "MOM CRAVING PICKLES AND ICE CREAM AT 3AM",
-        "BABY KICKS DETECTED ON SEISMOGRAPH",
-        "GENDER REVEAL PARTY CAUSES MINOR EARTHQUAKE",
-        "ONESIE BUTTONS CONFUSE ROCKET SCIENTISTS",
-        "CRIB ASSEMBLY INSTRUCTIONS WRITTEN IN ALIEN LANGUAGE",
-        "BABY SHOWER CAKE DECLARED DELICIOUS",
-        "GUESTS ADVISED TO BRING WIPES",
-        "TEDDY BEAR PICNIC SCHEDULED FOR NOON",
-        "RUBBER DUCKY DEMANDS BATH TIME",
-        "BLANKET FORT CONSTRUCTION PERMITS APPROVED",
-        "FIRST SMILE CAUGHT ON CAMERA",
-        "BABY SOCKS MYSTERIOUSLY VANISHING IN LAUNDRY",
-        "HIGH CHAIR CLEANUP CREW REQUESTED",
-        "LULLABY PLAYLIST HITS PLATINUM STATUS",
-        "TEETHING RING MARKET CRASHES",
-        "BABY MONITOR PICKING UP NEIGHBOR'S RADIO",
-        "DROOL BIB TECHNOLOGY ADVANCING RAPIDLY",
-        "PEEK-A-BOO CHAMPIONSHIP FINALS TONIGHT",
-        "BABY FOOD TASTE TEST: PEAS STILL UNPOPULAR",
-        "DIAPER GENIE REACHING CAPACITY",
-        "STUFFED ANIMAL CONGRESS IN SESSION",
-        "BABY YODA STILL CUTE, EXPERTS SAY"
+    "BREAKING: AMAZON DELIVERY DRIVER GRANTED 'UNCLE' STATUS AFTER DAILY VISITS",
+    "REPORT: 'SAD BEIGE' NURSERY TREND CONFUSES COLOR-LOVING INFANTS",
+    "TECH NEWS: BABY MONITOR PICKING UP NEIGHBOR'S KARAOKE SESSION",
+    "SCIENTIFIC BREAKTHROUGH: SHAZAM FOR CRYING BABIES IN DEVELOPMENT",
+    "TRENDING: PARENTS PETITION TO REMOVE 'BABY SHARK' FROM THE INTERNET",
+    "SCREEN TIME: 'BLUEY' PARENTING TACTICS DEEMED MORE EFFECTIVE THAN THERAPY",
+    "UPDATE: GOOGLE SEARCH HISTORY REVEALS 'IS GREEN POOP NORMAL?' SEARCHED 50 TIMES",
+    "LOCAL NEWS: WIFI OUTAGE CAUSES PANIC DURING 3AM FEEDING",
+    "HEALTH ALERT: COFFEE NOW CLASSIFIED AS A MAIN FOOD GROUP",
+    "CRIME WATCH: SILENT SNACK WRAPPER OPENED; BABY WAKES UP INSTANTLY",
+    "WEATHER: 100% CHANCE OF SPIT-UP ON OUTFIT YOU JUST CHANGED INTO",
+    "ECONOMY: BANK ACCOUNT DRAINED BY CUTE TINY SHOES THE BABY CAN'T WALK IN",
+    "TRAVEL ADVISORY: GROCERY TRIP NOW REQUIRES MORE LOGISTICS THAN MOON LANDING",
+    "SLEEP STUDY: 'SLEEPING LIKE A BABY' CONFIRMED TO MEAN WAKING UP SCREAMING EVERY 2 HOURS",
+    "FASHION: YOGA PANTS DECLARED OFFICIAL UNIFORM OF MATERNITY LEAVE",
+    "CONSTRUCTION UPDATE: CRIB ASSEMBLY ENTERS DAY 4; EXTRA SCREWS FOUND",
+    "DAD NEWS: HOSPITAL BAG PACKED WITH PLAYSTATION AND ONE PAIR OF SOCKS",
+    "GRANDMA ALERT: KNITTING PRODUCTION REACHES INDUSTRIAL LEVELS",
+    "OPINION: STRANGER IN TARGET OFFERS UNSOLICITED ADVICE ON SOCKS",
+    "UNCLE UPDATE: 'GOT YOUR NOSE' TRICK STILL FAILS TO IMPRESS INFANT",
+    "SIBLING RIVALRY: FAMILY DOG OFFICIALLY DEMOTED TO 'JUST THE DOG'",
+    "NEGOTIATIONS: DAD SWAPS 3 AM DIAPER CHANGE FOR FUTURE SLEEP-IN CREDITS",
+    "ENGINEERING FAILURE: 3AM ONESIE SNAPS MISALIGNED; PARENTS GIVING UP",
+    "TRAFFIC ALERT: DOUBLE STROLLER ATTEMPTING TO NAVIGATE COFFEE SHOP DOORWAY",
+    "MARKET WATCH: DIAPER BLOWOUT DECLARED LEVEL 5 HAZMAT EVENT",
+    "SCIENCE: NEWBORN HEAD SMELL BOTTLED; SOLD AS WORLD'S MOST EXPENSIVE PERFUME",
+    "CELEBRATION: GENDER REVEAL CONFETTI FOUND IN CARPET 5 YEARS LATER"
     ],
 
     init() {
@@ -2924,19 +3517,55 @@ const ChatFeed = {
 
 const QRCodeManager = {
     /**
-     * Fetch local IP and generate QR code for mobile URL
+     * Fetch local IP and generate QR codes for WiFi and mobile URL
      */
     async init() {
         try {
             const response = await fetch('/api/local-ip');
             const data = await response.json();
 
+            const hasWifi = data.wifi && data.wifi.ssid && data.wifi.password;
+
+            // Generate WiFi QR code if configured
+            if (hasWifi) {
+                this.generateWiFiQRCode(data.wifi.ssid, data.wifi.password);
+
+                // Show WiFi container and update label
+                const wifiContainer = document.getElementById('qr-wifi-container');
+                const wifiLabel = document.getElementById('qr-wifi-label');
+                if (wifiContainer) {
+                    wifiContainer.classList.remove('hidden');
+                }
+                if (wifiLabel) {
+                    wifiLabel.textContent = data.wifi.ssid;
+                }
+
+                // Update game QR step number when WiFi is present
+                const gameStep = document.getElementById('qr-game-step');
+                if (gameStep) {
+                    gameStep.textContent = '2. Join the game';
+                }
+            }
+
+            // Generate game URL QR code
             if (data.mobile_url) {
-                this.generateQRCode(data.mobile_url);
+                this.generateQRCode(data.mobile_url, 'qr-canvas');
                 // Display the URL text
                 const urlEl = document.getElementById('qr-url');
                 if (urlEl) {
                     urlEl.textContent = data.mobile_url;
+                }
+
+                // Update HUD room code badge
+                if (window.hudController) {
+                    // Extract just the host part for display
+                    try {
+                        const url = new URL(data.mobile_url);
+                        const displayUrl = url.host;
+                        window.hudController.updateRoomCode(displayUrl, '');
+                    } catch (e) {
+                        window.hudController.updateRoomCode(data.mobile_url, '');
+                    }
                 }
             }
         } catch (err) {
@@ -2945,20 +3574,35 @@ const QRCodeManager = {
     },
 
     /**
-     * Generate QR code on canvas
-     * @param {string} url - The URL to encode
+     * Generate WiFi QR code
+     * Format: WIFI:T:WPA;S:<SSID>;P:<password>;;
+     * @param {string} ssid - WiFi network name
+     * @param {string} password - WiFi password
      */
-    generateQRCode(url) {
-        const canvas = document.getElementById('qr-canvas');
+    generateWiFiQRCode(ssid, password) {
+        // Escape special characters in SSID and password for WiFi QR format
+        const escapeWiFi = (str) => str.replace(/[\\;,:\"]/g, '\\$&');
+        const wifiString = `WIFI:T:WPA;S:${escapeWiFi(ssid)};P:${escapeWiFi(password)};;`;
+        this.generateQRCode(wifiString, 'qr-wifi-canvas');
+        console.log('[QR] WiFi QR generated for SSID:', ssid);
+    },
+
+    /**
+     * Generate QR code on canvas
+     * @param {string} data - The data to encode
+     * @param {string} canvasId - The canvas element ID
+     */
+    generateQRCode(data, canvasId = 'qr-canvas') {
+        const canvas = document.getElementById(canvasId);
         if (!canvas) {
-            console.error('[QR] Canvas not found');
+            console.error('[QR] Canvas not found:', canvasId);
             return;
         }
 
         try {
             // Use qrcode-generator library
             const qr = qrcode(0, 'M');
-            qr.addData(url);
+            qr.addData(data);
             qr.make();
 
             const moduleCount = qr.getModuleCount();
@@ -2981,7 +3625,7 @@ const QRCodeManager = {
                 }
             }
 
-            console.log('[QR] Generated for:', url);
+            console.log('[QR] Generated for:', canvasId);
         } catch (error) {
             console.error('[QR] Generation failed:', error);
         }
@@ -3274,8 +3918,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize chat feed after socket is connected
     setTimeout(() => ChatFeed.init(), 500);
 
+    // Initialize activity tracking for screensaver
+    initActivityTracking();
+
     console.log('[TV] Ready');
 });
+
+// ============================================================
+// ACTIVITY TRACKING (keeps screensaver from activating)
+// ============================================================
+
+function initActivityTracking() {
+    let lastActivityPing = 0;
+    const PING_THROTTLE = 30000; // Only ping every 30 seconds max
+
+    function sendActivityPing() {
+        const now = Date.now();
+        if (now - lastActivityPing > PING_THROTTLE && AppState.socket && AppState.connected) {
+            AppState.socket.emit('screensaver_activity');
+            lastActivityPing = now;
+            console.log('[TV] Activity ping sent');
+        }
+    }
+
+    // Track user interactions - TV typically uses mouse/keyboard
+    ['click', 'keypress', 'mousemove', 'touchstart'].forEach(evt => {
+        document.addEventListener(evt, sendActivityPing);
+    });
+}
 
 /**
  * Initialize audio unlock overlay

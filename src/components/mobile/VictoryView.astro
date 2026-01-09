@@ -1,16 +1,40 @@
 ---
 import ViewContainer from '../shared/ViewContainer.astro';
+import ChapterHeader from './storybook/ChapterHeader.astro';
+import StoryPageFrame from './storybook/StoryPageFrame.astro';
+import NarratorText from './storybook/NarratorText.astro';
 ---
 <ViewContainer id="view-victory">
-    <div class="flex-grow flex-center flex-column text-center">
-        <h1 class="glow-strong" style="font-size: 2.5rem;">IT'S A BOY!</h1>
-        <p style="color: var(--terminal-amber);">SUCCESSFUL DELIVERY</p>
-        <div id="victory-message" class="mt-3"></div>
-        <p
-            class="mt-2"
-            style="color: var(--terminal-green-dim); font-size: 0.9rem;"
-        >
-            Welcome to the family.
-        </p>
+    <div class="frost-viewport">
+        <ChapterHeader
+            chapter="The Final Chapter"
+            title="The End"
+            narrator="And so the story ends..."
+        />
+
+        <StoryPageFrame withGlow={true}>
+            <NarratorText>And They All Lived Happily Ever After</NarratorText>
+            <div id="victory-message" class="victory-message reveal-glow"></div>
+        </StoryPageFrame>
+
+        <div class="frost-actions">
+            <p class="frost-status frost-status--narrator">Thank you for celebrating with us.</p>
+        </div>
     </div>
 </ViewContainer>
+
+<style>
+.victory-message {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: #ffffff;
+    margin-top: 1rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.frost-status--narrator {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--narrator-gold, rgba(255, 229, 180, 0.8));
+}
+</style>

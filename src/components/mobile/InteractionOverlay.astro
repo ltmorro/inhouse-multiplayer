@@ -5,19 +5,30 @@
     MOCK MODE - NO SERVER CONNECTION
 </div>
 
-<!-- Chat Input Bar - Floating above reaction bar -->
-<div class="chat-input-bar hidden" id="chat-input-bar">
-    <input type="text" id="chat-input" class="chat-input" placeholder="Send a message..." maxlength="100" autocomplete="off">
-    <button class="chat-send-btn" id="chat-send-btn" title="Send">
-        <span class="chat-send-icon">></span>
-    </button>
+<!-- Reaction Bar with Chat Toggle -->
+<div class="frost-reactions hidden" id="reaction-bar">
+    <button class="frost-reactions__emoji" data-reaction="🎉" title="Celebrate">🎉</button>
+    <button class="frost-reactions__emoji" data-reaction="😱" title="Shocked">😱</button>
+    <button class="frost-reactions__emoji" data-reaction="🔥" title="Fire">🔥</button>
+    <button class="frost-reactions__emoji" data-reaction="💀" title="Dead">💀</button>
+    <button class="frost-reactions__emoji" data-reaction="👏" title="Applause">👏</button>
+    <button class="frost-reactions__chat" id="chat-toggle" title="Open Chat">💬</button>
 </div>
 
-<!-- Reaction Bar - Floating at bottom -->
-<div class="reaction-bar hidden" id="reaction-bar">
-    <button class="reaction-btn" data-reaction="🎉" title="Celebrate">🎉</button>
-    <button class="reaction-btn" data-reaction="😱" title="Shocked">😱</button>
-    <button class="reaction-btn" data-reaction="🔥" title="Fire">🔥</button>
-    <button class="reaction-btn" data-reaction="💀" title="Dead">💀</button>
-    <button class="reaction-btn" data-reaction="👏" title="Applause">👏</button>
+<!-- Chat Drawer Overlay -->
+<div class="frost-chat-overlay" id="chat-overlay"></div>
+
+<!-- Chat Drawer -->
+<div class="frost-chat" id="chat-drawer">
+    <div class="frost-chat__header">
+        <h3 class="frost-chat__title">Team Chat</h3>
+        <button class="frost-chat__close" id="chat-close" title="Close">×</button>
+    </div>
+    <div class="frost-chat__messages" id="chat-messages">
+        <!-- Messages populated dynamically -->
+    </div>
+    <div class="frost-chat__input-area">
+        <input type="text" class="frost-chat__input" id="chat-input" placeholder="Send a message..." maxlength="100" autocomplete="off">
+        <button class="frost-chat__send" id="chat-send-btn" title="Send">›</button>
+    </div>
 </div>

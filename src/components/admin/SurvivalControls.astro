@@ -1,0 +1,95 @@
+---
+---
+<section id="survival-section" class="admin-section mt-3" style="display: none;">
+    <h3 class="glow">BABY SURVIVAL</h3>
+    <div class="mt-1">
+        <label>Pre-loaded Questions:</label>
+        <select id="survival-preset-select" class="terminal-input w-full">
+            <option value="">-- Select a question or type custom --</option>
+        </select>
+    </div>
+    <div class="mt-1">
+        <label>Question:</label>
+        <textarea id="survival-question-input" class="terminal-input" rows="2" placeholder="Enter binary question (Yes/No, A/B)..."></textarea>
+    </div>
+    <div class="admin-controls mt-1">
+        <div class="admin-input-group">
+            <label>Option A:</label>
+            <input type="text" id="survival-option-a" class="terminal-input" value="YES" placeholder="Option A label">
+        </div>
+        <div class="admin-input-group">
+            <label>Option B:</label>
+            <input type="text" id="survival-option-b" class="terminal-input" value="NO" placeholder="Option B label">
+        </div>
+    </div>
+    <div class="admin-controls items-center mt-1">
+        <label>Round#:</label>
+        <input type="number" id="survival-round-id" class="terminal-input admin-input--narrow" value="1">
+        <button id="send-survival-btn" class="terminal-btn terminal-btn--primary">SEND QUESTION</button>
+    </div>
+    <h4 class="mt-2">LIVE VOTES:</h4>
+    <div class="survival-vote-display mt-1">
+        <div class="survival-vote-column">
+            <span class="survival-vote-header" id="admin-vote-label-a">OPTION A</span>
+            <span class="survival-vote-count" id="admin-vote-count-a">0</span>
+            <ul class="admin-list" id="admin-voters-a"></ul>
+        </div>
+        <div class="survival-vote-column">
+            <span class="survival-vote-header" id="admin-vote-label-b">OPTION B</span>
+            <span class="survival-vote-count" id="admin-vote-count-b">0</span>
+            <ul class="admin-list" id="admin-voters-b"></ul>
+        </div>
+    </div>
+    <div class="admin-controls mt-2">
+        <button id="survival-reveal-btn" class="terminal-btn terminal-btn--primary">REVEAL & ELIMINATE</button>
+        <button id="survival-reset-btn" class="terminal-btn">RESET ROUND</button>
+    </div>
+    <h4 class="mt-2">TEAM STATUS:</h4>
+    <ul id="survival-team-list" class="admin-list admin-list--scrollable mt-1">
+        <li style="color: var(--baby-blue-dim);">No teams</li>
+    </ul>
+    <div class="admin-controls mt-1">
+        <button id="survival-revive-all-btn" class="terminal-btn">REVIVE ALL TEAMS</button>
+    </div>
+</section>
+
+<style>
+.survival-vote-display {
+    display: flex;
+    gap: 1rem;
+}
+
+.survival-vote-column {
+    flex: 1;
+    border: 1px solid var(--baby-blue-dim);
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.survival-vote-header {
+    display: block;
+    font-weight: bold;
+    color: var(--baby-blue);
+    margin-bottom: 0.25rem;
+}
+
+.survival-vote-count {
+    display: block;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--baby-blue);
+    font-family: var(--font-mono);
+}
+
+.admin-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.admin-input-group label {
+    font-size: 0.8rem;
+    color: var(--baby-blue-dim);
+}
+</style>

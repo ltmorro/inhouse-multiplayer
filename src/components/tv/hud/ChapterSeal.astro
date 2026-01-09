@@ -1,0 +1,17 @@
+---
+/**
+ * ChapterSeal.astro
+ * Wax seal styled badge showing current game/chapter name
+ * Floats gently to reinforce the storybook aesthetic
+ */
+---
+<div
+    id="chapter-seal"
+    class="hud-seal hud-element chapter-seal"
+    data-show-states="TRIVIA,TIMELINE,PICTUREGUESS,BUZZER,TIMER,MINESWEEPER,MACGYVER,PIXELPERFECT,PRICEGUESS,SURVIVAL"
+>
+    <div class="chapter-seal__inner">
+        <span class="chapter-seal__label">Chapter</span>
+        <span class="chapter-seal__name" id="chapter-name">--</span>
+    </div>
+</div>
