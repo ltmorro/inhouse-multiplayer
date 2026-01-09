@@ -39,6 +39,15 @@ body.tv-page .view {
     --tv-text-small: 2rem;     /* 32px */
     /* Tiny: Minimal text, timestamps */
     --tv-text-tiny: 1.75rem;   /* 28px */
+
+    /* Scoreboard HUD sizes (1080p base) */
+    --scoreboard-name-size: 1.2rem;
+    --scoreboard-name-width: 130px;
+    --scoreboard-score-size: 1.5rem;
+    --scoreboard-score-width: 40px;
+    --scoreboard-members-size: 0.85rem;
+    --scoreboard-box-padding: 12px 20px;
+    --scoreboard-box-min-width: 120px;
 }
 
 /* =============================================================
@@ -1844,8 +1853,19 @@ body.tv-page .view {
    RESPONSIVE ADJUSTMENTS (TV)
    ============================================================= */
 
-/* Large displays (55"+ TVs, 1080p+) - Scale up for viewing distance */
-@media (min-width: 1920px) {
+/* =============================================================
+   RESPONSIVE BREAKPOINTS FOR TV DISPLAYS
+
+   Resolution reference:
+   - 1080p (Full HD): 1920 x 1080 → Base styles (default)
+   - 1440p (QHD):     2560 x 1440 → Mid-range scaling
+   - 4K (Ultra HD):   3840 x 2160 → Maximum scaling
+
+   Note: Use min-width: 1921px to avoid triggering at exactly 1080p
+   ============================================================= */
+
+/* Mid-range displays (1440p, larger 1080p viewing distances) */
+@media (min-width: 2200px) {
     :root {
         --tv-text-hero: 10rem;     /* 160px */
         --tv-text-title: 7rem;     /* 112px */
@@ -1856,6 +1876,18 @@ body.tv-page .view {
         --tv-text-small: 2.25rem;  /* 36px */
         --tv-text-tiny: 2rem;      /* 32px */
         --ticker-height: 65px;
+
+        /* HUD scaling */
+        --tv-hud-padding: 48px;
+
+        /* Scoreboard scaling */
+        --scoreboard-name-size: 1.5rem;
+        --scoreboard-name-width: 160px;
+        --scoreboard-score-size: 1.8rem;
+        --scoreboard-score-width: 50px;
+        --scoreboard-members-size: 1rem;
+        --scoreboard-box-padding: 14px 24px;
+        --scoreboard-box-min-width: 140px;
     }
 
     .tv-timer {
@@ -1875,8 +1907,51 @@ body.tv-page .view {
     }
 }
 
-/* Extra large displays (4K TVs) */
-@media (min-width: 2560px) {
+/* 4K displays (3840x2160) */
+@media (min-width: 3200px) {
+    :root {
+        --tv-text-hero: 12rem;     /* 192px */
+        --tv-text-title: 8rem;     /* 128px */
+        --tv-text-subtitle: 5rem;  /* 80px */
+        --tv-text-large: 6rem;     /* 96px */
+        --tv-text-medium: 4rem;    /* 64px */
+        --tv-text-body: 3rem;      /* 48px */
+        --tv-text-small: 2.5rem;   /* 40px */
+        --tv-text-tiny: 2.25rem;   /* 36px */
+        --ticker-height: 75px;
+
+        /* HUD scaling */
+        --tv-hud-padding: 56px;
+
+        /* Scoreboard scaling */
+        --scoreboard-name-size: 1.8rem;
+        --scoreboard-name-width: 180px;
+        --scoreboard-score-size: 2.2rem;
+        --scoreboard-score-width: 60px;
+        --scoreboard-members-size: 1.1rem;
+        --scoreboard-box-padding: 16px 28px;
+        --scoreboard-box-min-width: 160px;
+    }
+
+    .tv-timer {
+        width: 500px;
+        height: 500px;
+    }
+
+    .lobby-team-card__avatar {
+        width: 110px;
+        height: 110px;
+    }
+
+    .polaroid-list li {
+        min-width: 400px !important;
+        max-width: 550px !important;
+        padding: 2.25rem 2.75rem 2.75rem !important;
+    }
+}
+
+/* True 4K at native resolution */
+@media (min-width: 3840px) {
     :root {
         --tv-text-hero: 14rem;     /* 224px */
         --tv-text-title: 9rem;     /* 144px */
@@ -1887,6 +1962,9 @@ body.tv-page .view {
         --tv-text-small: 3rem;     /* 48px */
         --tv-text-tiny: 2.5rem;    /* 40px */
         --ticker-height: 80px;
+
+        /* HUD scaling */
+        --tv-hud-padding: 64px;
     }
 
     .tv-timer {

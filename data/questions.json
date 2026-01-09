@@ -2,53 +2,53 @@
   "trivia_questions": [
     {
       "id": 1,
-      "question": "How many diapers does the average newborn go through in a day?",
-      "answer": "8 to 12"
+      "question": "True or False: Newborn babies do not shiver when they are cold.",
+      "answer": "True! (They burn 'brown fat' to stay warm instead)"
     },
     {
       "id": 2,
-      "question": "When does a baby's eye color become permanent?",
-      "answer": "6 to 9 months"
+      "question": "In 1961, what major invention changed parenting forever?",
+      "answer": "Disposable Diapers (Pampers)"
     },
     {
       "id": 3,
-      "question": "What is the first sense a baby develops?",
-      "answer": "Hearing"
+      "question": "What is the average room temperature recommended for a baby?",
+      "answer": "68° to 72° F (Sweater weather!)"
     },
     {
       "id": 4,
       "question": "How many bones are babies born with?",
-      "answer": "300 (Adults have 206)"
+      "answer": "300 (Adults have only 206)"
     },
     {
       "id": 5,
-      "question": "What percentage of babies are actually born on their due date?",
-      "answer": "4%"
+      "question": "Which month historically has the FEWEST births?",
+      "answer": "February"
     },
     {
       "id": 6,
-      "question": "What color do babies see first?",
-      "answer": "Red"
+      "question": "What old wives' tale predicts a baby with lots of hair?",
+      "answer": "Severe Heartburn during pregnancy"
     },
     {
       "id": 7,
-      "question": "How many hours a day does a newborn sleep on average?",
-      "answer": "16 to 17 hours"
+      "question": "How much does a baby's brain grow in the first year?",
+      "answer": "It doubles in size"
     },
     {
       "id": 8,
-      "question": "At what age do babies typically start smiling socially?",
-      "answer": "6 to 8 weeks"
+      "question": "In the song 'Frosty the Snowman', what were his first words?",
+      "answer": "Happy Birthday!"
     },
     {
       "id": 9,
-      "question": "What is the most popular day of the week for babies to be born?",
-      "answer": "Tuesday"
+      "question": "What is the first sense a baby develops in the womb?",
+      "answer": "Touch"
     },
     {
       "id": 10,
-      "question": "How far can a newborn see?",
-      "answer": "8 to 12 inches"
+      "question": "What percentage of body heat does a baby lose through their head?",
+      "answer": "About 25% (Put a hat on!)"
     },
     {
       "id": 11,
@@ -67,58 +67,28 @@
     },
     {
       "id": 14,
-      "question": "What flavor can babies not taste until they are 4 months old?",
-      "answer": "Salt"
+      "question": "Which famous TV baby was born in January 1953?",
+      "answer": "Little Ricky (I Love Lucy)"
     },
     {
       "id": 15,
-      "question": "How much does a baby's brain grow in the first year?",
-      "answer": "It doubles in size"
+      "question": "How many hours a day does a newborn sleep on average?",
+      "answer": "16 to 17 hours"
     }
   ],
   "timeline_puzzles": [
     {
       "id": 1,
-      "name": "Baby Milestones",
+      "name": "Winter Movies (Generations)",
       "events": [
-        "First Smile (2 months)",
-        "Rolls Over (4 months)",
-        "Sits Up (6 months)",
-        "First Steps (12 months)"
+        "Frosty the Snowman (1969)",
+        "Home Alone (1990)",
+        "Ice Age (2002)",
+        "Frozen (2013)"
       ]
     },
     {
       "id": 2,
-      "name": "Pregnancy Progression",
-      "events": [
-        "First Heartbeat (6 weeks)",
-        "Gender Reveal (20 weeks)",
-        "Baby Can Hear (24 weeks)",
-        "Full Term (37 weeks)"
-      ]
-    },
-    {
-      "id": 3,
-      "name": "Disney Babies",
-      "events": [
-        "Dumbo (1941)",
-        "Bambi (1942)",
-        "Simba (1994)",
-        "Jack-Jack Parr (2004)"
-      ]
-    },
-    {
-      "id": 4,
-      "name": "Famous TV Babies",
-      "events": [
-        "Little Ricky (I Love Lucy - 1953)",
-        "Tabitha (Bewitched - 1966)",
-        "Michelle Tanner (Full House - 1987)",
-        "Stewie Griffin (Family Guy - 1999)"
-      ]
-    },
-    {
-      "id": 5,
       "name": "Diaper Evolution",
       "events": [
         "Cloth Diapers (Ancient Times)",
@@ -128,127 +98,135 @@
       ]
     },
     {
-      "id": 6,
-      "name": "Baby Food History",
+      "id": 3,
+      "name": "Baby Milestones",
       "events": [
-        "Gerber Founded (1927)",
-        "First Glass Jars (1940s)",
-        "Organic Baby Food Trend (1990s)",
-        "Pouches become popular (2008)"
+        "First Smile (2 months)",
+        "Rolls Over (4 months)",
+        "Sits Up (6 months)",
+        "First Steps (12 months)"
       ]
     },
     {
-      "id": 7,
-      "name": "Toy Trends",
+      "id": 4,
+      "name": "Famous TV Babies",
       "events": [
-        "Teddy Bear Invented (1902)",
-        "LEGO Bricks Patented (1958)",
-        "Tickle Me Elmo Craze (1996)",
-        "Sophie the Giraffe US Boom (2010s)"
+        "Little Ricky (I Love Lucy - 50s)",
+        "Tabitha (Bewitched - 60s)",
+        "Michelle Tanner (Full House - 80s)",
+        "Stewie Griffin (Family Guy - 90s)"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Pregnancy Progression",
+      "events": [
+        "First Heartbeat (6 weeks)",
+        "Gender Reveal (20 weeks)",
+        "Baby Can Hear (24 weeks)",
+        "Full Term (37 weeks)"
       ]
     }
   ],
   "audio_tracks": [
     {
       "id": 1,
-      "spotify_uri": "spotify:track:5ghIJDpPoe3CfHMGu71E6T",
-      "title": "Baby",
-      "artist": "Justin Bieber",
-      "hint": "Teen Pop Anthem"
+      "spotify_uri": "spotify:track:0Ph6L4l8dYUuXFmb71Ajnd",
+      "title": "Baby It's Cold Outside",
+      "artist": "Dean Martin",
+      "hint": "The Theme Song (1959)"
     },
     {
       "id": 2,
       "spotify_uri": "spotify:track:1KGi9sZVMeszgZOWivFpxs",
       "title": "Baby Love",
       "artist": "The Supremes",
-      "hint": "Motown Classic"
+      "hint": "Motown Classic (1964)"
     },
     {
       "id": 3,
       "spotify_uri": "spotify:track:7IsEXPk6qqt30FfQv4SZMa",
       "title": "Ice Ice Baby",
       "artist": "Vanilla Ice",
-      "hint": "Stop, Collaborate and Listen"
+      "hint": "90s Party Anthem"
     },
     {
       "id": 4,
-      "spotify_uri": "spotify:track:0Ph6L4l8dYUuXFmb71Ajnd",
-      "title": "Baby One More Time",
-      "artist": "Britney Spears",
-      "hint": "90s Pop Icon"
-    },
-    {
-      "id": 5,
-      "spotify_uri": "spotify:track:2goLsvvODILDzeeiT4dAoR",
-      "title": "Always Be My Baby",
-      "artist": "Mariah Carey",
-      "hint": "High Note Diva"
-    },
-    {
-      "id": 6,
-      "spotify_uri": "spotify:track:47BBI51FKFwOMlIiX6m8ya",
-      "title": "Be My Baby",
-      "artist": "The Ronettes",
-      "hint": "60s Girl Group"
-    },
-    {
-      "id": 7,
       "spotify_uri": "spotify:track:3cfOd4CMv2snFaKAnMdnvK",
       "title": "I Got You Babe",
       "artist": "Sonny & Cher",
-      "hint": "Famous Duet"
+      "hint": "60s Duet"
+    },
+    {
+      "id": 5,
+      "spotify_uri": "spotify:track:0qcr5FMsEO85NAQjrlDRKo",
+      "title": "Let It Go",
+      "artist": "Idina Menzel",
+      "hint": "The cold never bothered me anyway"
+    },
+    {
+      "id": 6,
+      "spotify_uri": "spotify:track:5ghIJDpPoe3CfHMGu71E6T",
+      "title": "Baby",
+      "artist": "Justin Bieber",
+      "hint": "Gen Z Anthem"
+    },
+    {
+      "id": 7,
+      "spotify_uri": "spotify:track:47BBI51FKFwOMlIiX6m8ya",
+      "title": "Be My Baby",
+      "artist": "The Ronettes",
+      "hint": "Dirty Dancing Song"
     },
     {
       "id": 8,
-      "spotify_uri": "spotify:track:0n2SEXB2qoRQg171q7XqeW",
-      "title": "Baby Got Back",
-      "artist": "Sir Mix-A-Lot",
-      "hint": "I like big..."
+      "spotify_uri": "spotify:track:1KGi9sZVMeszgZOWivFpxs",
+      "title": "Santa Baby",
+      "artist": "Eartha Kitt",
+      "hint": "Holiday Classic"
     },
     {
       "id": 9,
-      "spotify_uri": "spotify:track:11mwFrKvLXCbcVGNxffGyP",
-      "title": "Hey Baby",
-      "artist": "No Doubt",
-      "hint": "Gwen Stefani"
+      "spotify_uri": "spotify:track:0n2SEXB2qoRQg171q7XqeW",
+      "title": "Baby Got Back",
+      "artist": "Sir Mix-A-Lot",
+      "hint": "For the 'Cool' Aunts"
     },
     {
       "id": 10,
       "spotify_uri": "spotify:track:5yaCquc7koPqtgj7v0lwHX",
       "title": "Baby Shark",
       "artist": "Pinkfong",
-      "hint": "Doo doo doo doo doo doo"
+      "hint": "Sorry in advance..."
     }
   ],
   "round_soundtracks": {
     "LOBBY": {
-      "description": "Upbeat Baby Shower Mix",
+      "description": "Cozy & Cute Mix",
       "shuffle": true,
       "tracks": [
+        { "spotify_uri": "spotify:track:6Im9k8u9iIzKMrmV7BWtlF", "title": "Winter Wonderland", "artist": "Michael Bublé" },
         { "spotify_uri": "spotify:track:5ghIJDpPoe3CfHMGu71E6T", "title": "Isn't She Lovely", "artist": "Stevie Wonder" },
         { "spotify_uri": "spotify:track:3XKIUb7HzIF1Vu9usunMzc", "title": "Beautiful Boy", "artist": "John Lennon" },
-        { "spotify_uri": "spotify:track:6Qyc6fS4DsZjB2mRW9DsQs", "title": "My Girl", "artist": "The Temptations" },
-        { "spotify_uri": "spotify:track:6MdqqkQ8sSC0WB4i8PyRuQ", "title": "Sweet Child O' Mine", "artist": "Guns N' Roses" },
-        { "spotify_uri": "spotify:track:70LcF31zb1H0PyJoS1Sx1r", "title": "Count on Me", "artist": "Bruno Mars" }
+        { "spotify_uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn", "title": "All I Want for Christmas", "artist": "Mariah Carey" }
       ]
     },
     "MACGYVER": {
-      "description": "Diaper Duty Tension",
+      "description": "Blizzard Prep",
       "shuffle": false,
       "tracks": [
-        { "spotify_uri": "spotify:track:1FL7eUG80aeUeyMO2N4btN", "title": "Mission: Impossible Theme", "artist": "Adam Clayton & Larry Mullen" },
-        { "spotify_uri": "spotify:track:2ffVdgR2RUHIaENDIrlVvG", "title": "The Pink Panther Theme", "artist": "Henry Mancini" }
+        { "spotify_uri": "spotify:track:1FL7eUG80aeUeyMO2N4btN", "title": "Mission: Impossible Theme", "artist": "Adam Clayton" }
       ]
     },
     "TRIVIA": {
-      "description": "Thinking Music",
+      "description": "Brain Freeze",
       "shuffle": false,
       "tracks": [
         { "spotify_uri": "spotify:track:57JDumk9hPiiPjAZRmTqvC", "title": "Jeopardy Theme", "artist": "Merv Griffin" }
       ]
     },
     "TIMER": {
-      "description": "Swaddle Panic",
+      "description": "Avalanche!",
       "shuffle": false,
       "tracks": [
         { "spotify_uri": "spotify:track:4Fpsa3pYc3gozrxHRRPvR6", "title": "Flight of the Bumblebee", "artist": "Rimsky-Korsakov" }
@@ -258,22 +236,21 @@
       "description": "Growing Up",
       "shuffle": false,
       "tracks": [
-        { "spotify_uri": "spotify:track:6ORqU0bHbVCRjXm9AjyHyZ", "title": "Circle of Life", "artist": "Elton John" },
-        { "spotify_uri": "spotify:track:57iDDD9N9tTWe75x6qhStw", "title": "Forever Young", "artist": "Rod Stewart" }
+        { "spotify_uri": "spotify:track:6ORqU0bHbVCRjXm9AjyHyZ", "title": "Circle of Life", "artist": "Elton John" }
       ]
     },
     "PICTUREGUESS": {
-      "description": "Mystery Baby",
+      "description": "Whiteout Condition",
       "shuffle": false,
       "tracks": [
         { "spotify_uri": "spotify:track:5xdtUZKYnE4l7KSzgQ6MBD", "title": "Inspector Gadget Theme", "artist": "Shuki Levy" }
       ]
     },
     "MINESWEEPER": {
-      "description": "Quiet Please",
+      "description": "Silent Night",
       "shuffle": false,
       "tracks": [
-        { "spotify_uri": "spotify:track:1auX4gkGe7hbrOH0BXdpV4", "title": "Twinkle Twinkle Little Star", "artist": "Lullaby Version" }
+        { "spotify_uri": "spotify:track:1auX4gkGe7hbrOH0BXdpV4", "title": "Twinkle Twinkle", "artist": "Lullaby Version" }
       ]
     },
     "VICTORY": {
@@ -288,93 +265,63 @@
   "survival_questions": [
     {
       "id": 1,
-      "question": "Would you rather change 100 dirty diapers in a row OR stay up for 48 hours straight with a crying baby?",
-      "option_a": "100 Diapers",
-      "option_b": "48 Hours Awake"
+      "question": "Which era was harder for parents?",
+      "option_a": "1950s (Cloth Diapers)",
+      "option_b": "2020s (Social Media)"
     },
     {
       "id": 2,
-      "question": "Is it acceptable to use a pacifier for a 3-year-old?",
-      "option_a": "Yes",
-      "option_b": "No"
+      "question": "Would you rather have a winter baby (stuck inside) OR a summer baby (too hot to babywear)?",
+      "option_a": "Winter Baby",
+      "option_b": "Summer Baby"
     },
     {
       "id": 3,
-      "question": "Which is worse: a blowout diaper in public OR projectile spit-up on your nice outfit?",
-      "option_a": "Blowout",
-      "option_b": "Spit-up"
+      "question": "Old School vs New School: Cloth Diapers or Disposables?",
+      "option_a": "Cloth (Eco-friendly)",
+      "option_b": "Disposable (Easy)"
     },
     {
       "id": 4,
-      "question": "Would you rather have a baby who sleeps through the night but is fussy all day OR one who is happy all day but wakes up every 2 hours?",
-      "option_a": "Sleeps at Night",
-      "option_b": "Happy All Day"
+      "question": "Which is a better gift?",
+      "option_a": "Handmade Blanket",
+      "option_b": "Amazon Gift Card"
     },
     {
       "id": 5,
-      "question": "Is it okay to let babies 'cry it out' at bedtime?",
-      "option_a": "Yes",
-      "option_b": "No"
-    },
-    {
-      "id": 6,
-      "question": "Which baby stage is harder: newborn (0-3 months) OR toddler (1-2 years)?",
-      "option_a": "Newborn",
-      "option_b": "Toddler"
-    },
-    {
-      "id": 7,
-      "question": "Would you rather have triplets all at once OR three kids one year apart?",
-      "option_a": "Triplets",
-      "option_b": "Three Years Apart"
-    },
-    {
-      "id": 8,
-      "question": "Is it ever okay to lie to your kids about where babies come from?",
-      "option_a": "Yes",
-      "option_b": "No"
-    },
-    {
-      "id": 9,
-      "question": "Which is a bigger parenting fear: the baby rolling off the bed OR choking on food?",
-      "option_a": "Rolling Off",
-      "option_b": "Choking"
-    },
-    {
-      "id": 10,
-      "question": "Would you rather only be able to use cloth diapers OR only have access to formula (no breastfeeding)?",
-      "option_a": "Cloth Diapers",
-      "option_b": "Formula Only"
-    },
-    {
-      "id": 11,
-      "question": "Is screen time okay for babies under 2?",
-      "option_a": "Yes",
-      "option_b": "No"
-    },
-    {
-      "id": 12,
-      "question": "Which celebrity baby name is worse: Apple (Gwyneth Paltrow) OR North (Kim Kardashian)?",
-      "option_a": "Apple",
-      "option_b": "North"
-    },
-    {
-      "id": 13,
-      "question": "Would you rather your baby's first word be 'Dada' OR 'Mama'?",
-      "option_a": "Dada",
-      "option_b": "Mama"
-    },
-    {
-      "id": 14,
       "question": "Is it okay to post baby photos on social media?",
       "option_a": "Yes",
       "option_b": "No"
     },
     {
-      "id": 15,
-      "question": "Which is harder to deal with: teething OR potty training?",
-      "option_a": "Teething",
-      "option_b": "Potty Training"
+      "id": 6,
+      "question": "Would you rather change a diaper in a freezing car OR a smelly public restroom?",
+      "option_a": "Freezing Car",
+      "option_b": "Smelly Restroom"
+    },
+    {
+      "id": 7,
+      "question": "Hot Cocoa or Hot Cider while nursing?",
+      "option_a": "Cocoa",
+      "option_b": "Cider"
+    },
+    {
+      "id": 8,
+      "question": "Is 'Baby It's Cold Outside' a creepy song?",
+      "option_a": "Yes, Creepy",
+      "option_b": "No, Classic"
+    },
+    {
+      "id": 9,
+      "question": "Which celebrity baby name is wilder?",
+      "option_a": "Pilot Inspektor (Lee)",
+      "option_b": "X Æ A-12 (Musk)"
+    },
+    {
+      "id": 10,
+      "question": "Would you rather have triplets all at once OR three kids one year apart?",
+      "option_a": "Triplets",
+      "option_b": "Three Years Apart"
     }
   ],
   "picture_guesses": [
@@ -386,25 +333,25 @@
     },
     {
       "id": 2,
-      "image_url": "/images/y2k/bottle.jpg",
-      "answer": "Baby Bottle",
-      "hint": "Milk delivery system..."
+      "image_url": "/images/shower/paci.webp",
+      "answer": "Snowsuit",
+      "hint": "A sleeping bag with legs"
     },
     {
       "id": 3,
-      "image_url": "/images/y2k/stroller.jpg",
-      "answer": "Stroller",
-      "hint": "Baby's first car..."
+      "image_url": "/images/shower/paci.webp",
+      "answer": "Humidifier",
+      "hint": "Makes steam for dry winter air"
     },
     {
       "id": 4,
-      "image_url": "/images/y2k/monitor.jpg",
+      "image_url": "/images/shower/paci.webp",
       "answer": "Baby Monitor",
       "hint": "Big Brother is watching..."
     },
     {
       "id": 5,
-      "image_url": "/images/y2k/onesie.jpg",
+      "image_url": "/images/shower/paci.webp",
       "answer": "Onesie",
       "hint": "The standard uniform..."
     }
@@ -418,25 +365,25 @@
     },
     {
       "id": 2,
-      "image_url": "/images/shower/pampers.webp",
+      "image_url": "/images/shower/paci.webp",
       "answer": "Diapers",
       "hint": "Essential supply"
     },
     {
       "id": 3,
-      "image_url": "/images/shower/boppy.webp",
+      "image_url": "/images/shower/paci.webp",
       "answer": "Boppy Pillow",
       "hint": "Nursing helper"
     },
     {
       "id": 4,
-      "image_url": "/images/shower/avent-bottles.webp",
+      "image_url": "/images/shower/paci.webp",
       "answer": "Baby Bottles",
       "hint": "Feeding time"
     },
     {
       "id": 5,
-      "image_url": "/images/shower/hatch-rest.webp",
+      "image_url": "/images/shower/paci.webp",
       "answer": "Sound Machine",
       "hint": "White noise"
     }
@@ -444,106 +391,106 @@
   "price_products": [
     {
       "id": 1,
-      "name": "Pampers Swaddlers (84 count)",
-      "image_url": "/images/shower/pampers.webp",
-      "actual_price": 34.99,
-      "hint": "Newborn size, mega pack"
+      "name": "Arctic Fleece Snowsuit",
+      "image_url": "/images/shower/paci.webp",
+      "actual_price": 45.00,
+      "hint": "Keeps baby warm in 0 degrees"
     },
     {
       "id": 2,
       "name": "Philips Avent Baby Bottle Set",
-      "image_url": "/images/shower/avent-bottles.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 29.99,
       "hint": "4-pack with natural nipples"
     },
     {
       "id": 3,
-      "name": "Graco Pack 'n Play",
-      "image_url": "/images/shower/pack-n-play.webp",
-      "actual_price": 89.99,
-      "hint": "Portable playard with bassinet"
+      "name": "Desitin Diaper Cream",
+      "image_url": "/images/shower/paci.webp",
+      "actual_price": 8.99,
+      "hint": "Classic purple tub for rashes"
     },
     {
       "id": 4,
       "name": "Hatch Rest Baby Sound Machine",
-      "image_url": "/images/shower/hatch-rest.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 69.99,
-      "hint": "Night light + white noise"
+      "hint": "Night light + white noise (Modern)"
     },
     {
       "id": 5,
       "name": "Infant Optics Baby Monitor",
-      "image_url": "/images/shower/infant-optics.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 165.99,
-      "hint": "Video monitor with interchangeable lens"
+      "hint": "Video monitor"
     },
     {
       "id": 6,
       "name": "Ergobaby Omni 360 Carrier",
-      "image_url": "/images/shower/ergobaby.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 180.00,
-      "hint": "All-position baby carrier"
+      "hint": "Wear the baby"
     },
     {
       "id": 7,
       "name": "MAM Pacifiers (6 pack)",
-      "image_url": "/images/shower/mam-pacis.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 14.99,
       "hint": "0-6 months, orthodontic"
     },
     {
       "id": 8,
-      "name": "Baby Brezza Formula Pro",
-      "image_url": "/images/shower/baby-brezza.webp",
-      "actual_price": 224.99,
-      "hint": "The Keurig for formula"
+      "name": "FridaBaby Humidifier",
+      "image_url": "/images/shower/paci.webp",
+      "actual_price": 44.99,
+      "hint": "Breathe easy in dry air"
     },
     {
       "id": 9,
       "name": "Boppy Nursing Pillow",
-      "image_url": "/images/shower/boppy.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 44.99,
       "hint": "Feeding support pillow"
     },
     {
       "id": 10,
       "name": "Snoo Smart Sleeper Bassinet",
-      "image_url": "/images/shower/snoo.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 1695.00,
       "hint": "The Tesla of bassinets"
     },
     {
       "id": 11,
       "name": "Medela Pump in Style",
-      "image_url": "/images/shower/medela-pump.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 249.99,
       "hint": "Double electric breast pump"
     },
     {
       "id": 12,
       "name": "UPPAbaby Vista V2 Stroller",
-      "image_url": "/images/shower/uppababy.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 1099.99,
       "hint": "Luxury convertible stroller"
     },
     {
       "id": 13,
       "name": "Owlet Dream Sock",
-      "image_url": "/images/shower/owlet.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 299.00,
       "hint": "Smart baby health monitor"
     },
     {
       "id": 14,
       "name": "Aquaphor Baby Healing Ointment",
-      "image_url": "/images/shower/aquaphor.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 12.99,
       "hint": "14 oz tub, diaper rash essential"
     },
     {
       "id": 15,
       "name": "Fisher-Price Jumperoo",
-      "image_url": "/images/shower/jumperoo.webp",
+      "image_url": "/images/shower/paci.webp",
       "actual_price": 89.99,
       "hint": "Baby's first bounce house"
     }

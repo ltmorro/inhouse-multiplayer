@@ -6,12 +6,9 @@
  *
  * Immersive "Frost Window" HUD:
  * - MoonTimer arcs across the top (replaces digital TimerOrb)
- * - ChapterSeal in corner for game context
- * - ScoreRibbon drifts in during transitions and score changes
+ * - TeamScoreboard centered at bottom with team boxes
  */
 import MoonTimer from './MoonTimer.astro';
-import ChapterSeal from './ChapterSeal.astro';
-import ScoreRibbon from './ScoreRibbon.astro';
 import TeamCountOrb from './TeamCountOrb.astro';
 import TeamScoreboard from './TeamScoreboard.astro';
 import StorybookFrame from './StorybookFrame.astro';
@@ -41,11 +38,6 @@ import FloatingNotes from './FloatingNotes.astro';
     <!-- Bottom Left: Team count (lobby only) -->
     <div class="tv-hud-corner tv-hud-corner--bottom-left">
         <TeamCountOrb />
-    </div>
-
-    <!-- Bottom Right: Scores (the lobby QR code already shows join info) -->
-    <div class="tv-hud-corner tv-hud-corner--bottom-right">
-        <ScoreRibbon />
     </div>
 
     <!-- Bottom Center: Persistent Team Scoreboard -->

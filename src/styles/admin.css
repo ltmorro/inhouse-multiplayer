@@ -3,7 +3,7 @@
    "Baby It's Cold Outside" - Ethereal Storybook
    ============================================================= */
 
-/* Admin page - Deep winter night sky */
+/* Admin page - Static deep winter night sky (no animations for performance) */
 body.admin-page {
     background: linear-gradient(180deg,
         #050a14 0%,
@@ -15,7 +15,7 @@ body.admin-page {
     min-height: 100vh;
 }
 
-/* Subtle starfield for admin */
+/* Static starfield for admin - no animation */
 body.admin-page::before {
     content: '';
     position: fixed;
@@ -30,6 +30,16 @@ body.admin-page::before {
         radial-gradient(1px 1px at 80% 65%, rgba(255,255,255,0.3) 0%, transparent 100%);
     pointer-events: none;
     z-index: 0;
+    /* No animation - static background for performance */
+}
+
+/* Disable all animations on admin page for performance */
+body.admin-page *,
+body.admin-page *::before,
+body.admin-page *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.1s !important; /* Keep minimal transitions for UX */
 }
 
 /* =============================================================

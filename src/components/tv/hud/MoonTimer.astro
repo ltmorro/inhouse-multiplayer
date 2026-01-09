@@ -34,12 +34,6 @@
                 <stop offset="100%" stop-color="transparent" />
             </radialGradient>
 
-            <!-- Mountain silhouette gradient -->
-            <linearGradient id="mountainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#0a1628" />
-                <stop offset="100%" stop-color="#05101a" />
-            </linearGradient>
-
             <!-- Glow filter for intensity -->
             <filter id="moonGlowFilter" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
@@ -58,23 +52,7 @@
             stroke="none"
         />
 
-        <!-- Stars along the path (subtle) -->
-        <g class="moon-timer__stars" opacity="0.6">
-            <circle cx="200" cy="60" r="1.5" fill="white" class="twinkle-star" />
-            <circle cx="400" cy="40" r="1" fill="white" class="twinkle-star" style="animation-delay: 0.5s" />
-            <circle cx="600" cy="30" r="1.5" fill="white" class="twinkle-star" style="animation-delay: 1s" />
-            <circle cx="960" cy="20" r="2" fill="white" class="twinkle-star" style="animation-delay: 0.3s" />
-            <circle cx="1300" cy="30" r="1" fill="white" class="twinkle-star" style="animation-delay: 0.8s" />
-            <circle cx="1500" cy="45" r="1.5" fill="white" class="twinkle-star" style="animation-delay: 1.2s" />
-            <circle cx="1700" cy="65" r="1" fill="white" class="twinkle-star" style="animation-delay: 0.6s" />
-        </g>
-
-        <!-- Mountain silhouette at bottom -->
-        <polygon
-            class="moon-timer__mountains"
-            fill="url(#mountainGradient)"
-            points="0,200 120,155 250,175 380,130 520,160 680,105 850,145 1000,95 1150,130 1300,115 1450,150 1600,120 1750,155 1850,135 1920,165 1920,200"
-        />
+        <!-- Stars and mountains removed - WinterWoods provides background -->
 
         <!-- The Moon group (animated along path) -->
         <g class="moon-timer__moon" id="moon-orb" transform="translate(60, 160)">
@@ -116,7 +94,7 @@
     left: 0;
     right: 0;
     height: 200px;
-    z-index: 50;
+    z-index: 90; /* Above background layers (frost-bg, winter-woods, frost-overlay) but below HUD corners (100) */
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -146,22 +124,8 @@
     transition: opacity 0.3s ease;
 }
 
-.moon-timer__mountains {
-    opacity: 0.95;
-}
-
 .moon-timer__moon {
     transition: transform 0.1s linear;
-}
-
-/* Star twinkle animation */
-.twinkle-star {
-    animation: star-twinkle 3s ease-in-out infinite;
-}
-
-@keyframes star-twinkle {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
 }
 
 /* Moon glow pulse (intensifies as time runs out) */

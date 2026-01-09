@@ -23,15 +23,41 @@
     overflow: hidden;
 }
 
-/* Aurora glow layers */
+/* PERFORMANCE: Allow pausing background animations via class on body/parent.
+   Apply 'reduce-motion' class to body during intensive gameplay to save CPU. */
+.reduce-motion .frost-bg::before,
+.reduce-motion .frost-bg::after,
+.reduce-motion .frost-snow,
+.reduce-motion .frost-stars,
+.reduce-motion .frost-moonbeam {
+    animation-play-state: paused !important;
+}
+
+/* PERFORMANCE & A11Y: Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .frost-bg::before,
+    .frost-bg::after,
+    .frost-snow,
+    .frost-stars,
+    .frost-moonbeam {
+        animation: none !important;
+    }
+}
+
+/* Aurora glow layers - GPU optimized */
 .frost-bg::before,
 .frost-bg::after {
     content: '';
     position: absolute;
+    z-index: -1; /* Keep aurora effects behind all other content */
     border-radius: 50%;
-    filter: blur(80px);
+    /* PERFORMANCE: Reduced blur from 60px to 40px - still looks good, less CPU */
+    filter: blur(40px);
     opacity: 0.4;
-    animation: aurora-drift 20s ease-in-out infinite;
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    /* PERFORMANCE: Slowed from 25s to 35s - subtle movement uses less CPU */
+    animation: aurora-drift 35s ease-in-out infinite;
 }
 
 .frost-bg::before {
@@ -77,26 +103,24 @@
     }
 }
 
-/* Subtle snowfall particles */
+/* Subtle snowfall particles - reduced count and GPU optimized */
 .frost-snow {
     position: fixed;
     inset: 0;
     z-index: 1;
     pointer-events: none;
+    will-change: transform;
+    transform: translateZ(0);
     background-image:
-        radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(2px 2px at 30% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(2px 2px at 70% 40%, rgba(255,255,255,0.35) 0%, transparent 100%),
-        radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.45) 0%, transparent 100%),
-        radial-gradient(1px 1px at 20% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(2px 2px at 80% 15%, rgba(255,255,255,0.3) 0%, transparent 100%);
-    animation: snow-fall 30s linear infinite;
+        radial-gradient(2px 2px at 15% 25%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(2px 2px at 85% 70%, rgba(255,255,255,0.35) 0%, transparent 100%);
+    animation: snow-fall 40s linear infinite; /* Slower */
 }
 
 @keyframes snow-fall {
-    0% { transform: translateY(-5%); }
-    100% { transform: translateY(5%); }
+    0% { transform: translateZ(0) translateY(-5%); }
+    100% { transform: translateZ(0) translateY(5%); }
 }
 
 /* =============================================================
@@ -137,29 +161,25 @@
     50% { opacity: 0.8; }
 }
 
-/* Twinkling star field */
+/* Twinkling star field - reduced count and slower animation */
 .frost-stars {
     position: fixed;
     inset: 0;
     z-index: 1;
     pointer-events: none;
+    will-change: opacity;
+    transform: translateZ(0);
     background-image:
-        radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,0.7) 0%, transparent 100%),
-        radial-gradient(1px 1px at 22% 38%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(2px 2px at 35% 8%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(1px 1px at 48% 65%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 62% 22%, rgba(255,255,255,0.55) 0%, transparent 100%),
-        radial-gradient(2px 2px at 78% 45%, rgba(255,255,255,0.45) 0%, transparent 100%),
-        radial-gradient(1px 1px at 88% 72%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.35) 0%, transparent 100%),
-        radial-gradient(1px 1px at 55% 5%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(2px 2px at 92% 15%, rgba(255,255,255,0.4) 0%, transparent 100%);
-    animation: twinkle-field 6s ease-in-out infinite;
+        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(2px 2px at 35% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 25%, rgba(255,255,255,0.45) 0%, transparent 100%),
+        radial-gradient(1px 1px at 85% 60%, rgba(255,255,255,0.4) 0%, transparent 100%);
+    animation: twinkle-field 8s ease-in-out infinite; /* Slower */
 }
 
 @keyframes twinkle-field {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.9; }
 }
 
 /* =============================================================

@@ -585,12 +585,20 @@ class TeamScoreboardController {
                 ? `<div class="scoreboard-team-box__members">${membersList}</div>`
                 : '';
 
+            // Crown badge for leading team
+            const crownHtml = isLeading ? '<span class="scoreboard-team-box__crown">👑</span>' : '';
+
+            // Handle long team names
+            const teamName = team.name || 'Team';
+            const longNameClass = teamName.length > 12 ? 'long-name' : '';
+
             return `
-                <div class="scoreboard-team-box ${leadingClass}" data-team-id="${teamId}">
+                <div class="scoreboard-team-box ${leadingClass}" data-team-id="${teamId}" style="--team-color: ${colorValue};">
+                    ${crownHtml}
                     <div class="scoreboard-team-box__header">
                         <span class="scoreboard-team-box__color" style="background: ${colorValue};"></span>
-                        <span class="scoreboard-team-box__name">${team.name || 'Team'}</span>
-                        <span class="scoreboard-team-box__score">${score}</span>
+                        <span class="scoreboard-team-box__name ${longNameClass}" title="${teamName}">${teamName}</span>
+                        <span class="scoreboard-team-box__score" data-score="${score}">${score}</span>
                     </div>
                     ${membersHtml}
                 </div>
@@ -613,20 +621,61 @@ class TeamScoreboardController {
             // Add scoring animation
             teamEl.classList.add('scoring');
 
-            // Animate the score value
+            // Animate the score value with counting effect
             const scoreEl = teamEl.querySelector('.scoreboard-team-box__score');
             if (scoreEl) {
-                scoreEl.classList.add('bumping');
+                const targetScore = parseInt(scoreEl.dataset.score, 10) || 0;
+                const previousScore = this.previousScores[teamId] || 0;
+
+                // Animate counting up from previous to new score
+                if (targetScore > previousScore) {
+                    this.animateScoreCounter(scoreEl, previousScore, targetScore);
+                } else {
+                    scoreEl.classList.add('counting');
+                }
             }
 
             // Remove animation classes after they complete
             setTimeout(() => {
                 teamEl.classList.remove('scoring');
                 if (scoreEl) {
-                    scoreEl.classList.remove('bumping');
+                    scoreEl.classList.remove('counting');
                 }
             }, 1200);
         }
+    }
+
+    /**
+     * Animate score counter from start to end value
+     * @param {HTMLElement} scoreEl - The score element
+     * @param {number} start - Starting value
+     * @param {number} end - Ending value
+     */
+    animateScoreCounter(scoreEl, start, end) {
+        const duration = 600; // ms
+        const startTime = performance.now();
+        const diff = end - start;
+
+        scoreEl.classList.add('counting');
+
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Ease out cubic for smooth deceleration
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const currentValue = Math.round(start + diff * easeOut);
+
+            scoreEl.textContent = currentValue;
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                scoreEl.textContent = end;
+            }
+        };
+
+        requestAnimationFrame(animate);
     }
 }
 

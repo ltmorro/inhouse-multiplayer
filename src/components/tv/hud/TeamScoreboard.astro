@@ -30,20 +30,46 @@
     transition: opacity 0.4s ease;
 }
 
+/* PERFORMANCE: Pause all animations when scoreboard is hidden */
+.team-scoreboard:not(.hud-visible) * {
+    animation-play-state: paused !important;
+}
+
 .team-scoreboard.hud-visible {
     opacity: 1;
 }
 
 .team-scoreboard__container {
     background: rgba(10, 22, 40, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* PERFORMANCE: Reduced blur from 16px to 8px for better performance */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(77, 135, 191, 0.25);
     border-radius: 20px;
     padding: 12px 24px;
     box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+}
+
+/* PERFORMANCE: Breathing glow uses pseudo-element with opacity animation
+   instead of animating box-shadow directly (which is CPU-intensive) */
+.team-scoreboard__container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(77, 135, 191, 0.2);
+    opacity: 0;
+    animation: scoreboard-breathe 4s ease-in-out infinite;
+    pointer-events: none;
+    will-change: opacity;
+}
+
+@keyframes scoreboard-breathe {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
 }
 
 .team-scoreboard__teams {
@@ -60,12 +86,39 @@
     flex-direction: column;
     align-items: center;
     padding: 12px 20px;
-    min-width: 140px;
-    max-width: 200px;
+    min-width: 120px;
+    max-width: 220px;
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
+    /* Enhancement #1: Team color left border - color set via inline style */
+    border-left: 3px solid var(--team-color, rgba(255, 255, 255, 0.2));
+    box-shadow: inset 3px 0 12px -6px var(--team-color, transparent);
+    /* Staggered entrance animation */
+    animation: team-box-enter 0.4s ease-out backwards;
+    position: relative;
+}
+
+/* Staggered entrance delays */
+:global(.scoreboard-team-box:nth-child(1)) { animation-delay: 0s; }
+:global(.scoreboard-team-box:nth-child(2)) { animation-delay: 0.08s; }
+:global(.scoreboard-team-box:nth-child(3)) { animation-delay: 0.16s; }
+:global(.scoreboard-team-box:nth-child(4)) { animation-delay: 0.24s; }
+:global(.scoreboard-team-box:nth-child(5)) { animation-delay: 0.32s; }
+:global(.scoreboard-team-box:nth-child(6)) { animation-delay: 0.40s; }
+:global(.scoreboard-team-box:nth-child(7)) { animation-delay: 0.48s; }
+:global(.scoreboard-team-box:nth-child(8)) { animation-delay: 0.56s; }
+
+@keyframes team-box-enter {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 /* Team header row (color dot + name + score) */
@@ -85,10 +138,10 @@
     flex-shrink: 0;
 }
 
-/* Team name */
+/* Team name - uses CSS custom property for responsive scaling */
 :global(.scoreboard-team-box__name) {
     font-family: var(--font-story, 'Cormorant Garamond', serif);
-    font-size: 1.3rem;
+    font-size: var(--scoreboard-name-size, 1.2rem);
     font-weight: 600;
     color: var(--ice-whisper, #E8F4FC);
     flex-grow: 1;
@@ -96,22 +149,29 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: var(--scoreboard-name-width, 130px);
+}
+
+/* Longer names get smaller font */
+:global(.scoreboard-team-box__name.long-name) {
+    font-size: calc(var(--scoreboard-name-size, 1.2rem) * 0.83);
+    max-width: calc(var(--scoreboard-name-width, 130px) + 10px);
 }
 
 /* Score */
 :global(.scoreboard-team-box__score) {
     font-family: var(--font-whimsy, 'Quicksand', sans-serif);
-    font-size: 1.5rem;
+    font-size: var(--scoreboard-score-size, 1.5rem);
     font-weight: 700;
     color: white;
-    min-width: 40px;
+    min-width: var(--scoreboard-score-width, 40px);
     text-align: right;
 }
 
 /* Members list */
 :global(.scoreboard-team-box__members) {
     font-family: var(--font-whimsy, 'Quicksand', sans-serif);
-    font-size: 0.85rem;
+    font-size: var(--scoreboard-members-size, 0.85rem);
     color: rgba(255, 255, 255, 0.6);
     margin-top: 6px;
     text-align: center;
@@ -169,6 +229,58 @@
 :global(.scoreboard-team-box.leading) {
     background: rgba(77, 135, 191, 0.15);
     border-color: rgba(77, 135, 191, 0.4);
+    position: relative;
+}
+
+/* Enhancement #3: Crown badge for leading team */
+:global(.scoreboard-team-box__crown) {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6));
+    animation: crown-float 2s ease-in-out infinite;
+    z-index: 10;
+}
+
+@keyframes crown-float {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-3px);
+    }
+}
+
+/* Enhancement #4: Score counter animation */
+:global(.scoreboard-team-box__score.counting) {
+    animation: score-counting 0.6s ease-out;
+}
+
+@keyframes score-counting {
+    0% {
+        transform: scale(1);
+        color: white;
+    }
+    20% {
+        transform: scale(1.3);
+        color: var(--baby-blue, #4D87BF);
+        text-shadow: 0 0 20px rgba(77, 135, 191, 0.8);
+    }
+    40% {
+        transform: scale(1.15);
+    }
+    60% {
+        transform: scale(1.25);
+        color: var(--gold-candle, #FFE5B4);
+        text-shadow: 0 0 15px rgba(255, 229, 180, 0.6);
+    }
+    100% {
+        transform: scale(1);
+        color: white;
+        text-shadow: none;
+    }
 }
 
 /* Responsive: stack vertically on smaller screens */

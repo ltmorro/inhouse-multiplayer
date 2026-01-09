@@ -242,14 +242,16 @@
     50% { transform: translateY(-2px) scale(1.005); }
 }
 
+/* PERFORMANCE: Removed filter: brightness() which forces CPU repainting.
+   Using opacity on a pseudo-element or just box-shadow is more efficient. */
 @keyframes glow-pulse {
     0%, 100% {
         box-shadow: var(--shadow-frost);
-        filter: brightness(1);
+        opacity: 1;
     }
     50% {
         box-shadow: var(--shadow-frost), var(--glow-ice);
-        filter: brightness(1.02);
+        opacity: 0.98;
     }
 }
 
