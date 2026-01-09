@@ -93,7 +93,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 200px;
+    height: var(--moon-timer-height, 200px);
     z-index: 90; /* Above background layers (frost-bg, winter-woods, frost-overlay) but below HUD corners (100) */
     pointer-events: none;
     opacity: 0;
@@ -114,7 +114,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 300px;
+    height: calc(var(--moon-timer-height, 200px) * 1.5);
     background: radial-gradient(
         ellipse 60% 80% at var(--moon-x, 50%) 0%,
         rgba(77, 135, 191, var(--glow-intensity, 0.1)) 0%,

@@ -48,6 +48,7 @@ body.tv-page .view {
     --scoreboard-members-size: 0.85rem;
     --scoreboard-box-padding: 12px 20px;
     --scoreboard-box-min-width: 120px;
+    --scoreboard-bottom-offset: 24px;
 }
 
 /* =============================================================
@@ -67,6 +68,11 @@ body.tv-page .view {
     --tv-header-height: 0px;
     --tv-ticker-height: 0px; /* Floating notes replace fixed ticker */
     --tv-hud-padding: 32px; /* Aligned to 4px grid */
+
+    /* Moon timer and HUD element sizes (1080p base) */
+    --moon-timer-height: 200px;
+    --hud-corner-inset: 2rem;
+    --hud-corner-bottom-inset: 6rem;
 
     /* ─── CONSOLIDATED BORDER RADIUS SYSTEM ─── */
     /* Sharp: small elements, badges */
@@ -215,23 +221,23 @@ body.tv-page .view {
 }
 
 .tv-hud-corner--top-left {
-    top: 2rem;
-    left: 2rem;
+    top: var(--hud-corner-inset, 2rem);
+    left: var(--hud-corner-inset, 2rem);
 }
 
 .tv-hud-corner--top-right {
-    top: 2rem;
-    right: 2rem;
+    top: var(--hud-corner-inset, 2rem);
+    right: var(--hud-corner-inset, 2rem);
 }
 
 .tv-hud-corner--bottom-left {
-    bottom: 6rem;
-    left: 2rem;
+    bottom: var(--hud-corner-bottom-inset, 6rem);
+    left: var(--hud-corner-inset, 2rem);
 }
 
 .tv-hud-corner--bottom-right {
-    bottom: 6rem;
-    right: 2rem;
+    bottom: var(--hud-corner-bottom-inset, 6rem);
+    right: var(--hud-corner-inset, 2rem);
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -1879,6 +1885,9 @@ body.tv-page .view {
 
         /* HUD scaling */
         --tv-hud-padding: 48px;
+        --moon-timer-height: 260px;
+        --hud-corner-inset: 2.5rem;
+        --hud-corner-bottom-inset: 7rem;
 
         /* Scoreboard scaling */
         --scoreboard-name-size: 1.5rem;
@@ -1888,6 +1897,7 @@ body.tv-page .view {
         --scoreboard-members-size: 1rem;
         --scoreboard-box-padding: 14px 24px;
         --scoreboard-box-min-width: 140px;
+        --scoreboard-bottom-offset: 32px;
     }
 
     .tv-timer {
@@ -1922,6 +1932,9 @@ body.tv-page .view {
 
         /* HUD scaling */
         --tv-hud-padding: 56px;
+        --moon-timer-height: 320px;
+        --hud-corner-inset: 3rem;
+        --hud-corner-bottom-inset: 8rem;
 
         /* Scoreboard scaling */
         --scoreboard-name-size: 1.8rem;
@@ -1931,6 +1944,7 @@ body.tv-page .view {
         --scoreboard-members-size: 1.1rem;
         --scoreboard-box-padding: 16px 28px;
         --scoreboard-box-min-width: 160px;
+        --scoreboard-bottom-offset: 40px;
     }
 
     .tv-timer {
@@ -1965,6 +1979,19 @@ body.tv-page .view {
 
         /* HUD scaling */
         --tv-hud-padding: 64px;
+        --moon-timer-height: 400px;
+        --hud-corner-inset: 4rem;
+        --hud-corner-bottom-inset: 10rem;
+
+        /* Scoreboard scaling */
+        --scoreboard-name-size: 2rem;
+        --scoreboard-name-width: 200px;
+        --scoreboard-score-size: 2.5rem;
+        --scoreboard-score-width: 70px;
+        --scoreboard-members-size: 1.25rem;
+        --scoreboard-box-padding: 18px 32px;
+        --scoreboard-box-min-width: 180px;
+        --scoreboard-bottom-offset: 48px;
     }
 
     .tv-timer {
