@@ -171,7 +171,7 @@ const GameProgress = {
             progressEl.classList.add('visible');
         } else if (state === 'VICTORY') {
             // Show completed state on victory
-            roundEl.textContent = 'ALL PROTOCOLS COMPLETE';
+            roundEl.textContent = 'All Chapters Complete';
             fillEl.style.width = '100%';
             progressEl.classList.add('visible');
         } else {
