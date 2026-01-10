@@ -11,9 +11,11 @@ body.tv-page {
     overflow: hidden;
 }
 
-/* TV views should never scroll */
+/* TV views should never scroll - fixed viewport display */
 body.tv-page .view {
     overflow: hidden;
+    /* Override ViewContainer default scroll behavior */
+    overflow-y: hidden !important;
 }
 
 /* =============================================================
@@ -40,15 +42,18 @@ body.tv-page .view {
     /* Tiny: Minimal text, timestamps */
     --tv-text-tiny: 1.75rem;   /* 28px */
 
-    /* Scoreboard HUD sizes (1080p base) */
-    --scoreboard-name-size: 1.2rem;
-    --scoreboard-name-width: 130px;
-    --scoreboard-score-size: 1.5rem;
-    --scoreboard-score-width: 40px;
-    --scoreboard-members-size: 0.85rem;
-    --scoreboard-box-padding: 12px 20px;
-    --scoreboard-box-min-width: 120px;
-    --scoreboard-bottom-offset: 24px;
+    /* Scoreboard HUD sizes (1080p base)
+       Designed for readability from 10-15 feet viewing distance */
+    --scoreboard-name-size: 1.5rem;    /* 24px - readable team names */
+    --scoreboard-name-width: 160px;
+    --scoreboard-score-size: 2rem;     /* 32px - prominent scores */
+    --scoreboard-score-width: 50px;
+    --scoreboard-members-size: 1rem;   /* 16px - member names visible */
+    --scoreboard-box-padding: 14px 24px;
+    --scoreboard-box-min-width: 140px;
+    --scoreboard-bottom-offset: 28px;
+    /* Total scoreboard height (container + bottom offset + safety margin) */
+    --scoreboard-reserved-height: 160px;
 }
 
 /* =============================================================
@@ -94,29 +99,22 @@ body.tv-page .view {
 /* 1. THE STAGE (Centered Content Area) */
 .tv-stage {
     position: fixed;
-    /* Center within available viewport (between header and ticker) */
-    top: calc(var(--tv-header-height) + (100vh - var(--tv-header-height) - var(--tv-ticker-height)) / 2);
+    /* Position from top, leaving room for scoreboard at bottom */
+    top: var(--hud-corner-inset, 2rem);
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     width: 85vw;
     max-width: 1600px;
-    /* Max height leaves room for HUD elements */
-    max-height: calc(100vh - var(--tv-header-height) - var(--tv-ticker-height) - 180px);
+    /* Height fills viewport minus top inset and scoreboard reserved space */
+    height: calc(100vh - var(--hud-corner-inset, 2rem) - var(--scoreboard-reserved-height, 140px));
     z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    overflow-y: auto;
-    overflow-x: hidden;
-    /* Hide scrollbar but allow scroll */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.tv-stage::-webkit-scrollbar {
-    display: none;
+    /* Never scroll - content must fit */
+    overflow: hidden;
 }
 
 /* 2. THE HUD - Top (DEPRECATED - hidden, replaced by corner HUD) */
@@ -247,7 +245,7 @@ body.tv-page .view {
 /* State-driven visibility for HUD elements */
 .hud-element {
     opacity: 0;
-    transform: scale(0.9);
+    /* transform: scale(0.9); */
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
                 transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
@@ -255,7 +253,7 @@ body.tv-page .view {
 
 .hud-element.hud-visible {
     opacity: 1;
-    transform: scale(1);
+    /* transform: scale(1); */
     pointer-events: auto;
 }
 
@@ -332,7 +330,7 @@ body.tv-page .view {
 
 .timer-orb__value {
     font-family: var(--font-story);
-    font-size: 2.5rem;
+    font-size: var(--tv-text-subtitle);  /* 56px at 1080p */
     font-weight: 700;
     color: var(--ice-bright, #A5D8F3);
     text-shadow: 0 0 20px rgba(135, 206, 235, 0.5);
@@ -341,7 +339,7 @@ body.tv-page .view {
 
 .timer-orb__label {
     font-family: var(--font-whimsy);
-    font-size: 0.6rem;
+    font-size: 0.9rem;   /* Increased from 0.6rem */
     text-transform: uppercase;
     letter-spacing: 0.15em;
     color: var(--ice-soft, #C4E4F7);
@@ -391,7 +389,7 @@ body.tv-page .view {
 .chapter-seal__label {
     display: block;
     font-family: var(--font-whimsy);
-    font-size: 0.5rem;
+    font-size: 0.7rem;   /* Increased from 0.5rem */
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: rgba(30, 30, 30, 0.6);
@@ -401,7 +399,7 @@ body.tv-page .view {
 .chapter-seal__name {
     display: block;
     font-family: var(--font-story);
-    font-size: 0.75rem;
+    font-size: 0.9rem;   /* Increased from 0.75rem */
     font-weight: 700;
     color: rgba(30, 30, 30, 0.9);
     max-width: 5.5rem;
@@ -514,7 +512,7 @@ body.tv-page .view {
 .room-code-badge__label {
     display: block;
     font-family: var(--font-whimsy);
-    font-size: 0.7rem;
+    font-size: 1rem;  /* Increased for TV readability */
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--ice-soft, #C4E4F7);
@@ -524,7 +522,7 @@ body.tv-page .view {
 .room-code-badge__url {
     display: block;
     font-family: var(--font-whimsy);
-    font-size: 1rem;
+    font-size: 1.25rem;  /* Increased for TV readability */
     color: var(--ice-soft, #C4E4F7);
     margin-top: 0.25rem;
 }
@@ -532,7 +530,7 @@ body.tv-page .view {
 .room-code-badge__code {
     display: block;
     font-family: var(--font-story);
-    font-size: 2.5rem;
+    font-size: var(--tv-text-medium);  /* Use TV scale - 48px at 1080p */
     font-weight: 700;
     color: var(--ice-bright, #A5D8F3);
     letter-spacing: 0.2em;
@@ -545,13 +543,13 @@ body.tv-page .view {
    ============================================================= */
 
 .team-count-orb {
-    width: 5rem;
-    height: 5rem;
+    width: 6rem;
+    height: 6rem;
 }
 
 .team-count-orb__value {
     font-family: var(--font-story);
-    font-size: 2rem;
+    font-size: var(--tv-text-medium);  /* 48px at 1080p */
     font-weight: 700;
     color: var(--fairy-periwinkle, #9EB3DE);
     line-height: 1;
@@ -560,7 +558,7 @@ body.tv-page .view {
 
 .team-count-orb__label {
     font-family: var(--font-whimsy);
-    font-size: 0.55rem;
+    font-size: 0.85rem;  /* Increased from 0.55rem for readability */
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--ice-soft, #C4E4F7);
@@ -781,11 +779,17 @@ body.tv-page .view {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: var(--radius-soft);
-    padding: 48px 64px;
+    padding: 32px 48px;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     box-shadow: var(--tv-shadow-elevated);
     max-width: 100%;
+    /* Flexbox layout for content distribution */
+    display: flex;
+    flex-direction: column;
+    /* Constrain to parent stage height */
+    max-height: 100%;
+    overflow: hidden;
 }
 
 .stage-book--narrow {
@@ -1158,52 +1162,36 @@ body.tv-page .view {
 }
 
 /* =============================================================
-   TV TEAM ANSWERS TABLE - Compact scrollable for many teams
+   TV TEAM ANSWERS TABLE - Flex-constrained to fit available space
+   No scrolling - content shrinks to fit viewport
    ============================================================= */
 
 .tv-team-answers {
-    max-height: 35vh;  /* Limit height to prevent overflow */
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 1rem;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(135, 206, 235, 0.4) transparent;
+    /* Flex item: shrink to fit available space in stage-book */
+    flex: 1 1 auto;
+    min-height: 0; /* Allow shrinking below content size */
+    overflow: hidden;
+    padding: 0.75rem;
+    /* Visual fade at bottom if content is clipped */
+    mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
 }
 
-.tv-team-answers::-webkit-scrollbar {
-    width: 8px;
-}
-
-.tv-team-answers::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.tv-team-answers::-webkit-scrollbar-thumb {
-    background: rgba(135, 206, 235, 0.4);
-    border-radius: 4px;
-}
-
-.tv-team-answers::-webkit-scrollbar-thumb:hover {
-    background: rgba(135, 206, 235, 0.6);
-}
-
-/* Team answers table - more compact styling */
+/* Team answers table - compact styling for fixed viewport */
 .tv-team-answers .scoreboard {
     table-layout: fixed;
+    width: 100%;
 }
 
 .tv-team-answers .scoreboard th {
-    font-size: var(--tv-text-small);
-    padding: 10px 16px;
-    position: sticky;
-    top: 0;
-    background: rgba(15, 40, 71, 0.95);
-    z-index: 1;
+    font-size: var(--tv-text-tiny);
+    padding: 8px 12px;
+    background: rgba(15, 40, 71, 0.8);
 }
 
 .tv-team-answers .scoreboard td {
-    font-size: var(--tv-text-small);
-    padding: 10px 16px;
+    font-size: var(--tv-text-tiny);
+    padding: 6px 12px;
     vertical-align: middle;
 }
 
@@ -1268,7 +1256,7 @@ body.tv-page .view {
 }
 
 .scoreboard th {
-    text-align: left;
+    text-align: center;
     color: var(--ice-bright);
     border-bottom: 1px solid rgba(135, 206, 235, 0.3);
     padding: 12px 16px;
@@ -1774,17 +1762,21 @@ body.tv-page .view {
 .tv-image-container {
     background: var(--baby-blue);
     border-radius: 12px;
-    padding: 20px;
+    padding: 16px;
     box-shadow: var(--book-shadow);
-    min-height: 300px;
+    min-height: 0;
+    max-height: 35vh; /* Constrain to viewport fraction */
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 1;
+    overflow: hidden;
 }
 
 .tv-image-container img {
     max-width: 100%;
-    max-height: 400px;
+    max-height: 100%;
+    object-fit: contain;
     border-radius: 8px;
 }
 
@@ -1830,29 +1822,90 @@ body.tv-page .view {
    ============================================================= */
 
 .polaroid-clothesline {
-    padding: 3rem 2rem 2rem;
+    padding: 5rem 2rem 3rem;
 }
 
 .polaroid-clothesline::before {
-    height: 6px;
+    height: 8px;
+    top: 1rem;
+    background: linear-gradient(90deg, transparent, #5d4d37 5%, #5d4d37 95%, transparent);
 }
 
-.polaroid-list li {
+.polaroid-list .timeline-item {
+    background: rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 4px !important;
+    padding: 2.5rem 3rem !important;
+    min-width: 320px !important;
+    max-width: 550px !important;
+    color: #ffffff !important;
+    font-family: var(--font-story) !important;
     font-size: var(--tv-text-medium) !important;
-    color: #1a1a1a !important;
-    padding: 1.75rem 2rem 2rem !important;
-    min-width: 280px !important;
-    max-width: 400px !important;
     box-shadow:
-        4px 6px 20px rgba(0, 0, 0, 0.25),
-        0 0 0 2px rgba(0, 0, 0, 0.08) !important;
+        0 15px 45px rgba(0, 0, 0, 0.3),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1) !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }
 
-/* Tape effect - larger */
-.polaroid-list li::before {
-    width: 80px !important;
-    height: 28px !important;
-    top: -14px !important;
+/* Tape effect - larger for TV */
+.polaroid-list .timeline-item::before {
+    width: 120px !important;
+    height: 40px !important;
+    top: -20px !important;
+    background: linear-gradient(180deg, var(--gold-candle), var(--gold-ember)) !important;
+    border: 1px solid rgba(200, 180, 100, 0.3) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+    opacity: 0.95 !important;
+    z-index: 1;
+}
+
+/* Milestone marker scaling for TV */
+.polaroid-list .timeline-item .timeline-marker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    background: rgba(135, 206, 235, 0.15);
+    border: 3px solid var(--ice-glow);
+    border-radius: 50%;
+    color: var(--ice-whisper);
+    font-family: var(--font-story);
+    font-weight: 700;
+    font-size: var(--tv-text-large);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 20px rgba(135, 206, 235, 0.5);
+}
+
+.polaroid-list .timeline-item .timeline-text {
+    line-height: 1.2;
+}
+
+/* 4K scaling for timeline items */
+@media (min-width: 2200px) {
+    .polaroid-list .timeline-item {
+        min-width: 450px !important;
+        max-width: 750px !important;
+        padding: 3.5rem 4rem !important;
+        border-width: 3px !important;
+    }
+
+    .polaroid-list .timeline-item::before {
+        width: 180px !important;
+        height: 60px !important;
+        top: -30px !important;
+    }
+
+    .polaroid-list .timeline-item .timeline-marker {
+        width: 6.5rem;
+        height: 6.5rem;
+        border-width: 5px;
+    }
 }
 
 /* =============================================================
@@ -1890,14 +1943,15 @@ body.tv-page .view {
         --hud-corner-bottom-inset: 7rem;
 
         /* Scoreboard scaling */
-        --scoreboard-name-size: 1.5rem;
-        --scoreboard-name-width: 160px;
-        --scoreboard-score-size: 1.8rem;
-        --scoreboard-score-width: 50px;
-        --scoreboard-members-size: 1rem;
-        --scoreboard-box-padding: 14px 24px;
-        --scoreboard-box-min-width: 140px;
-        --scoreboard-bottom-offset: 32px;
+        --scoreboard-name-size: 1.85rem;   /* ~30px */
+        --scoreboard-name-width: 180px;
+        --scoreboard-score-size: 2.4rem;   /* ~38px */
+        --scoreboard-score-width: 60px;
+        --scoreboard-members-size: 1.2rem; /* ~19px */
+        --scoreboard-box-padding: 16px 28px;
+        --scoreboard-box-min-width: 160px;
+        --scoreboard-bottom-offset: 36px;
+        --scoreboard-reserved-height: 180px;
     }
 
     .tv-timer {
@@ -1937,14 +1991,15 @@ body.tv-page .view {
         --hud-corner-bottom-inset: 8rem;
 
         /* Scoreboard scaling */
-        --scoreboard-name-size: 1.8rem;
-        --scoreboard-name-width: 180px;
-        --scoreboard-score-size: 2.2rem;
-        --scoreboard-score-width: 60px;
-        --scoreboard-members-size: 1.1rem;
-        --scoreboard-box-padding: 16px 28px;
-        --scoreboard-box-min-width: 160px;
-        --scoreboard-bottom-offset: 40px;
+        --scoreboard-name-size: 2.25rem;   /* ~36px */
+        --scoreboard-name-width: 200px;
+        --scoreboard-score-size: 2.75rem;  /* ~44px */
+        --scoreboard-score-width: 70px;
+        --scoreboard-members-size: 1.35rem; /* ~22px */
+        --scoreboard-box-padding: 18px 32px;
+        --scoreboard-box-min-width: 180px;
+        --scoreboard-bottom-offset: 44px;
+        --scoreboard-reserved-height: 200px;
     }
 
     .tv-timer {
@@ -1984,14 +2039,15 @@ body.tv-page .view {
         --hud-corner-bottom-inset: 10rem;
 
         /* Scoreboard scaling */
-        --scoreboard-name-size: 2rem;
-        --scoreboard-name-width: 200px;
-        --scoreboard-score-size: 2.5rem;
-        --scoreboard-score-width: 70px;
-        --scoreboard-members-size: 1.25rem;
-        --scoreboard-box-padding: 18px 32px;
-        --scoreboard-box-min-width: 180px;
-        --scoreboard-bottom-offset: 48px;
+        --scoreboard-name-size: 2.5rem;    /* 40px */
+        --scoreboard-name-width: 220px;
+        --scoreboard-score-size: 3.25rem;  /* 52px */
+        --scoreboard-score-width: 80px;
+        --scoreboard-members-size: 1.5rem; /* 24px */
+        --scoreboard-box-padding: 20px 36px;
+        --scoreboard-box-min-width: 200px;
+        --scoreboard-bottom-offset: 52px;
+        --scoreboard-reserved-height: 220px;
     }
 
     .tv-timer {
@@ -2049,37 +2105,23 @@ body.tv-page .view {
     text-shadow: var(--baby-blue-glow-soft);
 }
 
-/* Ethereal scroll - soft fade at edges */
+/* Ethereal scroll - soft fade at edges (no scrolling on TV) */
 .ethereal-scroll {
+    /* Fade effect at bottom edge for visual continuity */
     mask-image: linear-gradient(
         to bottom,
-        transparent 0%,
-        black 5%,
-        black 95%,
+        black 0%,
+        black 90%,
         transparent 100%
     );
     -webkit-mask-image: linear-gradient(
         to bottom,
-        transparent 0%,
-        black 5%,
-        black 95%,
+        black 0%,
+        black 90%,
         transparent 100%
     );
-    scrollbar-width: thin;
-    scrollbar-color: rgba(77, 135, 191, 0.3) transparent;
-}
-
-.ethereal-scroll::-webkit-scrollbar {
-    width: 6px;
-}
-
-.ethereal-scroll::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.ethereal-scroll::-webkit-scrollbar-thumb {
-    background: rgba(77, 135, 191, 0.4);
-    border-radius: 3px;
+    /* No scrolling - content must fit viewport */
+    overflow: hidden;
 }
 
 /* Answer reveal with baby blue glow */
@@ -2221,16 +2263,17 @@ body.tv-page .view {
         --tv-text-tiny: 0.875rem;
         /* Smaller padding for mobile */
         --tv-hud-padding: 15px;
+        --hud-corner-inset: 1rem;
+        --scoreboard-reserved-height: 100px;
     }
 
     /* Cinematic Frame responsive adjustments */
     .tv-stage {
         width: 95vw;
-        max-height: calc(100vh - var(--tv-header-height) - var(--tv-ticker-height) - 120px);
     }
 
     .stage-book {
-        padding: 1.5rem 2rem;
+        padding: 1rem 1.5rem;
     }
 
     .hud-pill {

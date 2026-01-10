@@ -259,6 +259,9 @@ def register_events(sio, sm, er, gr):
     sio.on_event('screensaver_activity', on_screensaver_activity)
     sio.on_event('request_screensaver_status', on_request_screensaver_status)
 
+    # Heartbeat for session keep-alive
+    sio.on_event('heartbeat', on_heartbeat)
+
     # Round timer events
     sio.on_event('round_timer_control', on_round_timer_control)
     sio.on_event('request_round_timer_status', on_request_round_timer_status)
@@ -272,6 +275,8 @@ def register_events(sio, sm, er, gr):
 def make_handler(event_name):
     def handler(data=None):
         if data is None: data = {}
+        # Touch session to keep it alive on any game event
+        session_manager.touch_session(request.sid)
         event_router.handle_event(event_name, data, request.sid)
     return handler
 
@@ -282,25 +287,28 @@ def make_handler(event_name):
 def on_connect():
     session_id = request.sid
     logger.info(f"Client connected: {session_id}")
-    
+
+    # Touch session to keep it alive
+    session_manager.touch_session(session_id)
+
     session_data = session_manager.get_team_for_session(session_id)
     if session_data:
         team_id = session_data.get('team_id')
         player_id = session_data.get('player_id')
-        
+
         if team_id and session_manager.get_team(team_id):
             join_room(f'team:{team_id}')
-            
+
             # Sync state
             sync_data = session_manager.get_sync_state(team_id, player_id)
-            
+
             # Add current game state data (sanitized)
             current_state = session_manager.current_state
             game = game_registry.get_game(current_state)
             if game:
                 sync_data['state_data'] = game.get_sanitized_state_data()
                 sync_data['current_state'] = current_state
-            
+
             emit('sync_state', sync_data)
             emit('score_update', {
                 'scores': session_manager.get_scores(),
@@ -481,6 +489,25 @@ def on_request_screensaver_status(data=None):
     """Return current screensaver status to the requesting client."""
     status = activity_tracker.get_status()
     emit('screensaver_status', status)
+
+
+# =============================================================================
+# HEARTBEAT / KEEP-ALIVE
+# =============================================================================
+
+def on_heartbeat(data=None):
+    """
+    Lightweight heartbeat for session keep-alive.
+
+    Clients should send this periodically (e.g., every 30 seconds) to:
+    1. Keep the session fresh (prevents TTL expiration)
+    2. Keep connection alive through proxies/firewalls
+    3. Allow fast detection of connection issues
+    """
+    session_id = request.sid
+    session_manager.touch_session(session_id)
+    # Respond with pong to confirm connection is alive
+    emit('heartbeat_ack', {'timestamp': time.time()})
 
 
 # =============================================================================

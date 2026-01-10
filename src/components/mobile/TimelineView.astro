@@ -1,14 +1,16 @@
 ---
 import ViewContainer from '../shared/ViewContainer.astro';
+import ChapterHeader from './storybook/ChapterHeader.astro';
 ---
 <ViewContainer id="view-timeline">
-    <div class="frost-viewport">
-        <header class="frost-header">
-            <p class="frost-header__chapter">A Story Unfolds</p>
-            <h2 class="frost-header__title">Baby Milestones</h2>
-        </header>
+    <div class="frost-viewport frost-viewport--compact">
+        <ChapterHeader
+            chapter="Chapter 3: Tiny Tracks in the Snow"
+            title="Watch Me Grow"
+            narrator="Restore the timeline, from earliest to latest..."
+        />
 
-        <div class="frost-card frost-card--glow">
+        <div class="frost-card frost-card--glow frost-card--no-scroll">
             <!-- Waiting state -->
             <div id="timeline-waiting" class="frost-waiting">
                 <p class="frost-waiting__text">Preparing milestone cards...</p>
@@ -16,7 +18,7 @@ import ViewContainer from '../shared/ViewContainer.astro';
             </div>
 
             <!-- Active timeline -->
-            <div id="timeline-active" class="hidden frost-timeline ethereal-scroll">
+            <div id="timeline-active" class="hidden frost-timeline">
                 <p class="frost-card__instruction">Drag to arrange earliest → latest</p>
                 <ul id="timeline-list" class="frost-timeline__list">
                     <!-- Items injected dynamically -->
@@ -24,7 +26,7 @@ import ViewContainer from '../shared/ViewContainer.astro';
             </div>
         </div>
 
-        <div class="frost-actions">
+        <div class="frost-actions frost-actions--tight">
             <button id="timeline-submit" class="frost-btn frost-btn--enchanted">
                 Submit Order
             </button>

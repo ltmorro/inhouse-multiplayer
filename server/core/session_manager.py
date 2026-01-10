@@ -6,10 +6,14 @@ Handles team registration, player management, scoring, and persistence.
 """
 
 import json
+import os
 import uuid
 import random
 import time
 import logging
+import threading
+import shutil
+import tempfile
 from pathlib import Path
 from typing import Optional, Dict, List, Any
 
@@ -48,50 +52,96 @@ class SessionManager:
         {'id': 8, 'name': 'Seafoam', 'hex': '#98D8C8'},
     ]
 
+    # Session TTL: sessions older than this are cleaned up (24 hours default)
+    SESSION_TTL_SECONDS = 24 * 60 * 60
+
+    # How often to run cleanup (1 hour)
+    CLEANUP_INTERVAL_SECONDS = 60 * 60
+
     def __init__(self, data_dir: str = "data"):
         self.data_dir = Path(data_dir)
         self.scores_file = self.data_dir / "scores.json"
 
+        # Thread-safe lock for all state mutations
+        # Using RLock so methods can call other methods that also acquire the lock
+        self._lock = threading.RLock()
+
         # Core state (no game-specific state)
         self.teams: Dict[str, dict] = {}
-        self.sessions: Dict[str, dict] = {}  # session_id -> {team_id, player_id}
+        self.sessions: Dict[str, dict] = {}  # session_id -> {team_id, player_id, last_seen}
         self.join_codes: Dict[str, str] = {}  # join_code -> team_id
-        
+
         self.current_state: str = "LOBBY"
         self.state_data: Dict[str, Any] = {}
+
+        # Cleanup timer
+        self._cleanup_timer: Optional[threading.Timer] = None
 
         # Load persisted data on startup
         self._load_scores()
 
+        # Start periodic cleanup
+        self._schedule_cleanup()
+
         logger.info(f"SessionManager initialized. Loaded {len(self.teams)} teams.")
 
     def _load_scores(self) -> None:
-        """Load persisted game data from JSON file (Crash Recovery)."""
-        if not self.scores_file.exists():
+        """
+        Load persisted game data from JSON file (Crash Recovery).
+
+        Tries main file first, falls back to backup if main is corrupted.
+        """
+        backup_file = self.scores_file.with_suffix('.json.bak')
+        files_to_try = []
+
+        if self.scores_file.exists():
+            files_to_try.append(('main', self.scores_file))
+        if backup_file.exists():
+            files_to_try.append(('backup', backup_file))
+
+        if not files_to_try:
             logger.info("No scores.json found, starting fresh.")
             return
 
-        try:
-            with open(self.scores_file, 'r') as f:
-                data = json.load(f)
+        for source_name, file_path in files_to_try:
+            try:
+                with open(file_path, 'r') as f:
+                    data = json.load(f)
 
-            self.teams = data.get('teams', {})
-            self.sessions = data.get('sessions', {})
-            self.current_state = data.get('current_state', 'LOBBY')
-            self.state_data = data.get('state_data', {})
+                self.teams = data.get('teams', {})
+                self.sessions = data.get('sessions', {})
+                self.current_state = data.get('current_state', 'LOBBY')
+                self.state_data = data.get('state_data', {})
 
-            # Rebuild join_codes lookup from teams
-            self.join_codes = {}
-            for team_id, team_data in self.teams.items():
-                if 'join_code' in team_data:
-                    self.join_codes[team_data['join_code']] = team_id
+                # Rebuild join_codes lookup from teams
+                self.join_codes = {}
+                for team_id, team_data in self.teams.items():
+                    if 'join_code' in team_data:
+                        self.join_codes[team_data['join_code']] = team_id
 
-            logger.info(f"Loaded session state: {len(self.teams)} teams, State: {self.current_state}")
-        except (json.JSONDecodeError, IOError) as e:
-            logger.error(f"Failed to load scores.json: {e}")
+                if source_name == 'backup':
+                    logger.warning(f"Loaded from backup file (main was corrupted)")
+                    # Restore main file from backup
+                    shutil.copy2(backup_file, self.scores_file)
+
+                logger.info(f"Loaded session state: {len(self.teams)} teams, State: {self.current_state}")
+                return  # Success, exit loop
+
+            except (json.JSONDecodeError, IOError) as e:
+                logger.error(f"Failed to load {source_name} scores file: {e}")
+                continue  # Try next file
+
+        logger.error("All score files corrupted, starting fresh.")
 
     def _save_scores(self) -> None:
-        """Persist game data to JSON file (Crash Protection)."""
+        """
+        Persist game data to JSON file with atomic write and backup.
+
+        Uses write-to-temp-then-rename pattern for crash safety:
+        1. Write to temporary file
+        2. If scores.json exists, copy it to scores.json.bak
+        3. Atomically rename temp file to scores.json
+        """
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
         data = {
@@ -101,18 +151,113 @@ class SessionManager:
             'state_data': self.state_data
         }
 
+        backup_file = self.scores_file.with_suffix('.json.bak')
+
         try:
-            with open(self.scores_file, 'w') as f:
-                json.dump(data, f, indent=2)
+            # Write to temporary file in the same directory (important for atomic rename)
+            fd, temp_path = tempfile.mkstemp(
+                suffix='.tmp',
+                prefix='scores_',
+                dir=self.data_dir
+            )
+            try:
+                with os.fdopen(fd, 'w') as f:
+                    json.dump(data, f, indent=2)
+            except:
+                os.unlink(temp_path)
+                raise
+
+            # Create backup of existing file if it exists
+            if self.scores_file.exists():
+                try:
+                    shutil.copy2(self.scores_file, backup_file)
+                except IOError as e:
+                    logger.warning(f"Failed to create backup: {e}")
+
+            # Atomic rename (on POSIX systems)
+            os.replace(temp_path, self.scores_file)
             logger.debug("Session state saved to scores.json")
-        except IOError as e:
+
+        except (IOError, OSError) as e:
             logger.error(f"Failed to save scores.json: {e}")
+            # Try to restore from backup if main save failed
+            if backup_file.exists() and not self.scores_file.exists():
+                try:
+                    shutil.copy2(backup_file, self.scores_file)
+                    logger.info("Restored scores.json from backup")
+                except IOError:
+                    pass
+
+    def _schedule_cleanup(self) -> None:
+        """Schedule the next session cleanup."""
+        if self._cleanup_timer:
+            self._cleanup_timer.cancel()
+        self._cleanup_timer = threading.Timer(
+            self.CLEANUP_INTERVAL_SECONDS,
+            self._cleanup_stale_sessions
+        )
+        self._cleanup_timer.daemon = True
+        self._cleanup_timer.start()
+
+    def _cleanup_stale_sessions(self) -> None:
+        """
+        Remove sessions that haven't been active for longer than SESSION_TTL_SECONDS.
+
+        This prevents unbounded memory growth from accumulated sessions.
+        """
+        try:
+            now = time.time()
+            stale_count = 0
+
+            with self._lock:
+                # Find stale sessions
+                stale_session_ids = []
+                for session_id, session_data in self.sessions.items():
+                    if isinstance(session_data, dict):
+                        last_seen = session_data.get('last_seen', 0)
+                    else:
+                        # Legacy format - no timestamp, treat as stale
+                        last_seen = 0
+
+                    if now - last_seen > self.SESSION_TTL_SECONDS:
+                        stale_session_ids.append(session_id)
+
+                # Remove stale sessions
+                for session_id in stale_session_ids:
+                    del self.sessions[session_id]
+                    stale_count += 1
+
+                if stale_count > 0:
+                    self._save_scores()
+                    logger.info(f"Cleaned up {stale_count} stale sessions")
+
+        except Exception as e:
+            logger.error(f"Session cleanup failed: {e}")
+        finally:
+            # Schedule next cleanup
+            self._schedule_cleanup()
+
+    def touch_session(self, session_id: str) -> None:
+        """Update the last_seen timestamp for a session."""
+        with self._lock:
+            if session_id in self.sessions:
+                session_data = self.sessions[session_id]
+                if isinstance(session_data, dict):
+                    session_data['last_seen'] = time.time()
+                else:
+                    # Migrate legacy format
+                    self.sessions[session_id] = {
+                        'team_id': session_data,
+                        'player_id': None,
+                        'last_seen': time.time()
+                    }
 
     def set_state(self, new_state: str, state_data: dict = None) -> None:
         """Update current game state."""
-        self.current_state = new_state
-        self.state_data = state_data or {}
-        self._save_scores()
+        with self._lock:
+            self.current_state = new_state
+            self.state_data = state_data or {}
+            self._save_scores()
 
     def create_team(self, team_name: str, player_name: str, session_id: str) -> dict:
         """
@@ -121,7 +266,7 @@ class SessionManager:
         Returns:
             dict with success, team_id, player_id, team_name, join_code
         """
-        # Validate team name
+        # Validate inputs first (no lock needed)
         team_name = team_name.strip()
         if not team_name or len(team_name) > 20:
             return {
@@ -129,7 +274,6 @@ class SessionManager:
                 'message': 'Team name must be 1-20 characters'
             }
 
-        # Validate player name
         player_name = player_name.strip()
         if not player_name or len(player_name) > 20:
             return {
@@ -137,77 +281,79 @@ class SessionManager:
                 'message': 'Player name must be 1-20 characters'
             }
 
-        # Check if session already has a team
-        if session_id in self.sessions:
-            session_data = self.sessions[session_id]
-            existing_team_id = session_data.get('team_id') if isinstance(session_data, dict) else session_data
-            if existing_team_id in self.teams:
-                team = self.teams[existing_team_id]
-                player_id = session_data.get('player_id') if isinstance(session_data, dict) else None
-                return {
-                    'success': True,
-                    'team_id': existing_team_id,
-                    'player_id': player_id,
-                    'team_name': team['name'],
-                    'player_name': team['players'].get(player_id, {}).get('name', '') if player_id else '',
-                    'join_code': team.get('join_code', ''),
-                    'players': self._get_players_list(existing_team_id),
-                    'message': 'Reconnected to existing team'
-                }
+        with self._lock:
+            # Check if session already has a team
+            if session_id in self.sessions:
+                session_data = self.sessions[session_id]
+                existing_team_id = session_data.get('team_id') if isinstance(session_data, dict) else session_data
+                if existing_team_id in self.teams:
+                    team = self.teams[existing_team_id]
+                    player_id = session_data.get('player_id') if isinstance(session_data, dict) else None
+                    return {
+                        'success': True,
+                        'team_id': existing_team_id,
+                        'player_id': player_id,
+                        'team_name': team['name'],
+                        'player_name': team['players'].get(player_id, {}).get('name', '') if player_id else '',
+                        'join_code': team.get('join_code', ''),
+                        'players': self._get_players_list(existing_team_id),
+                        'message': 'Reconnected to existing team'
+                    }
 
-        # Check for duplicate team name
-        for tid, team_data in self.teams.items():
-            if team_data['name'].lower() == team_name.lower():
-                return {
-                    'success': False,
-                    'message': 'Team name already taken'
-                }
+            # Check for duplicate team name
+            for tid, team_data in self.teams.items():
+                if team_data['name'].lower() == team_name.lower():
+                    return {
+                        'success': False,
+                        'message': 'Team name already taken'
+                    }
 
-        # Generate unique join code
-        join_code = generate_join_code()
-        while join_code in self.join_codes:
+            # Generate unique join code
             join_code = generate_join_code()
+            while join_code in self.join_codes:
+                join_code = generate_join_code()
 
-        # Create new team
-        team_id = str(uuid.uuid4())
-        player_id = str(uuid.uuid4())
-        team_color = self._assign_team_color()
+            # Create new team
+            team_id = str(uuid.uuid4())
+            player_id = str(uuid.uuid4())
+            team_color = self._assign_team_color()
 
-        self.teams[team_id] = {
-            'name': team_name,
-            'score': 0,
-            'status': 'active',
-            'eliminated': False,
-            'join_code': join_code,
-            'color': team_color,
-            'players': {
-                player_id: {
-                    'name': player_name,
-                    'joined_at': time.time()
+            self.teams[team_id] = {
+                'name': team_name,
+                'score': 0,
+                'status': 'active',
+                'eliminated': False,
+                'join_code': join_code,
+                'color': team_color,
+                'players': {
+                    player_id: {
+                        'name': player_name,
+                        'joined_at': time.time()
+                    }
                 }
             }
-        }
-        self.join_codes[join_code] = team_id
-        self.sessions[session_id] = {
-            'team_id': team_id,
-            'player_id': player_id
-        }
+            self.join_codes[join_code] = team_id
+            self.sessions[session_id] = {
+                'team_id': team_id,
+                'player_id': player_id,
+                'last_seen': time.time()
+            }
 
-        self._save_scores()
+            self._save_scores()
 
-        logger.info(f"Team created: {team_name} ({team_id}) by {player_name}, code: {join_code}")
+            logger.info(f"Team created: {team_name} ({team_id}) by {player_name}, code: {join_code}")
 
-        return {
-            'success': True,
-            'team_id': team_id,
-            'player_id': player_id,
-            'team_name': team_name,
-            'player_name': player_name,
-            'join_code': join_code,
-            'color': team_color,
-            'players': self._get_players_list(team_id),
-            'message': 'Team created successfully'
-        }
+            return {
+                'success': True,
+                'team_id': team_id,
+                'player_id': player_id,
+                'team_name': team_name,
+                'player_name': player_name,
+                'join_code': join_code,
+                'color': team_color,
+                'players': self._get_players_list(team_id),
+                'message': 'Team created successfully'
+            }
 
     def join_team(self, join_code: str, player_name: str, session_id: str) -> dict:
         """
@@ -216,7 +362,7 @@ class SessionManager:
         Returns:
             dict with success, team_id, player_id, team_name, players list
         """
-        # Validate player name
+        # Validate inputs first (no lock needed)
         player_name = player_name.strip()
         if not player_name or len(player_name) > 20:
             return {
@@ -224,71 +370,72 @@ class SessionManager:
                 'message': 'Player name must be 1-20 characters'
             }
 
-        # Normalize join code
         join_code = join_code.strip().upper()
 
-        # Check if session already has a team
-        if session_id in self.sessions:
-            session_data = self.sessions[session_id]
-            existing_team_id = session_data.get('team_id') if isinstance(session_data, dict) else session_data
-            if existing_team_id in self.teams:
-                team = self.teams[existing_team_id]
-                player_id = session_data.get('player_id') if isinstance(session_data, dict) else None
-                return {
-                    'success': True,
-                    'team_id': existing_team_id,
-                    'player_id': player_id,
-                    'team_name': team['name'],
-                    'player_name': team['players'].get(player_id, {}).get('name', '') if player_id else '',
-                    'join_code': team.get('join_code', ''),
-                    'players': self._get_players_list(existing_team_id),
-                    'message': 'Reconnected to existing team'
-                }
+        with self._lock:
+            # Check if session already has a team
+            if session_id in self.sessions:
+                session_data = self.sessions[session_id]
+                existing_team_id = session_data.get('team_id') if isinstance(session_data, dict) else session_data
+                if existing_team_id in self.teams:
+                    team = self.teams[existing_team_id]
+                    player_id = session_data.get('player_id') if isinstance(session_data, dict) else None
+                    return {
+                        'success': True,
+                        'team_id': existing_team_id,
+                        'player_id': player_id,
+                        'team_name': team['name'],
+                        'player_name': team['players'].get(player_id, {}).get('name', '') if player_id else '',
+                        'join_code': team.get('join_code', ''),
+                        'players': self._get_players_list(existing_team_id),
+                        'message': 'Reconnected to existing team'
+                    }
 
-        # Find team by join code
-        if join_code not in self.join_codes:
-            return {
-                'success': False,
-                'message': 'Invalid join code'
-            }
-
-        team_id = self.join_codes[join_code]
-        team = self.teams[team_id]
-
-        # Check if player name already exists on this team
-        for pid, pdata in team['players'].items():
-            if pdata['name'].lower() == player_name.lower():
+            # Find team by join code
+            if join_code not in self.join_codes:
                 return {
                     'success': False,
-                    'message': 'Player name already taken on this team'
+                    'message': 'Invalid join code'
                 }
 
-        # Add player to team
-        player_id = str(uuid.uuid4())
-        team['players'][player_id] = {
-            'name': player_name,
-            'joined_at': time.time()
-        }
-        self.sessions[session_id] = {
-            'team_id': team_id,
-            'player_id': player_id
-        }
+            team_id = self.join_codes[join_code]
+            team = self.teams[team_id]
 
-        self._save_scores()
+            # Check if player name already exists on this team
+            for pid, pdata in team['players'].items():
+                if pdata['name'].lower() == player_name.lower():
+                    return {
+                        'success': False,
+                        'message': 'Player name already taken on this team'
+                    }
 
-        logger.info(f"Player {player_name} joined team {team['name']} ({team_id})")
+            # Add player to team
+            player_id = str(uuid.uuid4())
+            team['players'][player_id] = {
+                'name': player_name,
+                'joined_at': time.time()
+            }
+            self.sessions[session_id] = {
+                'team_id': team_id,
+                'player_id': player_id,
+                'last_seen': time.time()
+            }
 
-        return {
-            'success': True,
-            'team_id': team_id,
-            'player_id': player_id,
-            'team_name': team['name'],
-            'player_name': player_name,
-            'join_code': join_code,
-            'color': team.get('color', 1),
-            'players': self._get_players_list(team_id),
-            'message': f"Joined team {team['name']}"
-        }
+            self._save_scores()
+
+            logger.info(f"Player {player_name} joined team {team['name']} ({team_id})")
+
+            return {
+                'success': True,
+                'team_id': team_id,
+                'player_id': player_id,
+                'team_name': team['name'],
+                'player_name': player_name,
+                'join_code': join_code,
+                'color': team.get('color', 1),
+                'players': self._get_players_list(team_id),
+                'message': f"Joined team {team['name']}"
+            }
 
     def _get_players_list(self, team_id: str) -> List[dict]:
         """Get list of players for a team."""
@@ -328,24 +475,26 @@ class SessionManager:
         Returns:
             True if successful, False if team/player doesn't exist
         """
-        team = self.teams.get(team_id)
-        if not team:
-            return False
+        with self._lock:
+            team = self.teams.get(team_id)
+            if not team:
+                return False
 
-        if 'players' not in team or player_id not in team['players']:
-            return False
+            if 'players' not in team or player_id not in team['players']:
+                return False
 
-        # Store the new session mapping
-        self.sessions[session_id] = {
-            'team_id': team_id,
-            'player_id': player_id
-        }
+            # Store the new session mapping
+            self.sessions[session_id] = {
+                'team_id': team_id,
+                'player_id': player_id,
+                'last_seen': time.time()
+            }
 
-        self._save_scores()
+            self._save_scores()
 
-        player_name = team['players'][player_id].get('name', 'Unknown')
-        logger.info(f"Session reassociated: {session_id} -> {player_name} on {team['name']}")
-        return True
+            player_name = team['players'][player_id].get('name', 'Unknown')
+            logger.info(f"Session reassociated: {session_id} -> {player_name} on {team['name']}")
+            return True
 
     def get_player_info(self, team_id: str, player_id: str) -> Optional[dict]:
         """Get player info by team_id and player_id."""
@@ -371,14 +520,15 @@ class SessionManager:
         Returns:
             True if successful, False if team not found
         """
-        if team_id not in self.teams:
-            return False
+        with self._lock:
+            if team_id not in self.teams:
+                return False
 
-        self.teams[team_id]['score'] += points
-        self._save_scores()
+            self.teams[team_id]['score'] += points
+            self._save_scores()
 
-        logger.info(f"Added {points} points to {self.teams[team_id]['name']}: {reason}")
-        return True
+            logger.info(f"Added {points} points to {self.teams[team_id]['name']}: {reason}")
+            return True
 
     def reset_game(self, preserve_teams: bool = False) -> None:
         """
@@ -387,19 +537,20 @@ class SessionManager:
         Args:
             preserve_teams: If True, keep teams but reset scores
         """
-        if preserve_teams:
-            for team_id in self.teams:
-                self.teams[team_id]['score'] = 0
-                self.teams[team_id]['status'] = 'active'
-                self.teams[team_id]['eliminated'] = False
-        else:
-            self.teams = {}
-            self.sessions = {}
-            self.join_codes = {}
+        with self._lock:
+            if preserve_teams:
+                for team_id in self.teams:
+                    self.teams[team_id]['score'] = 0
+                    self.teams[team_id]['status'] = 'active'
+                    self.teams[team_id]['eliminated'] = False
+            else:
+                self.teams = {}
+                self.sessions = {}
+                self.join_codes = {}
 
-        self._save_scores()
+            self._save_scores()
 
-        logger.info(f"Game reset. preserve_teams={preserve_teams}")
+            logger.info(f"Game reset. preserve_teams={preserve_teams}")
 
     def get_scores(self) -> Dict[str, int]:
         """Get current scores for all teams."""
@@ -443,49 +594,52 @@ class SessionManager:
 
     def kick_team(self, team_id: str) -> bool:
         """Remove a team from the game."""
-        if team_id not in self.teams:
-            return False
+        with self._lock:
+            if team_id not in self.teams:
+                return False
 
-        team = self.teams[team_id]
-        team_name = team['name']
+            team = self.teams[team_id]
+            team_name = team['name']
 
-        # Remove join code mapping
-        if 'join_code' in team:
-            self.join_codes.pop(team['join_code'], None)
+            # Remove join code mapping
+            if 'join_code' in team:
+                self.join_codes.pop(team['join_code'], None)
 
-        del self.teams[team_id]
+            del self.teams[team_id]
 
-        # Remove session mappings (handle both old and new format)
-        self.sessions = {
-            sid: sdata for sid, sdata in self.sessions.items()
-            if (sdata.get('team_id') if isinstance(sdata, dict) else sdata) != team_id
-        }
+            # Remove session mappings (handle both old and new format)
+            self.sessions = {
+                sid: sdata for sid, sdata in self.sessions.items()
+                if (sdata.get('team_id') if isinstance(sdata, dict) else sdata) != team_id
+            }
 
-        self._save_scores()
+            self._save_scores()
 
-        logger.info(f"Team kicked: {team_name}")
-        return True
+            logger.info(f"Team kicked: {team_name}")
+            return True
 
     def set_team_avatar(self, team_id: str, avatar_id: str) -> bool:
         """Set the avatar for a team."""
-        if team_id not in self.teams:
-            return False
+        with self._lock:
+            if team_id not in self.teams:
+                return False
 
-        self.teams[team_id]['avatar'] = avatar_id
-        self._save_scores()
-        logger.debug(f"Team {team_id} avatar set to: {avatar_id}")
-        return True
+            self.teams[team_id]['avatar'] = avatar_id
+            self._save_scores()
+            logger.debug(f"Team {team_id} avatar set to: {avatar_id}")
+            return True
 
     def toggle_elimination(self, team_id: str, eliminated: bool) -> bool:
         """Toggle team's elimination status."""
-        if team_id not in self.teams:
-            return False
+        with self._lock:
+            if team_id not in self.teams:
+                return False
 
-        self.teams[team_id]['eliminated'] = eliminated
-        self.teams[team_id]['status'] = 'eliminated' if eliminated else 'active'
+            self.teams[team_id]['eliminated'] = eliminated
+            self.teams[team_id]['status'] = 'eliminated' if eliminated else 'active'
 
-        self._save_scores()
-        return True
+            self._save_scores()
+            return True
 
     def get_remaining_teams(self) -> int:
         """Count non-eliminated teams."""

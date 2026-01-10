@@ -15,6 +15,7 @@
     </div>
     <div class="storybook-status-bar__right">
         <span id="team-name-display" class="storybook-status-bar__team">---</span>
+        <span id="header-team-code" class="storybook-status-bar__code"></span>
         <span id="player-name-display" class="storybook-status-bar__player"></span>
     </div>
 </div>
@@ -120,6 +121,21 @@
     color: var(--ice-whisper, #E0F4FF);
     font-size: 0.9rem;
     text-shadow: 0 0 15px rgba(135, 206, 235, 0.2);
+}
+
+.storybook-status-bar__code {
+    font-family: var(--font-mono);
+    color: var(--baby-blue, #4D87BF);
+    font-size: 0.75rem;
+    background: rgba(77, 135, 191, 0.1);
+    padding: 1px 4px;
+    border-radius: 3px;
+    border: 1px solid rgba(77, 135, 191, 0.2);
+    font-weight: bold;
+}
+
+.storybook-status-bar__code:empty {
+    display: none;
 }
 
 .storybook-status-bar__player {

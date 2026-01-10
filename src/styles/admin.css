@@ -43,6 +43,27 @@ body.admin-page *::after {
 }
 
 /* =============================================================
+   ADMIN TEXT COLORS - Optimized for dark background readability
+   ============================================================= */
+
+/* Override base heading styles for dark admin background */
+body.admin-page h1,
+body.admin-page h2,
+body.admin-page h3,
+body.admin-page h4,
+body.admin-page h5,
+body.admin-page h6 {
+    color: var(--ice-whisper);
+    text-shadow: 0 0 15px rgba(135, 206, 235, 0.3);
+}
+
+/* Section headers with glow class */
+body.admin-page .glow {
+    color: var(--ice-whisper);
+    text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+}
+
+/* =============================================================
    ADMIN HEADER
    ============================================================= */
 
@@ -54,7 +75,7 @@ body.admin-page *::after {
 }
 
 .admin-header__status {
-    color: var(--ice-soft);
+    color: var(--ice-bright);
 }
 
 /* =============================================================
@@ -63,7 +84,7 @@ body.admin-page *::after {
 
 .admin-container {
     padding: 1rem;
-    padding-top: 20px; /* Spacing below header */
+    padding-top: 70px; /* Space for fixed header */
     position: relative;
     z-index: 1;
 }
@@ -83,7 +104,7 @@ body.admin-page *::after {
 
 .admin-section__title {
     font-family: var(--font-serif);
-    color: var(--ice-bright);
+    color: var(--ice-whisper);
     font-size: 1.2rem;
     font-weight: bold;
     border-bottom: 1px solid rgba(135, 206, 235, 0.3);
@@ -111,7 +132,7 @@ body.admin-page *::after {
    ============================================================= */
 
 .admin-status {
-    color: var(--ice-soft);
+    color: var(--ice-bright);
     font-size: 0.9rem;
 }
 
@@ -157,7 +178,7 @@ body.admin-page *::after {
 }
 
 .admin-team-item__info {
-    color: var(--ice-soft);
+    color: var(--ice-bright);
     font-size: 0.9rem;
 }
 
@@ -175,14 +196,14 @@ body.admin-page *::after {
    ============================================================= */
 
 .admin-hint {
-    color: var(--ice-soft);
+    color: var(--ice-bright);
     font-size: 0.85rem;
-    opacity: 0.8;
 }
 
 .admin-warning {
-    color: var(--status-warning);
+    color: var(--gold-candle);
     font-size: 0.85rem;
+    text-shadow: 0 0 8px rgba(255, 229, 180, 0.3);
 }
 
 /* =============================================================
@@ -210,7 +231,7 @@ body.admin-page *::after {
     border-radius: 8px;
     min-height: 100px;
     background: rgba(15, 40, 71, 0.4);
-    color: var(--ice-soft);
+    color: var(--ice-whisper);
 }
 
 .admin-list--scrollable {

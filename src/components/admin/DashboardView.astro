@@ -1,5 +1,6 @@
 ---
 import ViewContainer from '../shared/ViewContainer.astro';
+import AdminHeader from './AdminHeader.astro';
 import GameStateControls from './GameStateControls.astro';
 import LobbyControls from './LobbyControls.astro';
 import MusicControls from './MusicControls.astro';
@@ -15,6 +16,8 @@ import RoundTimerControls from './RoundTimerControls.astro';
 ---
 <ViewContainer id="dashboard-view">
     <div class="admin-container">
+
+        <AdminHeader />
 
         <GameStateControls />
 

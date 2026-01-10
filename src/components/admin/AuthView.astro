@@ -1,7 +1,9 @@
 ---
 import ViewContainer from '../shared/ViewContainer.astro';
+import AdminHeader from './AdminHeader.astro';
 ---
 <ViewContainer id="auth-view" active={true}>
+    <AdminHeader />
     <div class="flex-grow flex-center flex-column">
         <h2 class="glow">SECURITY CLEARANCE REQUIRED</h2>
         <p class="admin-hint mb-2">DOCTOR / PARENT ACCESS ONLY</p>

@@ -73,9 +73,10 @@
 
     /* ─── STATUS COLORS ─── */
     --status-complete: #7FD4A3;    /* Success - soft mint */
-    --status-oops: #F28B82;        /* Error - rosy */
+    --status-oops: #96031A;        /* Error - rosy */
     --status-gentle-warn: #FFD699; /* Warning - peachy */
     --status-info-color: var(--ice-glow);
+
 
     /* ===========================================
        SEMANTIC TOKENS (Legacy Compatibility)
@@ -345,7 +346,7 @@ a:hover {
     appearance: none;
     background: linear-gradient(135deg, var(--ice-glow) 0%, var(--ice-bright) 100%);
     border: 1px solid rgba(135, 206, 235, 0.5);
-    color: var(--void-deep);
+    color: var(--baby-blue);
     font-family: var(--font-whimsy);
     font-weight: 600;
     padding: 0.875rem 2rem;

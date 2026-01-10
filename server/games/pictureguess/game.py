@@ -19,7 +19,8 @@ class PictureGuessGame(BaseGame):
             'picture_id': state_data.get('picture_id'),
             'image_url': state_data.get('image_url'),
             'hint': state_data.get('hint'),
-            'answers': {}  # team_id -> {guess_text, player_id, player_name, picture_id}
+            'answers': {},  # team_id -> {guess_text, player_id, player_name, picture_id}
+            'graded_teams': set()  # Prevent double-grading
         }
         return EventResponse()
     
@@ -93,9 +94,20 @@ class PictureGuessGame(BaseGame):
         team_id = data.get('team_id')
         correct = data.get('correct', False)
         points = data.get('points', 0)
-        
+
         response = EventResponse()
-        
+
+        # Prevent double-grading
+        if team_id in self._state['graded_teams']:
+            response.to_admin['already_graded'] = {
+                'team_id': team_id,
+                'message': 'Team already graded for this round'
+            }
+            return response
+
+        # Mark as graded
+        self._state['graded_teams'].add(team_id)
+
         # Notify team of result
         if team_id not in response.to_specific_team:
             response.to_specific_team[team_id] = {}
@@ -103,14 +115,21 @@ class PictureGuessGame(BaseGame):
             'correct': correct,
             'points_awarded': points if correct else 0
         }
-        
+
+        # Notify admin that grading was successful
+        response.to_admin['picture_guess_graded'] = {
+            'team_id': team_id,
+            'correct': correct,
+            'points_awarded': points if correct else 0
+        }
+
         if correct and points:
             self.session_manager.add_points(team_id, points, 'Picture guess correct')
             response.broadcast['score_update'] = {
                 'scores': self.session_manager.get_scores(),
                 'teams': self.session_manager.get_teams_info()
             }
-            
+
         return response
 
     def handle_reveal_picture(self, data, context: EventContext) -> EventResponse:
@@ -159,4 +178,6 @@ class PictureGuessGame(BaseGame):
         state = self._state.copy()
         if 'answers' in state:
             del state['answers']
+        if 'graded_teams' in state:
+            del state['graded_teams']
         return state

@@ -21,16 +21,18 @@ export const STATE_VIEW_MAP = {
 
 // Game phases in order (excludes LOBBY and VICTORY which are not gameplay rounds)
 export const GAME_PHASES = [
-    // 'MACGYVER',
     'TRIVIA',
-    // 'TIMER',
     'BUZZER',
     'TIMELINE',
-    // 'MINESWEEPER',
     'PICTUREGUESS',
-    'PIXELPERFECT',
     'PRICEGUESS',
     'SURVIVAL'
+
+    // disabled for this game
+    // 'PIXELPERFECT',
+    // 'MINESWEEPER',
+    // 'TIMER',
+    // 'MACGYVER',
 ];
 
 // Avatar configuration for team selection

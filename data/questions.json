@@ -200,68 +200,6 @@
       "hint": "Sorry in advance..."
     }
   ],
-  "round_soundtracks": {
-    "LOBBY": {
-      "description": "Cozy & Cute Mix",
-      "shuffle": true,
-      "tracks": [
-        { "spotify_uri": "spotify:track:6Im9k8u9iIzKMrmV7BWtlF", "title": "Winter Wonderland", "artist": "Michael Bublé" },
-        { "spotify_uri": "spotify:track:5ghIJDpPoe3CfHMGu71E6T", "title": "Isn't She Lovely", "artist": "Stevie Wonder" },
-        { "spotify_uri": "spotify:track:3XKIUb7HzIF1Vu9usunMzc", "title": "Beautiful Boy", "artist": "John Lennon" },
-        { "spotify_uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn", "title": "All I Want for Christmas", "artist": "Mariah Carey" }
-      ]
-    },
-    "MACGYVER": {
-      "description": "Blizzard Prep",
-      "shuffle": false,
-      "tracks": [
-        { "spotify_uri": "spotify:track:1FL7eUG80aeUeyMO2N4btN", "title": "Mission: Impossible Theme", "artist": "Adam Clayton" }
-      ]
-    },
-    "TRIVIA": {
-      "description": "Brain Freeze",
-      "shuffle": false,
-      "tracks": [
-        { "spotify_uri": "spotify:track:57JDumk9hPiiPjAZRmTqvC", "title": "Jeopardy Theme", "artist": "Merv Griffin" }
-      ]
-    },
-    "TIMER": {
-      "description": "Avalanche!",
-      "shuffle": false,
-      "tracks": [
-        { "spotify_uri": "spotify:track:4Fpsa3pYc3gozrxHRRPvR6", "title": "Flight of the Bumblebee", "artist": "Rimsky-Korsakov" }
-      ]
-    },
-    "TIMELINE": {
-      "description": "Growing Up",
-      "shuffle": false,
-      "tracks": [
-        { "spotify_uri": "spotify:track:6ORqU0bHbVCRjXm9AjyHyZ", "title": "Circle of Life", "artist": "Elton John" }
-      ]
-    },
-    "PICTUREGUESS": {
-      "description": "Whiteout Condition",
-      "shuffle": false,
-      "tracks": [
-        { "spotify_uri": "spotify:track:5xdtUZKYnE4l7KSzgQ6MBD", "title": "Inspector Gadget Theme", "artist": "Shuki Levy" }
-      ]
-    },
-    "MINESWEEPER": {
-      "description": "Silent Night",
-      "shuffle": false,
-      "tracks": [
-        { "spotify_uri": "spotify:track:1auX4gkGe7hbrOH0BXdpV4", "title": "Twinkle Twinkle", "artist": "Lullaby Version" }
-      ]
-    },
-    "VICTORY": {
-      "description": "It's a Boy!",
-      "shuffle": false,
-      "tracks": [
-        { "spotify_uri": "spotify:track:683hRieVmYdAhVA1DkjSAk", "title": "Celebration", "artist": "Kool & The Gang" },
-        { "spotify_uri": "spotify:track:22HYEJveCvykVDHDiEEmjZ", "title": "Happy", "artist": "Pharrell Williams" }
-      ]
-    }
-  },
   "survival_questions": [
     {
       "id": 1,
@@ -494,5 +432,295 @@
       "actual_price": 89.99,
       "hint": "Baby's first bounce house"
     }
-  ]
+  ],   
+  "round_soundtracks": {
+    "LOBBY": {
+      "description": "Waiting Room: Warm & Cozy",
+      "shuffle": true,
+      "tracks": [
+        {
+          "spotify_uri": "spotify:track:2TxCwUlqaOH3TIyJqGgR91",
+          "title": "Mamma Mia",
+          "artist": "ABBA"
+        },
+        {
+          "spotify_uri": "spotify:track:3YgtkOxZsTuaZdL8McA1FQ",
+          "title": "adore u",
+          "artist": "Fred again…, Obongjayar"
+        },
+        {
+          "spotify_uri": "spotify:track:5aqPFFCJivYjHanadZXDRJ",
+          "title": "Mary, Did You Know?",
+          "artist": "Zara Larsson"
+        },
+        {
+          "spotify_uri": "spotify:track:0uhHyU73F5CeXuceHqOCMX",
+          "title": "My Baby Just Cares For Me (2013 - Remaster)",
+          "artist": "Nina Simone"
+        },
+        {
+          "spotify_uri": "spotify:track:1prYSRBfwPvE3v8jSRZL3Q",
+          "title": "Let It Snow! Let it Snow! Let it Snow!",
+          "artist": "Dean Martin"
+        },
+        {
+          "spotify_uri": "spotify:track:476JcJ3TpAuCOlGdCmomGm",
+          "title": "New Soul",
+          "artist": "Yael Naim"
+        },
+        {
+          "spotify_uri": "spotify:track:2zF8ro2hX0aEYaqXQdEKW1",
+          "title": "How Sweet It Is (To Be Loved By You)",
+          "artist": "Marvin Gaye"
+        },
+        {
+          "spotify_uri": "spotify:track:62aP9fBQKYKxi7PDXwcUAS",
+          "title": "ily (i love you baby) (feat. Emilee)",
+          "artist": "Emilee, Surf Mesa"
+        },
+        {
+          "spotify_uri": "spotify:track:4pFNWAU8e8F32NQkMyLAZi",
+          "title": "Love Without End, Amen",
+          "artist": "George Strait"
+        },
+        {
+          "spotify_uri": "spotify:track:74JdR9aXE6I74oS1BVRsvb",
+          "title": "O-o-h Child",
+          "artist": "The Five Stairsteps"
+        },
+        {
+          "spotify_uri": "spotify:track:6dGnYIeXmHdcikdzNNDMm2",
+          "title": "Here Comes the Sun",
+          "artist": "The Beatles"
+        },
+        {
+          "spotify_uri": "spotify:track:0GegHVxeozw3rdjte45Bfx",
+          "title": "White Winter Hymnal",
+          "artist": "Fleet Foxes"
+        },
+        {
+          "spotify_uri": "spotify:track:5GQPBzoRBDxcAjwSSluQXD",
+          "title": "Pretty Little Baby",
+          "artist": "Connie Francis"
+        },
+        {
+          "spotify_uri": "spotify:track:4VywXu6umkIQ2OS0m1I79y",
+          "title": "Better Together",
+          "artist": "Jack Johnson"
+        },
+        {
+          "spotify_uri": "spotify:track:3IDsegNBHC4pjGCOMTQYlU",
+          "title": "Baby, Baby",
+          "artist": "Amy Grant"
+        },
+        {
+          "spotify_uri": "spotify:track:1Rvl8qsKJurfFTyWLBI9ib",
+          "title": "Baby, I Love Your Way",
+          "artist": "Big Mountain"
+        },
+        {
+          "spotify_uri": "spotify:track:5Px7SKjIyOc8BZA5lFdC0M",
+          "title": "Come on over Baby (All I Want Is You)",
+          "artist": "Christina Aguilera"
+        },
+        {
+          "spotify_uri": "spotify:track:3SnGymj6ijE2iuUfWxLo1q",
+          "title": "I'm Coming Out",
+          "artist": "Diana Ross"
+        },
+        {
+          "spotify_uri": "spotify:track:2aBxt229cbLDOvtL7Xbb9x",
+          "title": "Always Be My Baby",
+          "artist": "Mariah Carey"
+        },
+        {
+          "spotify_uri": "spotify:track:44AyOl4qVkzS48vBsbNXaC",
+          "title": "Can't Help Falling in Love",
+          "artist": "Elvis Presley"
+        }
+      ]
+    },
+    "TRIVIA": {
+      "description": "Whispers in the Woods: Nursery Wisdom",
+      "shuffle": true,
+      "tracks": [
+        {
+          "spotify_uri": "spotify:track:4at7knNBkngix1ertR9X1J",
+          "title": "Gaston (Instrumental)",
+          "artist": "Magic Philharmonic Orchestra"
+        },
+        {
+          "spotify_uri": "spotify:track:6QGL2yWEAh2H7cuWd55wZV",
+          "title": "Mama Said",
+          "artist": "The Shirelles"
+        },
+        {
+          "spotify_uri": "spotify:track:2VCUcIPY3i6pv9Nu9Vg6k3",
+          "title": "ABC",
+          "artist": "The Jackson 5"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_2",
+          "title": "Count On Me",
+          "artist": "Bruno Mars"
+        }
+      ]
+    },
+    "BUZZER": {
+      "description": "A Winter Lullaby: Freeze Dance",
+      "shuffle": true,
+      "tracks": [
+        {
+          "spotify_uri": "spotify:track:798W62jF177t4QMFsep2Cx",
+          "title": "Baby It's Cold Outside",
+          "artist": "Royal Philharmonic Orchestra"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_3",
+          "title": "Ice Ice Baby",
+          "artist": "Vanilla Ice"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_4",
+          "title": "Cold As Ice",
+          "artist": "Foreigner"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_5",
+          "title": "All I Want for Christmas Is You",
+          "artist": "Mariah Carey"
+        }
+      ]
+    },
+    "TIMELINE": {
+      "description": "Tiny Tracks: Watch Me Grow",
+      "shuffle": true,
+      "tracks": [
+        {
+          "spotify_uri": "spotify:track:11WQasJcGWgh3mvR1UiBcm",
+          "title": "Tchaikovsky: The Nutcracker, Op. 71",
+          "artist": "Berliner Philharmoniker"
+        },
+        {
+          "spotify_uri": "spotify:track:5URfZHMlUWTWxPvvSBWcPk",
+          "title": "Beautiful Boy (Darling Boy)",
+          "artist": "John Lennon"
+        },
+        {
+          "spotify_uri": "spotify:track:74WBGgUnpKrJXt6TETfR6Z",
+          "title": "Never Grow Up",
+          "artist": "Taylor Swift"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_6",
+          "title": "100 Years",
+          "artist": "Five for Fighting"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_7",
+          "title": "Circle of Life",
+          "artist": "Elton John"
+        }
+      ]
+    },
+    "PICTUREGUESS": {
+      "description": "Through the Frosty Window: Peek-a-Boo",
+      "shuffle": true,
+      "tracks": [
+        {
+          "spotify_uri": "spotify:track:3EsycJr8PYsS4Wca6zWRZ7",
+          "title": "Rugrats Official Theme Song",
+          "artist": "Nickelodeon"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_8",
+          "title": "Do You Want to Build a Snowman?",
+          "artist": "Kristen Bell / Frozen"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_9",
+          "title": "I Can See Clearly Now",
+          "artist": "Johnny Nash"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_10",
+          "title": "Cruella De Vil",
+          "artist": "Selena Gomez"
+        }
+      ]
+    },
+    "PRICEGUESS": {
+      "description": "Stocking the Burrow: The Price is Right",
+      "shuffle": true,
+      "tracks": [
+        {
+          "spotify_uri": "spotify:track:2eAoUDA0F3MtbgfjqK2hCC",
+          "title": "The Price Is Right Theme (Live)",
+          "artist": "The Session"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_11",
+          "title": "Money Money Money",
+          "artist": "ABBA"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_12",
+          "title": "Material Girl",
+          "artist": "Madonna"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_13",
+          "title": "7 Rings",
+          "artist": "Ariana Grande"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_14",
+          "title": "Shop Around",
+          "artist": "The Miracles"
+        }
+      ]
+    },
+    "SURVIVAL": {
+      "description": "Voices from the Village: Parenting Pathways",
+      "shuffle": true,
+      "tracks": [
+        {
+          "spotify_uri": "spotify:track:1Un0WkIwUupaNvrPbeIT5X",
+          "title": "The Family Fued - Game Show Theme",
+          "artist": "TV Tunesters"
+        },
+        {
+          "spotify_uri": "spotify:track:1jyddn36UN4tVsJGtaJfem",
+          "title": "You Are the Best Thing",
+          "artist": "Ray La Montagne"
+        },
+        {
+          "spotify_uri": "spotify:track:2OvyGP2JLi2zKc7ch7HCWf",
+          "title": "Push It",
+          "artist": "Salt-N-Pepa"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_15",
+          "title": "We Are Family",
+          "artist": "Sister Sledge"
+        },
+        {
+          "spotify_uri": "spotify:track:REPLACE_WITH_ID_16",
+          "title": "With A Little Help From My Friends",
+          "artist": "The Beatles"
+        }
+      ]
+    },
+    "VICTORY": {
+      "description": "The End: Celebration",
+      "shuffle": false,
+      "tracks": [
+        {
+          "spotify_uri": "spotify:track:0PDCewmZCp0P5s00bptcdd",
+          "title": "This Will Be (An Everlasting Love)",
+          "artist": "Natalie Cole"
+        }
+      ]
+    }
+  }
 }

@@ -102,7 +102,9 @@ class PriceGuessGame(BaseGame):
     def handle_reveal_price(self, data, context: EventContext) -> EventResponse:
         product_id = data.get('product_id')
         actual_price = data.get('actual_price')
-        points = data.get('points', 100)
+
+        # Tiered points: 1st=100, 2nd=50, 3rd=25, 4th=10
+        point_tiers = [100, 50, 25, 10]
 
         response = EventResponse()
 
@@ -112,7 +114,7 @@ class PriceGuessGame(BaseGame):
             response.error = {'code': 'INVALID_PRICE', 'message': 'Invalid actual price'}
             return response
 
-        # Determine winner - closest without going over
+        # Determine rankings - closest without going over
         valid_guesses = []
         bust_guesses = []
 
@@ -131,22 +133,32 @@ class PriceGuessGame(BaseGame):
 
             if guess_amount > actual_price:
                 guess_info['status'] = 'bust'
+                guess_info['points_awarded'] = 0
                 bust_guesses.append(guess_info)
             else:
                 guess_info['status'] = 'valid'
                 guess_info['difference'] = actual_price - guess_amount
                 valid_guesses.append(guess_info)
 
-        # Find the winner (closest valid guess)
-        winner_team_id = None
-        if valid_guesses:
-            valid_guesses.sort(key=lambda x: x['difference'])
-            winner = valid_guesses[0]
-            winner['status'] = 'winner'
-            winner_team_id = winner['team_id']
+        # Sort valid guesses by closeness (smallest difference first)
+        valid_guesses.sort(key=lambda x: x['difference'])
 
-            # Award points to winner
-            self.session_manager.add_points(winner_team_id, points, 'Price guess winner')
+        # Award tiered points to top 4 valid guesses
+        winner_team_id = None
+        total_points_awarded = 0
+        for i, guess in enumerate(valid_guesses):
+            if i < len(point_tiers):
+                points = point_tiers[i]
+                guess['points_awarded'] = points
+                guess['rank'] = i + 1
+                self.session_manager.add_points(guess['team_id'], points, f'Price guess #{i+1}')
+                total_points_awarded += points
+                if i == 0:
+                    guess['status'] = 'winner'
+                    winner_team_id = guess['team_id']
+            else:
+                guess['points_awarded'] = 0
+                guess['rank'] = i + 1
 
         # Sort bust guesses by how much over
         bust_guesses.sort(key=lambda x: x['guess_amount'])
@@ -162,11 +174,11 @@ class PriceGuessGame(BaseGame):
             'actual_price': actual_price,
             'winner_team_id': winner_team_id,
             'team_guesses': all_guesses,
-            'points_awarded': points if winner_team_id else 0
+            'points_awarded': total_points_awarded
         }
 
-        # Send score update
-        if winner_team_id:
+        # Send score update if any points were awarded
+        if total_points_awarded > 0:
             response.broadcast['score_update'] = {
                 'scores': self.session_manager.get_scores(),
                 'teams': self.session_manager.get_teams_info()
