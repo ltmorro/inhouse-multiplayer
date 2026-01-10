@@ -1888,10 +1888,32 @@ function initEventBindings() {
         });
     }
 
-    // Trivia submit button
+    // Trivia form submission
+    const triviaForm = document.getElementById('trivia-form');
+    if (triviaForm) {
+        triviaForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const answer = document.getElementById('trivia-answer').value.trim();
+            if (answer && AppState.teamId) {
+                Haptics.confirm();
+                SocketHandlers.emit('submit_answer', {
+                    team_id: AppState.teamId,
+                    question_id: AppState.currentQuestionId,
+                    answer_text: answer
+                });
+                // Show confirmation but keep enabled - team can resubmit to update answer
+                UI.updateTriviaStatus(`Submitted: "${answer}" (can still change)`);
+                // Set flag to prevent submission_status from overwriting this message
+                AppState.triviaSubmitted = true;
+            }
+        });
+    }
+
+    // Trivia submit button (fallback for direct click)
     const triviaSubmitBtn = document.getElementById('trivia-submit');
     if (triviaSubmitBtn) {
-        triviaSubmitBtn.addEventListener('click', () => {
+        triviaSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             const answer = document.getElementById('trivia-answer').value.trim();
             if (answer && AppState.teamId) {
                 Haptics.confirm();
@@ -1923,10 +1945,11 @@ function initEventBindings() {
         });
     }
 
-    // Picture guess submit button
-    const pictureGuessSubmitBtn = document.getElementById('pictureguess-submit');
-    if (pictureGuessSubmitBtn) {
-        pictureGuessSubmitBtn.addEventListener('click', () => {
+    // Picture guess form submission
+    const pictureGuessForm = document.getElementById('pictureguess-form');
+    if (pictureGuessForm) {
+        pictureGuessForm.addEventListener('submit', (e) => {
+            e.preventDefault();
             const guess = document.getElementById('pictureguess-answer').value.trim();
             if (guess && AppState.teamId) {
                 Haptics.confirm();
@@ -1935,7 +1958,24 @@ function initEventBindings() {
                     picture_id: AppState.currentPictureId,
                     guess_text: guess
                 });
-                // Show confirmation but keep enabled - team can resubmit to update guess
+                UI.updatePictureGuessStatus(`Submitted: "${guess}" (can still change)`);
+            }
+        });
+    }
+
+    // Picture guess submit button (fallback for direct click)
+    const pictureGuessSubmitBtn = document.getElementById('pictureguess-submit');
+    if (pictureGuessSubmitBtn) {
+        pictureGuessSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const guess = document.getElementById('pictureguess-answer').value.trim();
+            if (guess && AppState.teamId) {
+                Haptics.confirm();
+                SocketHandlers.emit('submit_picture_guess', {
+                    team_id: AppState.teamId,
+                    picture_id: AppState.currentPictureId,
+                    guess_text: guess
+                });
                 UI.updatePictureGuessStatus(`Submitted: "${guess}" (can still change)`);
             }
         });
@@ -1956,10 +1996,29 @@ function initEventBindings() {
         });
     }
 
-    // Price guess submit button
+    // Price guess form submission
+    const priceGuessForm = document.getElementById('priceguess-form');
+    if (priceGuessForm) {
+        priceGuessForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const guessAmount = document.getElementById('priceguess-answer').value;
+            if (guessAmount && AppState.teamId) {
+                Haptics.confirm();
+                SocketHandlers.emit('submit_price_guess', {
+                    team_id: AppState.teamId,
+                    product_id: AppState.currentProductId,
+                    guess_amount: parseFloat(guessAmount)
+                });
+                UI.updatePriceGuessStatus(`Submitted: $${parseFloat(guessAmount).toFixed(2)} (can still change)`);
+            }
+        });
+    }
+
+    // Price guess submit button (fallback for direct click)
     const priceGuessSubmitBtn = document.getElementById('priceguess-submit');
     if (priceGuessSubmitBtn) {
-        priceGuessSubmitBtn.addEventListener('click', () => {
+        priceGuessSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             const guessAmount = document.getElementById('priceguess-answer').value;
             if (guessAmount && AppState.teamId) {
                 Haptics.confirm();
