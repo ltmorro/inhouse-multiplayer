@@ -341,8 +341,9 @@ const UI = {
     /**
      * Update connection status indicator
      * @param {boolean} connected
+     * @param {string} [message] - Optional message to display when disconnected
      */
-    updateConnectionStatus(connected) {
+    updateConnectionStatus(connected, message = null) {
         const indicator = document.getElementById('connection-indicator');
         const status = document.getElementById('connection-status');
 
@@ -354,7 +355,7 @@ const UI = {
         } else {
             indicator.classList.remove('status-indicator--connected', 'storybook-status-bar__indicator--connected');
             indicator.classList.add('status-indicator--disconnected', 'storybook-status-bar__indicator--disconnected');
-            status.textContent = 'Reconnecting...';
+            status.textContent = message || 'Reconnecting...';
         }
     },
 
@@ -404,6 +405,11 @@ const UI = {
         const el = document.getElementById('join-code-display');
         if (el) {
             el.textContent = code || '----';
+        }
+
+        const headerEl = document.getElementById('header-team-code');
+        if (headerEl) {
+            headerEl.textContent = code ? `#${code}` : '';
         }
     },
 
@@ -836,7 +842,7 @@ const UI = {
             statusEl.style.color = 'var(--baby-blue)';
         } else {
             statusEl.textContent = 'ELIMINATED';
-            statusEl.style.color = 'var(--terminal-red)';
+            statusEl.style.color = 'var(--status-oops)';
         }
     },
 
@@ -886,11 +892,11 @@ const UI = {
         const btnB = document.getElementById('survival-vote-b');
         if (btnA) {
             btnA.classList.remove('selected');
-            btnA.disabled = AppState.survivalEliminated;
+            btnA.disabled = false;
         }
         if (btnB) {
             btnB.classList.remove('selected');
-            btnB.disabled = AppState.survivalEliminated;
+            btnB.disabled = false;
         }
     },
 
@@ -947,7 +953,7 @@ const UI = {
         if (isWinner) {
             UI.updateTimelineStatus('CORRECT ORDER REVEALED - You solved it!', 'var(--baby-blue)');
         } else if (winnerTeamId) {
-            UI.updateTimelineStatus('CORRECT ORDER REVEALED', 'var(--terminal-amber)');
+            UI.updateTimelineStatus('CORRECT ORDER REVEALED', 'var(--gold-candle)');
         } else {
             UI.updateTimelineStatus('CORRECT ORDER REVEALED', 'var(--baby-blue)');
         }
@@ -1053,11 +1059,23 @@ const SocketHandlers = {
         // Expose socket globally for screensaver and other shared components
         window.socket = AppState.socket;
 
+        // Heartbeat interval ID
+        let heartbeatInterval = null;
+        const HEARTBEAT_INTERVAL = 30000; // 30 seconds
+
         // Connection events
         AppState.socket.on('connect', () => {
             console.log('[Socket] Connected');
             AppState.connected = true;
             UI.updateConnectionStatus(true);
+
+            // Start heartbeat to keep session alive
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
+            heartbeatInterval = setInterval(() => {
+                if (AppState.connected) {
+                    AppState.socket.emit('heartbeat');
+                }
+            }, HEARTBEAT_INTERVAL);
 
             // Check for stored session and attempt rejoin
             const storedSession = SessionStorage.load();
@@ -1070,10 +1088,36 @@ const SocketHandlers = {
             }
         });
 
-        AppState.socket.on('disconnect', () => {
-            console.log('[Socket] Disconnected');
+        AppState.socket.on('disconnect', (reason) => {
+            console.log('[Socket] Disconnected:', reason);
             AppState.connected = false;
-            UI.updateConnectionStatus(false);
+            UI.updateConnectionStatus(false, 'Reconnecting...');
+            // Stop heartbeat on disconnect
+            if (heartbeatInterval) {
+                clearInterval(heartbeatInterval);
+                heartbeatInterval = null;
+            }
+        });
+
+        // Connection error handling
+        AppState.socket.on('connect_error', (error) => {
+            console.error('[Socket] Connection error:', error.message);
+            UI.updateConnectionStatus(false, 'Connection error');
+        });
+
+        AppState.socket.io.on('reconnect_attempt', (attempt) => {
+            console.log(`[Socket] Reconnect attempt ${attempt}`);
+            UI.updateConnectionStatus(false, `Reconnecting (${attempt})...`);
+        });
+
+        AppState.socket.io.on('reconnect', (attempt) => {
+            console.log(`[Socket] Reconnected after ${attempt} attempts`);
+            UI.updateConnectionStatus(true);
+        });
+
+        AppState.socket.io.on('reconnect_failed', () => {
+            console.error('[Socket] Reconnection failed');
+            UI.updateConnectionStatus(false, 'Connection lost. Tap to retry.');
         });
 
         // Rejoin session response (after page refresh)
@@ -1185,6 +1229,21 @@ const SocketHandlers = {
             }
         });
 
+        // Trivia answer reveal (when admin reveals correct answer)
+        AppState.socket.on('answer_revealed', (data) => {
+            console.log('[Socket] Answer revealed:', data);
+            // Show the correct answer
+            const correctAnswer = data.correct_answer || '';
+            UI.updateTriviaQuestion(`Answer: ${correctAnswer}`);
+            UI.updateTriviaStatus('Round complete!', true);
+            // Disable inputs
+            const answerInput = document.getElementById('trivia-answer');
+            const submitBtn = document.getElementById('trivia-submit');
+            if (answerInput) answerInput.disabled = true;
+            if (submitBtn) submitBtn.disabled = true;
+            Haptics.stateChange();
+        });
+
         // Timer events
         AppState.socket.on('timer_sync', (data) => {
             this.handleTimerSync(data);
@@ -1248,7 +1307,7 @@ const SocketHandlers = {
                 UI.updateTimelineStatus(msg, 'var(--baby-blue)');
                 Haptics.success();
             } else {
-                UI.updateTimelineStatus(data.message || 'Incorrect! - Try again', 'var(--terminal-red)');
+                UI.updateTimelineStatus(data.message || 'Incorrect! - Try again', 'var(--status-oops)');
                 Haptics.error();
             }
         });
@@ -1316,6 +1375,20 @@ const SocketHandlers = {
             AppState.lastTeamSubmissionTime = Date.now();
         });
 
+        // Picture guess reveal (when admin reveals correct answer)
+        AppState.socket.on('picture_revealed', (data) => {
+            console.log('[Socket] Picture revealed:', data);
+            const correctAnswer = data.correct_answer || '';
+            UI.updatePictureGuessHint(`Answer: ${correctAnswer}`);
+            UI.updatePictureGuessStatus('Round complete!', true);
+            // Disable inputs
+            const guessInput = document.getElementById('pictureguess-answer');
+            const submitBtn = document.getElementById('pictureguess-submit');
+            if (guessInput) guessInput.disabled = true;
+            if (submitBtn) submitBtn.disabled = true;
+            Haptics.stateChange();
+        });
+
         // Price Guess events
         AppState.socket.on('price_guess_result', (data) => {
             if (data.winner) {
@@ -1346,6 +1419,27 @@ const SocketHandlers = {
             UI.updatePriceGuessStatus(`${data.player_name} submitted: $${parseFloat(data.guess_amount).toFixed(2)} (can still change)`);
             // Set timestamp to prevent submission_status from immediately overwriting this message
             AppState.lastTeamSubmissionTime = Date.now();
+        });
+
+        // Price reveal (when admin reveals actual price)
+        AppState.socket.on('price_revealed', (data) => {
+            console.log('[Socket] Price revealed:', data);
+            const actualPrice = data.actual_price || 0;
+            const isWinner = data.winner_team_id === AppState.teamId;
+
+            UI.updatePriceGuessHint(`Actual Price: $${actualPrice.toFixed(2)}`);
+            if (isWinner) {
+                UI.updatePriceGuessStatus('You won! Closest without going over!', true);
+                Haptics.success();
+            } else {
+                UI.updatePriceGuessStatus('Round complete!', true);
+                Haptics.stateChange();
+            }
+            // Disable inputs
+            const guessInput = document.getElementById('priceguess-answer');
+            const submitBtn = document.getElementById('priceguess-submit');
+            if (guessInput) guessInput.disabled = true;
+            if (submitBtn) submitBtn.disabled = true;
         });
 
         // Minesweeper events
@@ -1387,16 +1481,16 @@ const SocketHandlers = {
                 UI.updateSurvivalTeamStatus(false, null);
                 Haptics.success();
             } else if (teamAwarded) {
-                UI.updateSurvivalStatus(`Your team aligned with the village! +${teamAwarded.points_awarded} points!`);
+                UI.updateSurvivalStatus(`Your team aligned with the majority! +${teamAwarded.points_awarded} points!`);
                 UI.updateSurvivalTeamStatus(false, teamAwarded.points_awarded);
                 Haptics.success();
             } else if (teamNotAwarded) {
                 const reason = teamNotAwarded.reason;
-                let msg = 'Your team missed the majority path.';
+                let msg = 'Your team voted with the minority.';
                 if (reason === 'team_tie') {
-                    msg = 'Your team was split - no points earned.';
+                    msg = 'Your team was split - no majority!';
                 } else if (reason === 'no_votes') {
-                    msg = 'Your team didn\'t vote!';
+                    msg = 'No one from your team voted!';
                 }
                 UI.updateSurvivalStatus(msg);
                 UI.updateSurvivalTeamStatus(false, 0);
@@ -1404,16 +1498,9 @@ const SocketHandlers = {
             }
         });
 
-        AppState.socket.on('survival_eliminated', (data) => {
-            AppState.survivalEliminated = true;
-            UI.updateSurvivalTeamStatus(true);
-            UI.resetSurvivalVoteButtons();
-        });
-
         AppState.socket.on('survival_round_reset', (data) => {
             // New round starting
             AppState.survivalVote = null;
-            AppState.survivalEliminated = data.eliminated_teams?.includes(AppState.teamId) || false;
             const questionEl = document.getElementById('survival-question');
             if (questionEl && data.question_text) {
                 questionEl.textContent = data.question_text;
@@ -1423,17 +1510,14 @@ const SocketHandlers = {
             if (labelA && data.option_a) labelA.textContent = data.option_a;
             if (labelB && data.option_b) labelB.textContent = data.option_b;
             UI.updateSurvivalStatus('');
-            UI.updateSurvivalTeamStatus(AppState.survivalEliminated);
+            // Clear previous result
+            const statusEl = document.getElementById('survival-team-status');
+            if (statusEl) {
+                statusEl.textContent = '';
+                statusEl.className = 'survival-team-status';
+            }
             UI.resetSurvivalVoteButtons();
             Haptics.stateChange();
-        });
-
-        AppState.socket.on('survival_revive_all', (data) => {
-            AppState.survivalEliminated = false;
-            AppState.survivalVote = null;
-            UI.updateSurvivalTeamStatus(false);
-            UI.resetSurvivalVoteButtons();
-            UI.updateSurvivalStatus('All teams revived!');
         });
 
         // Admin actions
@@ -1559,7 +1643,6 @@ const SocketHandlers = {
             case 'SURVIVAL':
                 // Reset survival vote state
                 AppState.survivalVote = null;
-                AppState.survivalEliminated = data.state_data?.eliminated_teams?.includes(AppState.teamId) || false;
                 if (data.state_data?.question_text) {
                     const questionEl = document.getElementById('survival-question');
                     if (questionEl) questionEl.textContent = data.state_data.question_text;
@@ -1573,7 +1656,12 @@ const SocketHandlers = {
                     if (labelB) labelB.textContent = data.state_data.option_b;
                 }
                 UI.updateSurvivalStatus('');
-                UI.updateSurvivalTeamStatus(AppState.survivalEliminated);
+                // Clear any previous result
+                const survivalStatusEl = document.getElementById('survival-team-status');
+                if (survivalStatusEl) {
+                    survivalStatusEl.textContent = '';
+                    survivalStatusEl.className = 'survival-team-status';
+                }
                 UI.resetSurvivalVoteButtons();
                 break;
 
@@ -1758,7 +1846,7 @@ const MockSocket = {
         if (correct) {
             UI.updateTimelineStatus('TIMELINE RESTORED! +100 points', 'var(--baby-blue)');
         } else {
-            UI.updateTimelineStatus('Incorrect! - Try again', 'var(--terminal-red)');
+            UI.updateTimelineStatus('Incorrect! - Try again', 'var(--status-oops)');
         }
     }
 };
@@ -1800,11 +1888,10 @@ function initEventBindings() {
         });
     }
 
-    // Trivia form
-    const triviaForm = document.getElementById('trivia-form');
-    if (triviaForm) {
-        triviaForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+    // Trivia submit button
+    const triviaSubmitBtn = document.getElementById('trivia-submit');
+    if (triviaSubmitBtn) {
+        triviaSubmitBtn.addEventListener('click', () => {
             const answer = document.getElementById('trivia-answer').value.trim();
             if (answer && AppState.teamId) {
                 Haptics.confirm();
@@ -1836,11 +1923,10 @@ function initEventBindings() {
         });
     }
 
-    // Picture guess form
-    const pictureGuessForm = document.getElementById('pictureguess-form');
-    if (pictureGuessForm) {
-        pictureGuessForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+    // Picture guess submit button
+    const pictureGuessSubmitBtn = document.getElementById('pictureguess-submit');
+    if (pictureGuessSubmitBtn) {
+        pictureGuessSubmitBtn.addEventListener('click', () => {
             const guess = document.getElementById('pictureguess-answer').value.trim();
             if (guess && AppState.teamId) {
                 Haptics.confirm();
@@ -1870,11 +1956,10 @@ function initEventBindings() {
         });
     }
 
-    // Price guess form
-    const priceGuessForm = document.getElementById('priceguess-form');
-    if (priceGuessForm) {
-        priceGuessForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+    // Price guess submit button
+    const priceGuessSubmitBtn = document.getElementById('priceguess-submit');
+    if (priceGuessSubmitBtn) {
+        priceGuessSubmitBtn.addEventListener('click', () => {
             const guessAmount = document.getElementById('priceguess-answer').value;
             if (guessAmount && AppState.teamId) {
                 Haptics.confirm();
@@ -1952,7 +2037,7 @@ function initEventBindings() {
 
     if (survivalVoteA) {
         survivalVoteA.addEventListener('click', () => {
-            if (AppState.survivalEliminated || AppState.survivalVote) return;
+            if (AppState.survivalVote) return; // Already voted this round
             Haptics.tap();
             SocketHandlers.emit('survival_vote', {
                 team_id: AppState.teamId,
@@ -1963,7 +2048,7 @@ function initEventBindings() {
 
     if (survivalVoteB) {
         survivalVoteB.addEventListener('click', () => {
-            if (AppState.survivalEliminated || AppState.survivalVote) return;
+            if (AppState.survivalVote) return; // Already voted this round
             Haptics.tap();
             SocketHandlers.emit('survival_vote', {
                 team_id: AppState.teamId,
@@ -2126,13 +2211,43 @@ function initReactionBar() {
     const bar = document.getElementById('reaction-bar');
     if (!bar) return;
 
-    bar.querySelectorAll('.reaction-btn').forEach(btn => {
+    // Updated selector for new frost-reactions__emoji class
+    bar.querySelectorAll('.frost-reactions__emoji').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const reaction = btn.dataset.reaction;
             sendReaction(reaction);
         });
     });
+
+    // Initialize chat toggle button
+    const chatToggle = document.getElementById('chat-toggle');
+    const chatDrawer = document.getElementById('chat-drawer');
+    const chatOverlay = document.getElementById('chat-overlay');
+    const chatClose = document.getElementById('chat-close');
+
+    if (chatToggle && chatDrawer) {
+        chatToggle.addEventListener('click', () => {
+            chatDrawer.classList.add('open');
+            if (chatOverlay) chatOverlay.classList.add('open');
+            const input = document.getElementById('chat-input');
+            if (input) input.focus();
+        });
+    }
+
+    if (chatClose && chatDrawer) {
+        chatClose.addEventListener('click', () => {
+            chatDrawer.classList.remove('open');
+            if (chatOverlay) chatOverlay.classList.remove('open');
+        });
+    }
+
+    if (chatOverlay && chatDrawer) {
+        chatOverlay.addEventListener('click', () => {
+            chatDrawer.classList.remove('open');
+            chatOverlay.classList.remove('open');
+        });
+    }
 }
 
 /**
@@ -2161,12 +2276,12 @@ function sendReaction(reaction) {
     // Disable buttons briefly
     const bar = document.getElementById('reaction-bar');
     if (bar) {
-        bar.querySelectorAll('.reaction-btn').forEach(btn => {
+        bar.querySelectorAll('.frost-reactions__emoji').forEach(btn => {
             btn.disabled = true;
         });
 
         setTimeout(() => {
-            bar.querySelectorAll('.reaction-btn').forEach(btn => {
+            bar.querySelectorAll('.frost-reactions__emoji').forEach(btn => {
                 btn.disabled = false;
             });
         }, cooldown);
@@ -2179,17 +2294,19 @@ function sendReaction(reaction) {
  */
 function updateReactionBarVisibility(state) {
     const bar = document.getElementById('reaction-bar');
-    const chatBar = document.getElementById('chat-input-bar');
 
-    // Show reaction and chat bars during gameplay, hide during registration
+    // Show reaction bar during gameplay (chat drawer is accessed via toggle button in bar)
     const showStates = ['LOBBY', 'MACGYVER', 'TRIVIA', 'TIMER', 'BUZZER', 'TIMELINE', 'MINESWEEPER', 'PICTUREGUESS', 'PIXELPERFECT', 'PRICEGUESS', 'SURVIVAL', 'VICTORY'];
 
     if (showStates.includes(state) && AppState.isRegistered) {
         if (bar) bar.classList.remove('hidden');
-        if (chatBar) chatBar.classList.remove('hidden');
     } else {
         if (bar) bar.classList.add('hidden');
-        if (chatBar) chatBar.classList.add('hidden');
+        // Also close chat drawer when hiding reaction bar
+        const chatDrawer = document.getElementById('chat-drawer');
+        const chatOverlay = document.getElementById('chat-overlay');
+        if (chatDrawer) chatDrawer.classList.remove('open');
+        if (chatOverlay) chatOverlay.classList.remove('open');
     }
 }
 
