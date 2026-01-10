@@ -567,10 +567,10 @@ const UI = {
             let color = 'var(--baby-blue)';
             let icon = '...';
             if (status === 'failed') {
-                color = 'var(--terminal-red)';
+                color = 'var(--status-oops)';
                 icon = 'X';
             } else if (status === 'winner') {
-                color = 'var(--terminal-amber)';
+                color = 'var(--gold-candle)';
                 icon = '!';
             }
 
@@ -691,8 +691,8 @@ const UI = {
         if (!list) return;
 
         list.innerHTML = items.map((item, index) => {
-            return `<li style="padding: 0.5rem 1rem; margin: 0.5rem 0; border: 1px solid var(--baby-blue-dim); background: rgba(0, 255, 65, 0.05);">
-                <span style="color: var(--baby-blue-dim); margin-right: 0.75rem;">${String.fromCharCode(65 + index)}.</span>${item}
+            return `<li class="timeline-item">
+                <span class="timeline-text">${item}</span>
             </li>`;
         }).join('');
     },
@@ -772,7 +772,7 @@ const UI = {
     showSpotifyError(message) {
         const hint = document.getElementById('buzzer-hint');
         if (hint) {
-            hint.innerHTML = `<span style="color: var(--terminal-red);">ERROR: ${message}</span>`;
+            hint.innerHTML = `<span style="color: var(--status-oops);">ERROR: ${message}</span>`;
         }
     },
 
@@ -1012,9 +1012,14 @@ const UI = {
                 statusClass = 'bust';
             }
 
+            const pointsDisplay = item.points_awarded > 0
+                ? `<span class="points-awarded">+${item.points_awarded}</span>`
+                : '';
+
             html += `<div class="priceguess-guess-row ${statusClass}">
                 <span class="team-name">${item.team_name}</span>
                 <span class="guess-amount">$${formattedAmount}</span>
+                ${pointsDisplay}
             </div>`;
         });
 
@@ -1088,7 +1093,7 @@ const UI = {
 
         if (!data.is_tie) {
             // Mark majority/minority
-            if (data.majority === 'A') {
+            if (data.game_majority === 'A') {
                 optionA?.classList.add('is-majority');
                 optionB?.classList.add('is-minority');
             } else {
@@ -1100,46 +1105,74 @@ const UI = {
         // Update vote counts
         this.updateSurvivalVoteCounts(data.vote_counts);
 
-        // Update remaining count
+        // Fill vote percentage bars
+        this.updateSurvivalVoteBars(data.vote_counts);
+
+        // Update points summary
         const remainingEl = document.getElementById('survival-remaining');
         if (remainingEl) {
-            remainingEl.textContent = `${data.remaining_count} teams remaining`;
-            if (data.remaining_count <= 2) {
-                remainingEl.classList.add('critical');
-            } else {
-                remainingEl.classList.remove('critical');
-            }
+            const awardedCount = data.teams_awarded?.length || 0;
+            remainingEl.textContent = `${awardedCount} team${awardedCount !== 1 ? 's' : ''} earned +${data.points_value} points!`;
+            remainingEl.classList.remove('critical');
         }
 
         // Update team statuses in scoreboard
-        this.updateSurvivalTeamTable(data.majority_teams, data.minority_teams, data.newly_eliminated);
+        this.updateSurvivalTeamTable(data.teams_awarded, data.teams_not_awarded, data.points_value);
+    },
+
+    /**
+     * Update survival vote percentage bars
+     * @param {Object} voteCounts - { A: number, B: number }
+     */
+    updateSurvivalVoteBars(voteCounts) {
+        const total = (voteCounts.A || 0) + (voteCounts.B || 0);
+        if (total === 0) return;
+
+        const percentA = Math.round((voteCounts.A / total) * 100);
+        const percentB = Math.round((voteCounts.B / total) * 100);
+
+        const barA = document.getElementById('survival-bar-a');
+        const barB = document.getElementById('survival-bar-b');
+
+        if (barA) barA.style.width = `${percentA}%`;
+        if (barB) barB.style.width = `${percentB}%`;
     },
 
     /**
      * Update survival teams scoreboard table
-     * @param {Array} majorityTeams
-     * @param {Array} minorityTeams
-     * @param {Array} newlyEliminated - team IDs
+     * @param {Array} teamsAwarded - Teams that got points
+     * @param {Array} teamsNotAwarded - Teams that didn't get points
+     * @param {number} pointsValue - Points awarded
      */
-    updateSurvivalTeamTable(majorityTeams, minorityTeams, newlyEliminated) {
+    updateSurvivalTeamTable(teamsAwarded, teamsNotAwarded, pointsValue) {
         const tbody = document.getElementById('survival-teams');
         if (!tbody) return;
 
-        const allTeams = [...(majorityTeams || []), ...(minorityTeams || [])];
-        const eliminatedSet = new Set(newlyEliminated || []);
-
         let html = '';
-        allTeams.forEach(team => {
-            const isEliminated = eliminatedSet.has(team.team_id);
+
+        // Show awarded teams first
+        (teamsAwarded || []).forEach(team => {
             const colorClass = TeamColors ? TeamColors.getColorClass(team.team_id) : '';
-            const status = isEliminated ? 'ELIMINATED' : 'ALIVE';
-            const statusClass = isEliminated ? 'status-eliminated' : 'status-alive';
-            const rowClass = isEliminated ? 'eliminated' : '';
             const score = AppState.scores[team.team_id] || 0;
 
-            html += `<tr class="${rowClass}">
+            html += `<tr class="awarded">
                 <td class="${colorClass}">${team.team_name}</td>
-                <td class="${statusClass}">${status}</td>
+                <td class="status-awarded">+${pointsValue}</td>
+                <td>${score}</td>
+            </tr>`;
+        });
+
+        // Then teams that didn't get points
+        (teamsNotAwarded || []).forEach(team => {
+            const colorClass = TeamColors ? TeamColors.getColorClass(team.team_id) : '';
+            const score = AppState.scores[team.team_id] || 0;
+            let reasonText = 'No points';
+            if (team.reason === 'team_tie') reasonText = 'Split vote';
+            else if (team.reason === 'no_votes') reasonText = 'No votes';
+
+            html += `<tr class="not-awarded">
+                <td class="${colorClass}">${team.team_name}</td>
+                <td class="status-not-awarded">${reasonText}</td>
                 <td>${score}</td>
             </tr>`;
         });
@@ -1154,6 +1187,12 @@ const UI = {
     resetSurvivalRound(data) {
         // Clear vote displays
         this.updateSurvivalVoteCounts({ A: 0, B: 0 });
+
+        // Reset vote bars
+        const barA = document.getElementById('survival-bar-a');
+        const barB = document.getElementById('survival-bar-b');
+        if (barA) barA.style.width = '0%';
+        if (barB) barB.style.width = '0%';
 
         // Clear majority/minority states
         const optionA = document.getElementById('survival-option-a');
@@ -1171,38 +1210,15 @@ const UI = {
         if (data.question_text) this.updateSurvivalQuestion(data.question_text);
         if (data.option_a || data.option_b) this.updateSurvivalOptions(data.option_a, data.option_b);
 
-        // Update remaining count
+        // Clear points summary
         const remainingEl = document.getElementById('survival-remaining');
         if (remainingEl) {
-            remainingEl.textContent = `${data.remaining_count} teams remaining`;
+            remainingEl.textContent = '';
         }
-    },
 
-    /**
-     * Revive all survival teams
-     * @param {Object} data
-     */
-    reviveSurvivalTeams(data) {
-        // Clear all eliminated states in the table
+        // Clear team table
         const tbody = document.getElementById('survival-teams');
-        if (tbody) {
-            tbody.querySelectorAll('tr.eliminated').forEach(row => {
-                row.classList.remove('eliminated');
-                const statusTd = row.querySelector('.status-eliminated');
-                if (statusTd) {
-                    statusTd.classList.remove('status-eliminated');
-                    statusTd.classList.add('status-alive');
-                    statusTd.textContent = 'ALIVE';
-                }
-            });
-        }
-
-        // Update remaining count
-        const remainingEl = document.getElementById('survival-remaining');
-        if (remainingEl) {
-            remainingEl.textContent = `${data.remaining_count} teams remaining`;
-            remainingEl.classList.remove('critical');
-        }
+        if (tbody) tbody.innerHTML = '';
     },
 
     /**
@@ -1214,9 +1230,16 @@ const UI = {
         this.updateSurvivalOptions(stateData?.option_a, stateData?.option_b);
         this.updateSurvivalVoteCounts({ A: 0, B: 0 });
 
+        // Reset vote bars
+        const barA = document.getElementById('survival-bar-a');
+        const barB = document.getElementById('survival-bar-b');
+        if (barA) barA.style.width = '0%';
+        if (barB) barB.style.width = '0%';
+
+        // Clear points summary
         const remainingEl = document.getElementById('survival-remaining');
-        if (remainingEl && stateData?.remaining_count !== undefined) {
-            remainingEl.textContent = `${stateData.remaining_count} teams remaining`;
+        if (remainingEl) {
+            remainingEl.textContent = '';
         }
     }
 };
@@ -1240,6 +1263,10 @@ const SocketHandlers = {
         // Expose socket globally for screensaver and other shared components
         window.socket = AppState.socket;
 
+        // Heartbeat interval
+        let heartbeatInterval = null;
+        const HEARTBEAT_INTERVAL = 30000; // 30 seconds
+
         // Connection events
         AppState.socket.on('connect', () => {
             console.log('[Socket] Connected');
@@ -1248,11 +1275,47 @@ const SocketHandlers = {
             AppState.socket.emit('request_tv_sync');
             // Notify server of activity on connect
             AppState.socket.emit('screensaver_activity');
+
+            // Start heartbeat to keep session alive
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
+            heartbeatInterval = setInterval(() => {
+                if (AppState.connected) {
+                    AppState.socket.emit('heartbeat');
+                }
+            }, HEARTBEAT_INTERVAL);
         });
 
-        AppState.socket.on('disconnect', () => {
-            console.log('[Socket] Disconnected');
+        AppState.socket.on('disconnect', (reason) => {
+            console.log('[Socket] Disconnected:', reason);
             AppState.connected = false;
+            this.showConnectionOverlay('Reconnecting...');
+            // Stop heartbeat on disconnect
+            if (heartbeatInterval) {
+                clearInterval(heartbeatInterval);
+                heartbeatInterval = null;
+            }
+        });
+
+        // Connection error handling
+        AppState.socket.on('connect_error', (error) => {
+            console.error('[Socket] Connection error:', error.message);
+            this.showConnectionOverlay('Connection error - retrying...');
+        });
+
+        // Socket.IO will automatically reconnect, but we track attempts
+        AppState.socket.io.on('reconnect_attempt', (attempt) => {
+            console.log(`[Socket] Reconnect attempt ${attempt}`);
+            this.showConnectionOverlay(`Reconnecting... (attempt ${attempt})`);
+        });
+
+        AppState.socket.io.on('reconnect', (attempt) => {
+            console.log(`[Socket] Reconnected after ${attempt} attempts`);
+            this.hideConnectionOverlay();
+        });
+
+        AppState.socket.io.on('reconnect_failed', () => {
+            console.error('[Socket] Reconnection failed - giving up');
+            this.showConnectionOverlay('Connection lost. Please refresh the page.', true);
         });
 
         // State sync
@@ -1512,10 +1575,6 @@ const SocketHandlers = {
             UI.resetSurvivalRound(data);
         });
 
-        AppState.socket.on('survival_revive_all', (data) => {
-            UI.reviveSurvivalTeams(data);
-        });
-
         // Pixel Perfect events
         AppState.socket.on('pixelperfect_round_start', (data) => {
             console.log('[TV] Received pixelperfect_round_start event:', data);
@@ -1570,6 +1629,60 @@ const SocketHandlers = {
         AppState.socket.on('error', (data) => {
             console.error('[Socket] Error:', data);
         });
+    },
+
+    /**
+     * Show connection overlay with message
+     * @param {string} message - Message to display
+     * @param {boolean} isError - If true, shows as error state
+     */
+    showConnectionOverlay(message, isError = false) {
+        let overlay = document.getElementById('connection-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'connection-overlay';
+            overlay.innerHTML = `
+                <div class="connection-overlay__content">
+                    <div class="connection-overlay__spinner"></div>
+                    <div class="connection-overlay__message"></div>
+                </div>
+            `;
+            overlay.style.cssText = `
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0, 0, 0, 0.85); z-index: 10000;
+                display: flex; align-items: center; justify-content: center;
+                font-family: var(--font-whimsy, sans-serif);
+            `;
+            const content = overlay.querySelector('.connection-overlay__content');
+            content.style.cssText = 'text-align: center; color: white;';
+            const spinner = overlay.querySelector('.connection-overlay__spinner');
+            spinner.style.cssText = `
+                width: 48px; height: 48px; margin: 0 auto 1rem;
+                border: 4px solid rgba(255,255,255,0.3);
+                border-top-color: var(--ice-glow, #88ccff);
+                border-radius: 50%; animation: spin 1s linear infinite;
+            `;
+            const style = document.createElement('style');
+            style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+            document.head.appendChild(style);
+            document.body.appendChild(overlay);
+        }
+        const msgEl = overlay.querySelector('.connection-overlay__message');
+        const spinner = overlay.querySelector('.connection-overlay__spinner');
+        msgEl.textContent = message;
+        msgEl.style.color = isError ? '#ff6b6b' : 'white';
+        spinner.style.display = isError ? 'none' : 'block';
+        overlay.style.display = 'flex';
+    },
+
+    /**
+     * Hide connection overlay
+     */
+    hideConnectionOverlay() {
+        const overlay = document.getElementById('connection-overlay');
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
     },
 
     /**

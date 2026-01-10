@@ -62,20 +62,47 @@ const UI = {
         document.getElementById('auth-error').textContent = message;
     },
 
+    updateConnectionStatus(connected, message = null) {
+        let indicator = document.getElementById('connection-status');
+        if (!indicator) {
+            indicator = document.createElement('div');
+            indicator.id = 'connection-status';
+            indicator.style.cssText = `
+                position: fixed; top: 10px; right: 10px; z-index: 1000;
+                padding: 8px 16px; border-radius: 4px; font-size: 0.85rem;
+                font-family: var(--font-whimsy, sans-serif);
+                transition: all 0.3s ease;
+            `;
+            document.body.appendChild(indicator);
+        }
+        if (connected) {
+            indicator.textContent = 'Connected';
+            indicator.style.background = 'rgba(34, 197, 94, 0.9)';
+            indicator.style.color = 'white';
+            // Auto-hide after 2 seconds when connected
+            setTimeout(() => { indicator.style.opacity = '0'; }, 2000);
+        } else {
+            indicator.textContent = message || 'Disconnected';
+            indicator.style.background = 'rgba(239, 68, 68, 0.9)';
+            indicator.style.color = 'white';
+            indicator.style.opacity = '1';
+        }
+    },
+
     updateTeamList() {
         const list = document.getElementById('team-list');
         const select = document.getElementById('point-team');
         const teams = Object.entries(AppState.teams);
 
         if (teams.length === 0) {
-            list.innerHTML = '<li style="color: var(--baby-blue-dim);">No teams connected</li>';
+            list.innerHTML = '<li style="color: var(--ice-soft);">No teams connected</li>';
             select.innerHTML = '<option value="">-- No teams --</option>';
             return;
         }
 
         list.innerHTML = teams.map(([id, team]) => {
             const score = AppState.scores[id] || 0;
-            return `<li style="padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim);">
+            return `<li style="padding: 0.5rem; border-bottom: 1px solid var(--ice-soft);">
                 ${team.name} - ${score} pts
                 <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 10px;"
                     onclick="AdminActions.kickTeam('${id}')">KICK</button>
@@ -117,11 +144,18 @@ const UI = {
     },
 
     updateBuzzerLocker(teamName) {
-        document.getElementById('buzzer-locker').textContent = teamName || '---';
+        const el = document.getElementById('buzzer-locker');
+        console.log('[Admin] updateBuzzerLocker:', teamName, 'element found:', !!el);
+        if (el) el.textContent = teamName || '---';
     },
 
     addAnswer(teamId, teamName, answer) {
         const list = document.getElementById('answer-list');
+        console.log('[Admin] addAnswer:', { teamId, teamName, answer }, 'list found:', !!list);
+        if (!list) {
+            console.error('[Admin] answer-list element not found!');
+            return;
+        }
         const existingId = `answer-${teamId}`;
         let li = document.getElementById(existingId);
 
@@ -131,14 +165,32 @@ const UI = {
             list.appendChild(li);
         }
 
-        li.style.cssText = 'padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim);';
+        li.style.cssText = 'padding: 0.5rem; border-bottom: 1px solid var(--ice-soft);';
         li.innerHTML = `
             <strong>${teamName}:</strong> ${answer}
-            <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 10px; background: #004400;"
-                onclick="AdminActions.gradeAnswer('${teamId}', true)">CORRECT</button>
-            <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 5px; background: #440000;"
-                onclick="AdminActions.gradeAnswer('${teamId}', false)">WRONG</button>
+            <span class="grading-buttons">
+                <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 10px; background: #004400;"
+                    onclick="AdminActions.gradeAnswer('${teamId}', true)">CORRECT</button>
+                <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 5px; background: #440000;"
+                    onclick="AdminActions.gradeAnswer('${teamId}', false)">WRONG</button>
+            </span>
+            <span class="graded-status" style="display: none; margin-left: 10px; font-weight: bold;"></span>
         `;
+    },
+
+    markAnswerGraded(teamId, correct, points) {
+        const li = document.getElementById(`answer-${teamId}`);
+        if (!li) return;
+
+        const buttons = li.querySelector('.grading-buttons');
+        const status = li.querySelector('.graded-status');
+
+        if (buttons) buttons.style.display = 'none';
+        if (status) {
+            status.style.display = 'inline';
+            status.style.color = correct ? '#00ff00' : '#ff4444';
+            status.textContent = correct ? `CORRECT (+${points} pts)` : 'WRONG';
+        }
     },
 
     populateTriviaPresets() {
@@ -206,7 +258,7 @@ const UI = {
         const submissions = Object.values(AppState.timelineSubmissions);
 
         if (submissions.length === 0) {
-            list.innerHTML = '<li style="color: var(--baby-blue-dim);">No submissions yet</li>';
+            list.innerHTML = '<li style="color: var(--ice-soft);">No submissions yet</li>';
             return;
         }
 
@@ -214,9 +266,9 @@ const UI = {
             const statusColor = sub.status === 'winner' ? '#004400' : '#440000';
             const statusText = sub.status === 'winner' ? 'CORRECT' : 'INCORRECT';
             const playerInfo = sub.player_name ? ` (${sub.player_name})` : '';
-            return `<li style="padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim); background: ${statusColor};">
+            return `<li style="padding: 0.5rem; border-bottom: 1px solid var(--ice-soft); background: ${statusColor};">
                 <strong>${sub.team_name}</strong>${playerInfo}: ${statusText}
-                <br><small style="color: var(--baby-blue-dim);">Order: [${sub.order.join(', ')}]</small>
+                <br><small style="color: var(--ice-soft);">Order: [${sub.order.join(', ')}]</small>
             </li>`;
         }).join('');
     },
@@ -237,7 +289,11 @@ const UI = {
 
     addPictureGuess(teamId, teamName, guessText) {
         const list = document.getElementById('pictureguess-list');
-        if (!list) return;
+        console.log('[Admin] addPictureGuess:', { teamId, teamName, guessText }, 'list found:', !!list);
+        if (!list) {
+            console.error('[Admin] pictureguess-list element not found!');
+            return;
+        }
 
         const existingId = `pictureguess-${teamId}`;
         let li = document.getElementById(existingId);
@@ -248,14 +304,32 @@ const UI = {
             list.appendChild(li);
         }
 
-        li.style.cssText = 'padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim);';
+        li.style.cssText = 'padding: 0.5rem; border-bottom: 1px solid var(--ice-soft);';
         li.innerHTML = `
             <strong>${teamName}:</strong> ${guessText}
-            <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 10px; background: #004400;"
-                onclick="AdminActions.gradePictureGuess('${teamId}', true)">CORRECT</button>
-            <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 5px; background: #440000;"
-                onclick="AdminActions.gradePictureGuess('${teamId}', false)">WRONG</button>
+            <span class="grading-buttons">
+                <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 10px; background: #004400;"
+                    onclick="AdminActions.gradePictureGuess('${teamId}', true)">CORRECT</button>
+                <button class="terminal-btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 5px; background: #440000;"
+                    onclick="AdminActions.gradePictureGuess('${teamId}', false)">WRONG</button>
+            </span>
+            <span class="graded-status" style="display: none; margin-left: 10px; font-weight: bold;"></span>
         `;
+    },
+
+    markPictureGuessGraded(teamId, correct, points) {
+        const li = document.getElementById(`pictureguess-${teamId}`);
+        if (!li) return;
+
+        const buttons = li.querySelector('.grading-buttons');
+        const status = li.querySelector('.graded-status');
+
+        if (buttons) buttons.style.display = 'none';
+        if (status) {
+            status.style.display = 'inline';
+            status.style.color = correct ? '#00ff00' : '#ff4444';
+            status.textContent = correct ? `CORRECT (+${points} pts)` : 'WRONG';
+        }
     },
 
     clearPictureGuessList() {
@@ -279,7 +353,7 @@ const UI = {
         }
 
         const formattedAmount = parseFloat(guessAmount).toFixed(2);
-        li.style.cssText = 'padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim);';
+        li.style.cssText = 'padding: 0.5rem; border-bottom: 1px solid var(--ice-soft);';
         li.innerHTML = `<strong>${teamName}:</strong> $${formattedAmount}`;
     },
 
@@ -303,7 +377,7 @@ const UI = {
                 statusText = ' - BUST';
             }
             const formattedAmount = parseFloat(guess.guess_amount).toFixed(2);
-            return `<li style="padding: 0.5rem; border-bottom: 1px solid var(--baby-blue-dim); ${statusClass}">
+            return `<li style="padding: 0.5rem; border-bottom: 1px solid var(--ice-soft); ${statusClass}">
                 <strong>${guess.team_name}:</strong> $${formattedAmount}${statusText}
             </li>`;
         }).join('');
@@ -356,24 +430,20 @@ const UI = {
         if (countB) countB.textContent = '0';
     },
 
-    updateSurvivalTeamList(teams, eliminatedTeams) {
+    updateSurvivalTeamList(teams) {
         const list = document.getElementById('survival-team-list');
         if (!list) return;
 
         const teamIds = Object.keys(teams);
         if (teamIds.length === 0) {
-            list.innerHTML = '<li style="color: var(--baby-blue-dim);">No teams</li>';
+            list.innerHTML = '<li style="color: var(--ice-soft);">No teams</li>';
             return;
         }
 
-        const eliminatedSet = new Set(eliminatedTeams || []);
         list.innerHTML = teamIds.map(id => {
             const team = teams[id];
-            const isEliminated = eliminatedSet.has(id);
-            const status = isEliminated ? 'ELIMINATED' : 'ALIVE';
-            const color = isEliminated ? '#ff4444' : 'var(--baby-blue)';
-            return `<li style="padding: 0.25rem 0.5rem; color: ${color};">
-                ${team.name} - ${status}
+            return `<li style="padding: 0.25rem 0.5rem; color: var(--ice-glow);">
+                ${team.name}
             </li>`;
         }).join('');
     },
@@ -810,11 +880,11 @@ const AdminActions = {
         if (AppState.qrVisible) {
             btn.textContent = 'HIDE QR CODE';
             status.textContent = 'QR visible';
-            status.style.color = 'var(--baby-blue)';
+            status.style.color = 'var(--ice-glow)';
         } else {
             btn.textContent = 'SHOW QR CODE';
             status.textContent = 'QR hidden';
-            status.style.color = 'var(--baby-blue-dim)';
+            status.style.color = 'var(--ice-soft)';
         }
     },
 
@@ -914,8 +984,7 @@ const AdminActions = {
                     round_id: roundId,
                     question_text: questionText,
                     option_a: optionA,
-                    option_b: optionB,
-                    eliminated_teams: AppState.survivalEliminatedTeams || []
+                    option_b: optionB
                 }
             });
 
@@ -950,14 +1019,6 @@ const AdminActions = {
                 option_a: optionA,
                 option_b: optionB
             });
-        }
-    },
-
-    survivalReviveAll() {
-        if (AppState.socket && confirm('Revive all eliminated teams?')) {
-            AppState.survivalEliminatedTeams = [];
-            AppState.socket.emit('survival_revive_all', {});
-            UI.updateSurvivalTeamList(AppState.teams, []);
         }
     },
 
@@ -1022,16 +1083,62 @@ function initSocket() {
     // Expose socket globally for screensaver and other shared components
     window.socket = AppState.socket;
 
+    // Heartbeat interval
+    let heartbeatInterval = null;
+    const HEARTBEAT_INTERVAL = 30000; // 30 seconds
+
     AppState.socket.on('connect', () => {
         console.log('[Admin] Connected to server');
         AppState.connected = true;
+        UI.updateConnectionStatus(true);
         // Notify server of activity on connect
         AppState.socket.emit('screensaver_activity');
+
+        // Start heartbeat to keep session alive
+        if (heartbeatInterval) clearInterval(heartbeatInterval);
+        heartbeatInterval = setInterval(() => {
+            if (AppState.connected) {
+                AppState.socket.emit('heartbeat');
+            }
+        }, HEARTBEAT_INTERVAL);
+
+        // If already authenticated, request state sync
+        if (AppState.authenticated) {
+            console.log('[Admin] Reconnected while authenticated - requesting state sync');
+            AppState.socket.emit('request_tv_sync');
+        }
     });
 
-    AppState.socket.on('disconnect', () => {
-        console.log('[Admin] Disconnected');
+    AppState.socket.on('disconnect', (reason) => {
+        console.log('[Admin] Disconnected:', reason);
         AppState.connected = false;
+        UI.updateConnectionStatus(false);
+        // Stop heartbeat on disconnect
+        if (heartbeatInterval) {
+            clearInterval(heartbeatInterval);
+            heartbeatInterval = null;
+        }
+    });
+
+    // Connection error handling
+    AppState.socket.on('connect_error', (error) => {
+        console.error('[Admin] Connection error:', error.message);
+        UI.updateConnectionStatus(false, 'Connection error');
+    });
+
+    AppState.socket.io.on('reconnect_attempt', (attempt) => {
+        console.log(`[Admin] Reconnect attempt ${attempt}`);
+        UI.updateConnectionStatus(false, `Reconnecting (${attempt})...`);
+    });
+
+    AppState.socket.io.on('reconnect', (attempt) => {
+        console.log(`[Admin] Reconnected after ${attempt} attempts`);
+        UI.updateConnectionStatus(true);
+    });
+
+    AppState.socket.io.on('reconnect_failed', () => {
+        console.error('[Admin] Reconnection failed');
+        UI.updateConnectionStatus(false, 'Connection lost');
     });
 
     AppState.socket.on('admin_auth_result', (data) => {
@@ -1058,6 +1165,7 @@ function initSocket() {
     });
 
     AppState.socket.on('buzzer_locked', (data) => {
+        console.log('[Admin] buzzer_locked received:', data);
         AppState.buzzerLockedBy = data.locked_by_team_id;
         UI.updateBuzzerLocker(data.locked_by_team_name);
     });
@@ -1068,6 +1176,7 @@ function initSocket() {
     });
 
     AppState.socket.on('answer_received', (data) => {
+        console.log('[Admin] answer_received:', data);
         UI.addAnswer(data.team_id, data.team_name, data.answer_text);
     });
 
@@ -1079,7 +1188,25 @@ function initSocket() {
 
     // Picture guess handler
     AppState.socket.on('picture_guess_received', (data) => {
+        console.log('[Admin] picture_guess_received:', data);
         UI.addPictureGuess(data.team_id, data.team_name, data.guess_text);
+    });
+
+    // Grading confirmation handlers - prevent double-grading
+    AppState.socket.on('answer_graded', (data) => {
+        console.log('[Admin] answer_graded:', data);
+        UI.markAnswerGraded(data.team_id, data.correct, data.points_awarded);
+    });
+
+    AppState.socket.on('picture_guess_graded', (data) => {
+        console.log('[Admin] picture_guess_graded:', data);
+        UI.markPictureGuessGraded(data.team_id, data.correct, data.points_awarded);
+    });
+
+    AppState.socket.on('already_graded', (data) => {
+        console.log('[Admin] already_graded:', data);
+        // Show brief warning - team was already graded
+        alert(data.message || 'Team already graded for this round');
     });
 
     // Timer sync handler
@@ -1138,16 +1265,14 @@ function initSocket() {
     // Survival handlers
     AppState.socket.on('survival_vote_received', (data) => {
         console.log('[Admin] Survival vote received:', data);
-        UI.addSurvivalVote(data.team_name, data.vote);
+        // Show player name with team in vote list
+        const displayName = data.player_name ? `${data.player_name} (${data.team_name})` : data.team_name;
+        UI.addSurvivalVote(displayName, data.vote);
     });
 
     AppState.socket.on('survival_round_complete', (data) => {
         console.log('[Admin] Survival round complete:', data);
-        if (!AppState.survivalEliminatedTeams) {
-            AppState.survivalEliminatedTeams = [];
-        }
-        AppState.survivalEliminatedTeams.push(...(data.newly_eliminated || []));
-        UI.updateSurvivalTeamList(AppState.teams, AppState.survivalEliminatedTeams);
+        // Just log the results - no elimination tracking needed
     });
 
     // Pixel Perfect handlers
@@ -1423,12 +1548,6 @@ function initEventBindings() {
         });
     }
 
-    const survivalReviveAllBtn = document.getElementById('survival-revive-all-btn');
-    if (survivalReviveAllBtn) {
-        survivalReviveAllBtn.addEventListener('click', () => {
-            AdminActions.survivalReviveAll();
-        });
-    }
 
     // Pixel Perfect controls
     const startPixelperfectBtn = document.getElementById('start-pixelperfect-btn');
@@ -1522,13 +1641,13 @@ async function checkSpotifyStatus() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('spotify_success')) {
         statusText.textContent = 'Connected! (refresh TV page)';
-        statusText.style.color = 'var(--baby-blue)';
+        statusText.style.color = 'var(--ice-glow)';
         loginBtn.classList.add('hidden');
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
     } else if (urlParams.has('spotify_error')) {
         statusText.textContent = 'Connection failed: ' + urlParams.get('spotify_error');
-        statusText.style.color = 'var(--terminal-red)';
+        statusText.style.color = 'var(--status-oops)';
         loginBtn.classList.remove('hidden');
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
@@ -1541,22 +1660,22 @@ async function checkSpotifyStatus() {
 
             if (!data.configured) {
                 statusText.textContent = 'Not configured (set SPOTIFY_CLIENT_ID/SECRET)';
-                statusText.style.color = 'var(--terminal-amber)';
+                statusText.style.color = 'var(--gold-candle)';
                 loginBtn.classList.add('hidden');
             } else if (data.connected) {
                 statusText.textContent = 'Connected (Web Playback SDK ready)';
-                statusText.style.color = 'var(--baby-blue)';
+                statusText.style.color = 'var(--ice-glow)';
                 loginBtn.classList.add('hidden');
             } else {
                 statusText.textContent = 'Not connected';
-                statusText.style.color = 'var(--terminal-amber)';
+                statusText.style.color = 'var(--gold-candle)';
                 loginBtn.classList.remove('hidden');
             }
         }
     } catch (err) {
         console.error('[Admin] Failed to check Spotify status:', err);
         statusText.textContent = 'Status check failed';
-        statusText.style.color = 'var(--terminal-red)';
+        statusText.style.color = 'var(--status-oops)';
     }
 }
 
