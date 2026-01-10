@@ -1,42 +1,109 @@
 ---
 import ViewContainer from '../shared/ViewContainer.astro';
-import AdminHeader from './AdminHeader.astro';
-import GameStateControls from './GameStateControls.astro';
-import LobbyControls from './LobbyControls.astro';
-import MusicControls from './MusicControls.astro';
-import BuzzerControls from './BuzzerControls.astro';
+import AdminSidebar from './AdminSidebar.astro';
+import GlobalControls from './GlobalControls.astro';
 import TriviaControls from './TriviaControls.astro';
+import BuzzerControls from './BuzzerControls.astro';
 import TimelineControls from './TimelineControls.astro';
 import PictureGuessControls from './PictureGuessControls.astro';
 import TimerControls from './TimerControls.astro';
 import PixelPerfectControls from './PixelPerfectControls.astro';
 import PriceGuessControls from './PriceGuessControls.astro';
 import SurvivalControls from './SurvivalControls.astro';
-import RoundTimerControls from './RoundTimerControls.astro';
+import SettingsPanel from './SettingsPanel.astro';
 ---
 <ViewContainer id="dashboard-view">
-    <div class="admin-container">
+    <div class="admin-layout">
+        <AdminSidebar />
 
-        <AdminHeader />
+        <main class="admin-main">
+            <GlobalControls />
 
-        <GameStateControls />
+            <div class="admin-content">
+                <!-- Lobby section (shown when in LOBBY state) -->
+                <section id="lobby-section" class="game-section">
+                    <h2 class="section-title">Waiting Room</h2>
+                    <p class="section-hint">Players are joining. Use the QR code above to let them in.</p>
+                </section>
 
-        <div class="admin-grid">
-            <LobbyControls />
-            <RoundTimerControls />
-            <MusicControls />
-        </div>
+                <!-- Game-specific controls (show/hide based on state) -->
+                <TriviaControls />
+                <BuzzerControls />
+                <TimelineControls />
+                <PictureGuessControls />
+                <TimerControls />
+                <PriceGuessControls />
+                <PixelPerfectControls />
+                <SurvivalControls />
 
-        <hr class="admin-divider--section">
+                <!-- Victory section -->
+                <section id="victory-section" class="game-section" style="display: none;">
+                    <h2 class="section-title">The End</h2>
+                    <p class="section-hint">The game is complete! Final scores are displayed on TV.</p>
+                </section>
 
-        <TriviaControls />
-        <BuzzerControls />
-        <TimelineControls />
-        <PictureGuessControls />
-        <TimerControls />
-        <PriceGuessControls />
-        <PixelPerfectControls />
-        <SurvivalControls />
-
+                <!-- Settings panel -->
+                <SettingsPanel />
+            </div>
+        </main>
     </div>
 </ViewContainer>
+
+<style>
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-main {
+    flex: 1;
+    margin-left: 220px; /* Match sidebar width */
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-content {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.game-section {
+    background: rgba(15, 40, 71, 0.5);
+    border: 1px solid rgba(135, 206, 235, 0.2);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ice-whisper);
+    margin-bottom: 0.75rem;
+    text-shadow: 0 0 15px rgba(135, 206, 235, 0.3);
+}
+
+.section-hint {
+    color: var(--ice-soft);
+    font-size: 0.9rem;
+}
+
+/* Responsive: collapse sidebar on small screens */
+@media (max-width: 768px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .admin-main {
+        margin-left: 0;
+    }
+
+    :global(.admin-sidebar) {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+}
+</style>

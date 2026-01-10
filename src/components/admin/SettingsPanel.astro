@@ -1,0 +1,63 @@
+---
+/**
+ * SettingsPanel.astro
+ * Settings panel with Music controls and danger zone (reset)
+ */
+---
+<section id="settings-section" class="game-section" style="display: none;">
+    <h2 class="section-title">Settings</h2>
+
+    <!-- Music Control -->
+    <div class="settings-card">
+        <h3 class="settings-card-title">Background Music</h3>
+        <p class="admin-hint mb-1">Lullaby DJ - Control Spotify playback</p>
+
+        <div id="spotify-status" class="admin-controls items-center mb-2">
+            <span id="spotify-status-text" class="admin-hint">Checking Spotify...</span>
+            <a id="spotify-login-btn" href="/spotify/login" class="terminal-btn terminal-btn--sm hidden">CONNECT</a>
+        </div>
+
+        <div class="admin-controls items-center">
+            <button id="music-prev-btn" class="terminal-btn" title="Previous Track">Prev</button>
+            <button id="music-toggle-btn" class="terminal-btn terminal-btn--primary" title="Play/Pause">Play/Pause</button>
+            <button id="music-next-btn" class="terminal-btn" title="Next Track">Next</button>
+        </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="settings-card settings-card--danger">
+        <h3 class="settings-card-title settings-card-title--danger">Danger Zone</h3>
+        <p class="admin-hint mb-1">These actions cannot be undone.</p>
+
+        <button id="reset-btn" class="terminal-btn admin-btn--danger">
+            FACTORY RESET - Clear All Scores & Teams
+        </button>
+    </div>
+</section>
+
+<style>
+.settings-card {
+    background: rgba(15, 40, 71, 0.5);
+    border: 1px solid rgba(135, 206, 235, 0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.settings-card--danger {
+    border-color: rgba(220, 53, 69, 0.4);
+    background: rgba(220, 53, 69, 0.1);
+}
+
+.settings-card-title {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ice-whisper);
+    margin-bottom: 0.5rem;
+}
+
+.settings-card-title--danger {
+    color: #ff6b6b;
+}
+</style>

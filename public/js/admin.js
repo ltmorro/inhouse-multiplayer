@@ -88,25 +88,51 @@ const UI = {
     },
 
     updateCurrentState(state) {
-        document.getElementById('current-state').textContent = `STATE: ${state}`;
+        // Update sidebar status text
+        const sidebarStatus = document.getElementById('sidebar-status');
+        if (sidebarStatus) sidebarStatus.textContent = state;
+
         AppState.currentState = state;
 
-        // Show/hide section-specific controls (with null checks)
+        // Map of section IDs to their corresponding states
         const sections = {
-            'buzzer-section': 'BUZZER',
+            'lobby-section': 'LOBBY',
             'trivia-section': 'TRIVIA',
+            'buzzer-section': 'BUZZER',
             'timeline-section': 'TIMELINE',
-            'timer-section': 'TIMER',
             'pictureguess-section': 'PICTUREGUESS',
-            'pixelperfect-section': 'PIXELPERFECT',
             'priceguess-section': 'PRICEGUESS',
-            'survival-section': 'SURVIVAL'
+            'timer-section': 'TIMER',
+            'pixelperfect-section': 'PIXELPERFECT',
+            'survival-section': 'SURVIVAL',
+            'victory-section': 'VICTORY',
+            'settings-section': 'SETTINGS'
         };
 
+        // Show/hide sections based on current state
         Object.entries(sections).forEach(([id, sectionState]) => {
             const el = document.getElementById(id);
             if (el) el.style.display = state === sectionState ? 'block' : 'none';
         });
+
+        // Update sidebar active state
+        document.querySelectorAll('.nav-item.state-btn').forEach(btn => {
+            if (btn.dataset.state === state) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // Handle settings button active state
+        const settingsBtn = document.getElementById('nav-settings-btn');
+        if (settingsBtn) {
+            if (state === 'SETTINGS') {
+                settingsBtn.classList.add('active');
+            } else {
+                settingsBtn.classList.remove('active');
+            }
+        }
     },
 
     updateTimerDisplay(remaining, total, status) {
@@ -1038,6 +1064,8 @@ function initSocket() {
         if (data.success) {
             AppState.authenticated = true;
             UI.showView('dashboard-view');
+            // Set initial state to show LOBBY section
+            UI.updateCurrentState(AppState.currentState || 'LOBBY');
         } else {
             UI.showAuthError(data.message || 'Authentication failed');
         }
@@ -1179,12 +1207,20 @@ function initEventBindings() {
         AdminActions.authenticate(password);
     });
 
-    // State buttons
+    // State buttons (sidebar navigation)
     document.querySelectorAll('.state-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             AdminActions.setState(btn.dataset.state);
         });
     });
+
+    // Settings button (local-only, doesn't change server state)
+    const settingsBtn = document.getElementById('nav-settings-btn');
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => {
+            UI.updateCurrentState('SETTINGS');
+        });
+    }
 
     // Add points
     document.getElementById('add-points-btn').addEventListener('click', () => {

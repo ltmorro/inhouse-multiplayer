@@ -1,0 +1,146 @@
+---
+/**
+ * GlobalControls.astro
+ * Always-visible controls: Round Timer, QR Code, Teams, Points
+ */
+---
+<div class="global-controls">
+    <div class="global-controls-grid">
+        <!-- Round Timer -->
+        <div class="global-card">
+            <h4 class="global-card-title">Round Timer</h4>
+            <div class="timer-display-row">
+                <span id="round-timer-display" class="timer-display">--:--</span>
+                <span id="round-timer-status" class="timer-status">(stopped)</span>
+            </div>
+            <div class="admin-controls items-center mt-1">
+                <label class="admin-hint" for="round-timer-duration">Sec:</label>
+                <input
+                    type="number"
+                    id="round-timer-duration"
+                    value="60"
+                    min="10"
+                    max="600"
+                    class="terminal-input terminal-input--small"
+                    style="width: 60px;"
+                />
+            </div>
+            <div class="admin-controls mt-1">
+                <button id="round-timer-start-btn" class="terminal-btn terminal-btn--sm terminal-btn--primary">START</button>
+                <button id="round-timer-pause-btn" class="terminal-btn terminal-btn--sm">PAUSE</button>
+                <button id="round-timer-resume-btn" class="terminal-btn terminal-btn--sm">RESUME</button>
+                <button id="round-timer-stop-btn" class="terminal-btn terminal-btn--sm">STOP</button>
+            </div>
+            <div class="admin-controls mt-1">
+                <button id="round-timer-add30-btn" class="terminal-btn terminal-btn--xs">+30s</button>
+                <button id="round-timer-add60-btn" class="terminal-btn terminal-btn--xs">+60s</button>
+            </div>
+        </div>
+
+        <!-- QR & Lobby -->
+        <div class="global-card">
+            <h4 class="global-card-title">Lobby</h4>
+            <div class="admin-controls items-center">
+                <button id="toggle-qr-btn" class="terminal-btn terminal-btn--sm">SHOW QR</button>
+                <span id="qr-status" class="admin-hint">Hidden</span>
+            </div>
+        </div>
+
+        <!-- Teams & Points -->
+        <div class="global-card global-card--wide">
+            <h4 class="global-card-title">Teams</h4>
+            <ul id="team-list" class="team-list"></ul>
+            <div class="admin-controls items-center mt-1">
+                <select id="point-team" class="terminal-input terminal-input--sm" style="flex: 1;"></select>
+                <input type="number" id="point-amount" class="terminal-input terminal-input--sm" value="50" style="width: 60px;">
+                <button id="add-points-btn" class="terminal-btn terminal-btn--sm terminal-btn--primary">+PTS</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.global-controls {
+    background: rgba(15, 40, 71, 0.4);
+    border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+    padding: 1rem;
+}
+
+.global-controls-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.global-card {
+    background: rgba(15, 40, 71, 0.6);
+    border: 1px solid rgba(135, 206, 235, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+.global-card--wide {
+    grid-column: span 2;
+}
+
+@media (max-width: 800px) {
+    .global-card--wide {
+        grid-column: span 1;
+    }
+}
+
+.global-card-title {
+    font-family: var(--font-serif);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ice-whisper);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(135, 206, 235, 0.2);
+}
+
+.timer-display-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.timer-display {
+    font-family: var(--font-mono, monospace);
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--ice-whisper);
+}
+
+.timer-status {
+    font-size: 0.75rem;
+    color: var(--ice-soft);
+}
+
+.team-list {
+    list-style: none;
+    padding: 0.5rem;
+    margin: 0;
+    background: rgba(10, 22, 40, 0.5);
+    border-radius: 4px;
+    min-height: 60px;
+    max-height: 120px;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    color: var(--ice-whisper);
+}
+
+.terminal-btn--sm {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.terminal-btn--xs {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.7rem;
+}
+
+.terminal-input--sm {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.8rem;
+}
+</style>

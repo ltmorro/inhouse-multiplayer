@@ -1,0 +1,176 @@
+---
+/**
+ * AdminSidebar.astro
+ * Sidebar navigation for game state control
+ */
+---
+<aside class="admin-sidebar">
+    <div class="sidebar-header">
+        <span class="sidebar-title">Storybook Host</span>
+        <span id="sidebar-status" class="sidebar-status">LOBBY</span>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <span class="nav-section-label">Chapters</span>
+            <button class="nav-item state-btn" data-state="LOBBY">
+                <span class="nav-icon">0</span>
+                <span class="nav-label">Waiting Room</span>
+            </button>
+            <button class="nav-item state-btn" data-state="TRIVIA">
+                <span class="nav-icon">1</span>
+                <span class="nav-label">Parenting Trivia</span>
+            </button>
+            <button class="nav-item state-btn" data-state="BUZZER">
+                <span class="nav-icon">2</span>
+                <span class="nav-label">Name That Lullaby</span>
+            </button>
+            <button class="nav-item state-btn" data-state="TIMELINE">
+                <span class="nav-icon">3</span>
+                <span class="nav-label">Baby Milestones</span>
+            </button>
+            <button class="nav-item state-btn" data-state="PICTUREGUESS">
+                <span class="nav-icon">4</span>
+                <span class="nav-label">Guess The Item</span>
+            </button>
+            <button class="nav-item state-btn" data-state="PRICEGUESS">
+                <span class="nav-icon">5</span>
+                <span class="nav-label">Price Guesser</span>
+            </button>
+            <button class="nav-item state-btn" data-state="SURVIVAL">
+                <span class="nav-icon">6</span>
+                <span class="nav-label">Baby Survival</span>
+            </button>
+            <button class="nav-item state-btn" data-state="VICTORY">
+                <span class="nav-icon">*</span>
+                <span class="nav-label">The End</span>
+            </button>
+        </div>
+
+        <div class="nav-section nav-section--bottom">
+            <span class="nav-section-label">System</span>
+            <button class="nav-item" id="nav-settings-btn">
+                <span class="nav-icon">S</span>
+                <span class="nav-label">Settings</span>
+            </button>
+        </div>
+    </nav>
+</aside>
+
+<style>
+.admin-sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: rgba(10, 22, 40, 0.95);
+    border-right: 1px solid rgba(135, 206, 235, 0.2);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+}
+
+.sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+    text-align: center;
+}
+
+.sidebar-title {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ice-whisper);
+    text-shadow: 0 0 15px rgba(135, 206, 235, 0.3);
+}
+
+.sidebar-status {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--ice-bright);
+    margin-top: 0.25rem;
+    letter-spacing: 0.05em;
+}
+
+.sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0;
+    overflow-y: auto;
+}
+
+.nav-section {
+    padding: 0.5rem 0;
+}
+
+.nav-section--bottom {
+    margin-top: auto;
+    border-top: 1px solid rgba(135, 206, 235, 0.15);
+    padding-top: 1rem;
+}
+
+.nav-section-label {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(135, 206, 235, 0.5);
+    padding: 0.5rem 1rem 0.25rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.6rem 1rem;
+    background: transparent;
+    border: none;
+    color: var(--ice-soft);
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.nav-item:hover {
+    background: rgba(135, 206, 235, 0.1);
+    color: var(--ice-whisper);
+}
+
+.nav-item.active {
+    background: rgba(135, 206, 235, 0.2);
+    color: var(--ice-whisper);
+    border-left: 3px solid var(--ice-bright);
+}
+
+.nav-item.active .nav-icon {
+    background: var(--ice-bright);
+    color: var(--void-deep);
+}
+
+.nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: rgba(135, 206, 235, 0.15);
+    color: var(--ice-soft);
+    font-size: 0.75rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.nav-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>

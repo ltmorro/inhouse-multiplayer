@@ -1,16 +1,66 @@
 ---
 import ViewContainer from '../shared/ViewContainer.astro';
-import AdminHeader from './AdminHeader.astro';
 ---
 <ViewContainer id="auth-view" active={true}>
-    <AdminHeader />
-    <div class="flex-grow flex-center flex-column">
-        <h2 class="glow">SECURITY CLEARANCE REQUIRED</h2>
-        <p class="admin-hint mb-2">DOCTOR / PARENT ACCESS ONLY</p>
-        <form id="auth-form" class="admin-form mt-3">
-            <input type="password" id="admin-password" class="terminal-input" placeholder="ACCESS CODE" autocomplete="off">
-            <button type="submit" class="terminal-btn terminal-btn--primary mobile-form__submit mt-2">AUTHORIZE</button>
-        </form>
-        <p id="auth-error" class="status-text status-text--error mt-2 hidden"></p>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Storybook Host</h1>
+            <h2 class="auth-subtitle">Security Clearance Required</h2>
+            <p class="admin-hint mb-2">Doctor / Parent Access Only</p>
+            <form id="auth-form" class="auth-form">
+                <input type="password" id="admin-password" class="terminal-input" placeholder="Access Code" autocomplete="off">
+                <button type="submit" class="terminal-btn terminal-btn--primary mt-2">Authorize</button>
+            </form>
+            <p id="auth-error" class="status-text status-text--error mt-2 hidden"></p>
+        </div>
     </div>
 </ViewContainer>
+
+<style>
+.auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.auth-card {
+    background: rgba(15, 40, 71, 0.8);
+    border: 1px solid rgba(135, 206, 235, 0.3);
+    border-radius: 16px;
+    padding: 2.5rem;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+}
+
+.auth-title {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--ice-whisper);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+}
+
+.auth-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--ice-bright);
+    margin-bottom: 1rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.auth-form .terminal-input {
+    text-align: center;
+}
+</style>
