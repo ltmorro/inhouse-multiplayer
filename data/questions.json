@@ -131,28 +131,28 @@
   "audio_tracks": [
     {
       "id": 1,
-      "spotify_uri": "spotify:track:0Ph6L4l8dYUuXFmb71Ajnd",
+      "spotify_uri": "spotify:track:4MrfQL4TYQXJBlZYpAHTuE",
       "title": "Baby It's Cold Outside",
       "artist": "Dean Martin",
       "hint": "The Theme Song (1959)"
     },
     {
       "id": 2,
-      "spotify_uri": "spotify:track:1KGi9sZVMeszgZOWivFpxs",
+      "spotify_uri": "spotify:track:5uES1C2NgkdrNHiCwf9jRr",
       "title": "Baby Love",
       "artist": "The Supremes",
       "hint": "Motown Classic (1964)"
     },
     {
       "id": 3,
-      "spotify_uri": "spotify:track:7IsEXPk6qqt30FfQv4SZMa",
+      "spotify_uri": "spotify:track:3XVozq1aeqsJwpXrEZrDJ9",
       "title": "Ice Ice Baby",
       "artist": "Vanilla Ice",
       "hint": "90s Party Anthem"
     },
     {
       "id": 4,
-      "spotify_uri": "spotify:track:3cfOd4CMv2snFaKAnMdnvK",
+      "spotify_uri": "spotify:track:4SGBuq37Ol4HJr7pQqFMKa",
       "title": "I Got You Babe",
       "artist": "Sonny & Cher",
       "hint": "60s Duet"
@@ -166,35 +166,35 @@
     },
     {
       "id": 6,
-      "spotify_uri": "spotify:track:5ghIJDpPoe3CfHMGu71E6T",
+      "spotify_uri": "spotify:track:6epn3r7S14KUqlReYr77hA",
       "title": "Baby",
       "artist": "Justin Bieber",
       "hint": "Gen Z Anthem"
     },
     {
       "id": 7,
-      "spotify_uri": "spotify:track:47BBI51FKFwOMlIiX6m8ya",
+      "spotify_uri": "spotify:track:2G2YzndIA6jeWFPBXhUjh5",
       "title": "Be My Baby",
       "artist": "The Ronettes",
       "hint": "Dirty Dancing Song"
     },
     {
       "id": 8,
-      "spotify_uri": "spotify:track:1KGi9sZVMeszgZOWivFpxs",
+      "spotify_uri": "spotify:track:59hKzj0h6ElhQv8rBqvpUz",
       "title": "Santa Baby",
       "artist": "Eartha Kitt",
       "hint": "Holiday Classic"
     },
     {
       "id": 9,
-      "spotify_uri": "spotify:track:0n2SEXB2qoRQg171q7XqeW",
+      "spotify_uri": "spotify:track:1SAkL1mYNJlaqnBQxVZrRl",
       "title": "Baby Got Back",
       "artist": "Sir Mix-A-Lot",
       "hint": "For the 'Cool' Aunts"
     },
     {
       "id": 10,
-      "spotify_uri": "spotify:track:5yaCquc7koPqtgj7v0lwHX",
+      "spotify_uri": "spotify:track:5ygDXis42ncn6kYG14lEVG",
       "title": "Baby Shark",
       "artist": "Pinkfong",
       "hint": "Sorry in advance..."
@@ -252,8 +252,8 @@
     {
       "id": 9,
       "question": "Which celebrity baby name is wilder?",
-      "option_a": "Pilot Inspektor (Lee)",
-      "option_b": "X Æ A-12 (Musk)"
+      "option_a": "Apple (Gwyneth Paltrow)",
+      "option_b": "X Æ A-12 (Elon Musk)"
     },
     {
       "id": 10,
@@ -292,35 +292,33 @@
       "image_url": "/images/shower/paci.webp",
       "answer": "Onesie",
       "hint": "The standard uniform..."
-    }
-  ],
-  "pixelperfect_images": [
+    },
     {
-      "id": 1,
+      "id": 6,
       "image_url": "/images/shower/paci.webp",
       "answer": "Pacifier",
       "hint": "Baby soother"
     },
     {
-      "id": 2,
+      "id": 7,
       "image_url": "/images/shower/paci.webp",
       "answer": "Diapers",
       "hint": "Essential supply"
     },
     {
-      "id": 3,
+      "id": 8,
       "image_url": "/images/shower/paci.webp",
       "answer": "Boppy Pillow",
       "hint": "Nursing helper"
     },
     {
-      "id": 4,
+      "id": 9,
       "image_url": "/images/shower/paci.webp",
       "answer": "Baby Bottles",
       "hint": "Feeding time"
     },
     {
-      "id": 5,
+      "id": 10,
       "image_url": "/images/shower/paci.webp",
       "answer": "Sound Machine",
       "hint": "White noise"
@@ -560,7 +558,7 @@
           "artist": "The Jackson 5"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_2",
+          "spotify_uri": "spotify:track:7l1qvxWjxcKpB9PCtBuTbU",
           "title": "Count On Me",
           "artist": "Bruno Mars"
         }
@@ -576,17 +574,17 @@
           "artist": "Royal Philharmonic Orchestra"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_3",
+          "spotify_uri": "spotify:track:3XVozq1aeqsJwpXrEZrDJ9",
           "title": "Ice Ice Baby",
           "artist": "Vanilla Ice"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_4",
+          "spotify_uri": "spotify:track:7vidktgNZFQylTgH1GEnMs",
           "title": "Cold As Ice",
           "artist": "Foreigner"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_5",
+          "spotify_uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
           "title": "All I Want for Christmas Is You",
           "artist": "Mariah Carey"
         }
@@ -612,12 +610,12 @@
           "artist": "Taylor Swift"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_6",
+          "spotify_uri": "spotify:track:2lFlveK1y13WWp3vnQtrr3",
           "title": "100 Years",
           "artist": "Five for Fighting"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_7",
+          "spotify_uri": "spotify:track:5vKkaZHPzuqQheytfKuXzp",
           "title": "Circle of Life",
           "artist": "Elton John"
         }
@@ -633,17 +631,17 @@
           "artist": "Nickelodeon"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_8",
+          "spotify_uri": "spotify:track:2yi7HZrBOC4bMUSTcs4VK6",
           "title": "Do You Want to Build a Snowman?",
           "artist": "Kristen Bell / Frozen"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_9",
+          "spotify_uri": "spotify:track:30SCXVFyQGOFMdKnbgJS18",
           "title": "I Can See Clearly Now",
           "artist": "Johnny Nash"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_10",
+          "spotify_uri": "spotify:track:2tkIIkF3CPqsmYhsncNEGN",
           "title": "Cruella De Vil",
           "artist": "Selena Gomez"
         }
@@ -659,22 +657,22 @@
           "artist": "The Session"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_11",
+          "spotify_uri": "spotify:track:29FNeqjOV2kPWGS55qhtGB",
           "title": "Money Money Money",
           "artist": "ABBA"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_12",
+          "spotify_uri": "spotify:track:22sLuJYcvZOSoLLRYev1s5",
           "title": "Material Girl",
           "artist": "Madonna"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_13",
+          "spotify_uri": "spotify:track:6ocbgoVGwYJhOv1GgI9NsF",
           "title": "7 Rings",
           "artist": "Ariana Grande"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_14",
+          "spotify_uri": "spotify:track:47IRIQxGDe2Sc6F4pe2FMf",
           "title": "Shop Around",
           "artist": "The Miracles"
         }
@@ -700,12 +698,7 @@
           "artist": "Salt-N-Pepa"
         },
         {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_15",
-          "title": "We Are Family",
-          "artist": "Sister Sledge"
-        },
-        {
-          "spotify_uri": "spotify:track:REPLACE_WITH_ID_16",
+          "spotify_uri": "spotify:track:0YZ3J8xzGwLOg4yEgST1YK",
           "title": "With A Little Help From My Friends",
           "artist": "The Beatles"
         }
@@ -719,6 +712,11 @@
           "spotify_uri": "spotify:track:0PDCewmZCp0P5s00bptcdd",
           "title": "This Will Be (An Everlasting Love)",
           "artist": "Natalie Cole"
+        },
+        {
+          "spotify_uri": "spotify:track:5IKLwqBQG6KU6MP2zP80Nu",
+          "title": "We Are Family",
+          "artist": "Sister Sledge"
         }
       ]
     }
