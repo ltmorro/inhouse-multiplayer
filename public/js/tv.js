@@ -3581,8 +3581,26 @@ const QRCodeManager = {
      */
     generateWiFiQRCode(ssid, password) {
         // Escape special characters in SSID and password for WiFi QR format
-        const escapeWiFi = (str) => str.replace(/[\\;,:\"]/g, '\\$&');
-        const wifiString = `WIFI:T:WPA;S:${escapeWiFi(ssid)};P:${escapeWiFi(password)};;`;
+        // Characters that need escaping: \, ;, ,, :, "
+        const escapeWiFi = (str) => {
+            if (!str) return '';
+            return str.replace(/[\\;,:"]/g, '\\$&');
+        };
+
+        // WiFi QR code format: WIFI:S:<SSID>;T:<security>;P:<password>;;
+        // iOS prefers S: field first, and no H: field for non-hidden networks
+        const escapedSsid = escapeWiFi(ssid);
+        const escapedPassword = escapeWiFi(password);
+        const wifiString = `WIFI:S:${escapedSsid};T:WPA;P:${escapedPassword};;`;
+
+        console.log('[QR] WiFi QR string:', wifiString);
+        console.log('[QR] SSID:', ssid, '-> escaped:', escapedSsid);
+        console.log('[QR] Password provided:', password ? 'yes (' + password.length + ' chars)' : 'NO - THIS IS THE PROBLEM');
+
+        if (!password) {
+            console.error('[QR] WARNING: No password provided for WiFi QR code!');
+        }
+
         this.generateQRCode(wifiString, 'qr-wifi-canvas');
         console.log('[QR] WiFi QR generated for SSID:', ssid);
     },

@@ -1948,17 +1948,17 @@ function initEventBindings() {
 
 // Tab switching functions (for registration view)
 function showCreateTab() {
-    document.getElementById('tab-create').classList.add('terminal-btn--primary');
-    document.getElementById('tab-join').classList.remove('terminal-btn--primary');
-    document.getElementById('create-form').style.display = 'block';
-    document.getElementById('join-form').style.display = 'none';
+    document.getElementById('tab-create').classList.add('frost-tab--active');
+    document.getElementById('tab-join').classList.remove('frost-tab--active');
+    document.getElementById('create-form').classList.remove('hidden');
+    document.getElementById('join-form').classList.add('hidden');
 }
 
 function showJoinTab() {
-    document.getElementById('tab-join').classList.add('terminal-btn--primary');
-    document.getElementById('tab-create').classList.remove('terminal-btn--primary');
-    document.getElementById('join-form').style.display = 'block';
-    document.getElementById('create-form').style.display = 'none';
+    document.getElementById('tab-join').classList.add('frost-tab--active');
+    document.getElementById('tab-create').classList.remove('frost-tab--active');
+    document.getElementById('join-form').classList.remove('hidden');
+    document.getElementById('create-form').classList.add('hidden');
 }
 
 // Proceed to lobby after team creation
