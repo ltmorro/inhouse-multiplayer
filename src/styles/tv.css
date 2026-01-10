@@ -824,13 +824,15 @@ body.tv-page .view {
 /* Stage Reveal - Answer reveals, dramatic moments */
 .stage-reveal {
     font-family: var(--font-story);
-    font-size: var(--tv-text-hero);
+    font-size: 10rem;  /* Extra large for dramatic answer reveals - 160px */
     font-weight: 700;
     color: var(--ice-whisper);
     text-shadow:
         0 0 60px rgba(135, 206, 235, 0.7),
         0 0 120px rgba(135, 206, 235, 0.4);
     animation: reveal-glow 2s ease-in-out infinite alternate;
+    line-height: 1.1;
+    margin: 1rem 0;
 }
 
 @keyframes reveal-glow {
@@ -1465,7 +1467,7 @@ body.tv-page .view {
     gap: 12px;
     box-shadow: var(--tv-shadow);
     z-index: 100;
-    max-width: 300px;
+    max-width: 400px;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 }
@@ -1502,6 +1504,7 @@ body.tv-page .view {
 }
 
 .now-playing__title {
+    font-size: 2rem;
     font-weight: bold;
     color: var(--ice-whisper);
     white-space: nowrap;
@@ -1510,7 +1513,7 @@ body.tv-page .view {
 }
 
 .now-playing__artist {
-    font-size: 0.875rem;
+    font-size: 1.5rem;
     color: var(--ice-soft);
     opacity: 0.8;
     white-space: nowrap;
@@ -1829,6 +1832,15 @@ body.tv-page .view {
     height: 8px;
     top: 1rem;
     background: linear-gradient(90deg, transparent, #5d4d37 5%, #5d4d37 95%, transparent);
+}
+
+.polaroid-list {
+    color: white;
+}
+
+.polaroid-list li {
+    color: white !important;
+    font-size: var(--tv-text-medium) !important;
 }
 
 .polaroid-list .timeline-item {
@@ -2293,5 +2305,9 @@ body.tv-page .view {
 
     .midnight-countdown {
         font-size: 8rem;
+    }
+
+    .stage-reveal {
+        font-size: 4rem;  /* Still prominent on smaller screens */
     }
 }

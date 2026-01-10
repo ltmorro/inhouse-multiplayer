@@ -296,9 +296,11 @@ const UI = {
      * @param {Array} teamAnswers - Array of {team_name, answer_text}
      */
     revealTriviaAnswer(answer, teamAnswers) {
-        const el = document.getElementById('trivia-answer-reveal');
-        el.textContent = `ANSWER: ${answer}`;
-        el.classList.remove('hidden');
+        const revealEl = document.getElementById('trivia-answer-reveal');
+        const answerEl = document.getElementById('trivia-answer-text');
+
+        if (answerEl) answerEl.textContent = answer;
+        if (revealEl) revealEl.classList.remove('hidden');
 
         // Show team answers if provided
         if (teamAnswers && teamAnswers.length > 0) {
@@ -1064,7 +1066,7 @@ const UI = {
     },
 
     /**
-     * Update survival vote counts display
+     * Update survival vote counts display (only called on reveal)
      * @param {Object} voteCounts - { A: number, B: number }
      */
     updateSurvivalVoteCounts(voteCounts) {
@@ -1072,6 +1074,45 @@ const UI = {
         const countB = document.getElementById('survival-count-b');
         if (countA) countA.textContent = voteCounts.A || 0;
         if (countB) countB.textContent = voteCounts.B || 0;
+
+        // Update vote bars based on percentages
+        const total = (voteCounts.A || 0) + (voteCounts.B || 0);
+        const barA = document.getElementById('survival-bar-a');
+        const barB = document.getElementById('survival-bar-b');
+        if (total > 0) {
+            const pctA = ((voteCounts.A || 0) / total) * 100;
+            const pctB = ((voteCounts.B || 0) / total) * 100;
+            if (barA) barA.style.width = `${pctA}%`;
+            if (barB) barB.style.width = `${pctB}%`;
+        }
+    },
+
+    /**
+     * Update survival vote progress without revealing A/B counts
+     * Shows total votes cast to indicate activity
+     * @param {number} totalVotes
+     */
+    updateSurvivalVoteProgress(totalVotes) {
+        // Show that votes are coming in without revealing the breakdown
+        const remainingEl = document.getElementById('survival-remaining');
+        if (remainingEl && totalVotes > 0) {
+            remainingEl.textContent = `${totalVotes} vote${totalVotes !== 1 ? 's' : ''} cast...`;
+            remainingEl.classList.remove('critical');
+        }
+    },
+
+    /**
+     * Hide survival vote counts (show "?" instead)
+     */
+    hideSurvivalVoteCounts() {
+        const countA = document.getElementById('survival-count-a');
+        const countB = document.getElementById('survival-count-b');
+        const barA = document.getElementById('survival-bar-a');
+        const barB = document.getElementById('survival-bar-b');
+        if (countA) countA.textContent = '?';
+        if (countB) countB.textContent = '?';
+        if (barA) barA.style.width = '0%';
+        if (barB) barB.style.width = '0%';
     },
 
     /**
@@ -1087,8 +1128,8 @@ const UI = {
         optionB?.classList.remove('is-majority', 'is-minority');
 
         if (!data.is_tie) {
-            // Mark majority/minority
-            if (data.majority === 'A') {
+            // Mark majority/minority - backend sends game_majority
+            if (data.game_majority === 'A') {
                 optionA?.classList.add('is-majority');
                 optionB?.classList.add('is-minority');
             } else {
@@ -1100,46 +1141,58 @@ const UI = {
         // Update vote counts
         this.updateSurvivalVoteCounts(data.vote_counts);
 
-        // Update remaining count
+        // Update points summary
         const remainingEl = document.getElementById('survival-remaining');
         if (remainingEl) {
-            remainingEl.textContent = `${data.remaining_count} teams remaining`;
-            if (data.remaining_count <= 2) {
-                remainingEl.classList.add('critical');
-            } else {
+            const awardedCount = data.teams_awarded?.length || 0;
+            if (data.is_tie) {
+                remainingEl.textContent = "It's a tie! No points awarded.";
                 remainingEl.classList.remove('critical');
+            } else if (awardedCount > 0) {
+                remainingEl.textContent = `${awardedCount} team${awardedCount !== 1 ? 's' : ''} earned +${data.points_value} points!`;
+                remainingEl.classList.remove('critical');
+            } else {
+                remainingEl.textContent = 'No teams aligned with the majority!';
+                remainingEl.classList.add('critical');
             }
         }
 
         // Update team statuses in scoreboard
-        this.updateSurvivalTeamTable(data.majority_teams, data.minority_teams, data.newly_eliminated);
+        this.updateSurvivalTeamTable(data.teams_awarded, data.teams_not_awarded);
     },
 
     /**
      * Update survival teams scoreboard table
-     * @param {Array} majorityTeams
-     * @param {Array} minorityTeams
-     * @param {Array} newlyEliminated - team IDs
+     * @param {Array} teamsAwarded - Teams that got points
+     * @param {Array} teamsNotAwarded - Teams that didn't get points
      */
-    updateSurvivalTeamTable(majorityTeams, minorityTeams, newlyEliminated) {
+    updateSurvivalTeamTable(teamsAwarded, teamsNotAwarded) {
         const tbody = document.getElementById('survival-teams');
         if (!tbody) return;
 
-        const allTeams = [...(majorityTeams || []), ...(minorityTeams || [])];
-        const eliminatedSet = new Set(newlyEliminated || []);
-
         let html = '';
-        allTeams.forEach(team => {
-            const isEliminated = eliminatedSet.has(team.team_id);
+
+        // Show awarded teams first
+        (teamsAwarded || []).forEach(team => {
             const colorClass = TeamColors ? TeamColors.getColorClass(team.team_id) : '';
-            const status = isEliminated ? 'ELIMINATED' : 'ALIVE';
-            const statusClass = isEliminated ? 'status-eliminated' : 'status-alive';
-            const rowClass = isEliminated ? 'eliminated' : '';
+            const score = AppState.scores[team.team_id] || 0;
+            const newScore = score + (team.points_awarded || 0);
+
+            html += `<tr class="awarded">
+                <td class="${colorClass}">${team.team_name}</td>
+                <td class="status-awarded">+${team.points_awarded}</td>
+                <td>${newScore}</td>
+            </tr>`;
+        });
+
+        // Then show not awarded teams
+        (teamsNotAwarded || []).forEach(team => {
+            const colorClass = TeamColors ? TeamColors.getColorClass(team.team_id) : '';
             const score = AppState.scores[team.team_id] || 0;
 
-            html += `<tr class="${rowClass}">
+            html += `<tr class="not-awarded">
                 <td class="${colorClass}">${team.team_name}</td>
-                <td class="${statusClass}">${status}</td>
+                <td class="status-not-awarded">+0</td>
                 <td>${score}</td>
             </tr>`;
         });
@@ -1152,8 +1205,8 @@ const UI = {
      * @param {Object} data
      */
     resetSurvivalRound(data) {
-        // Clear vote displays
-        this.updateSurvivalVoteCounts({ A: 0, B: 0 });
+        // Hide vote counts until reveal
+        this.hideSurvivalVoteCounts();
 
         // Clear majority/minority states
         const optionA = document.getElementById('survival-option-a');
@@ -1171,11 +1224,16 @@ const UI = {
         if (data.question_text) this.updateSurvivalQuestion(data.question_text);
         if (data.option_a || data.option_b) this.updateSurvivalOptions(data.option_a, data.option_b);
 
-        // Update remaining count
+        // Reset status text
         const remainingEl = document.getElementById('survival-remaining');
         if (remainingEl) {
-            remainingEl.textContent = `${data.remaining_count} teams remaining`;
+            remainingEl.textContent = 'Waiting for votes...';
+            remainingEl.classList.remove('critical');
         }
+
+        // Clear team table for new round
+        const tbody = document.getElementById('survival-teams');
+        if (tbody) tbody.innerHTML = '';
     },
 
     /**
@@ -1212,12 +1270,24 @@ const UI = {
     initSurvivalView(stateData) {
         this.updateSurvivalQuestion(stateData?.question_text);
         this.updateSurvivalOptions(stateData?.option_a, stateData?.option_b);
-        this.updateSurvivalVoteCounts({ A: 0, B: 0 });
+        // Hide vote counts until reveal
+        this.hideSurvivalVoteCounts();
+
+        // Clear majority/minority states
+        const optionA = document.getElementById('survival-option-a');
+        const optionB = document.getElementById('survival-option-b');
+        optionA?.classList.remove('is-majority', 'is-minority');
+        optionB?.classList.remove('is-majority', 'is-minority');
 
         const remainingEl = document.getElementById('survival-remaining');
-        if (remainingEl && stateData?.remaining_count !== undefined) {
-            remainingEl.textContent = `${stateData.remaining_count} teams remaining`;
+        if (remainingEl) {
+            remainingEl.textContent = 'Waiting for votes...';
+            remainingEl.classList.remove('critical');
         }
+
+        // Clear team table
+        const tbody = document.getElementById('survival-teams');
+        if (tbody) tbody.innerHTML = '';
     }
 };
 
@@ -1501,7 +1571,8 @@ const SocketHandlers = {
 
         // Survival events
         AppState.socket.on('survival_vote_update', (data) => {
-            UI.updateSurvivalVoteCounts(data.vote_counts);
+            // Don't show vote counts until reveal - just track total votes
+            UI.updateSurvivalVoteProgress(data.total_votes);
         });
 
         AppState.socket.on('survival_reveal', (data) => {

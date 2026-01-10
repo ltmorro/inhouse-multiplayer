@@ -17,7 +17,7 @@ import ChapterHeader from './storybook/ChapterHeader.astro';
             </p>
         </div>
 
-        <div class="frost-actions">
+        <form id="priceguess-form" class="frost-actions">
             <div class="frost-price">
                 <span class="frost-price__symbol">$</span>
                 <input
@@ -30,10 +30,10 @@ import ChapterHeader from './storybook/ChapterHeader.astro';
                     autocomplete="off"
                 >
             </div>
-            <button type="button" id="priceguess-submit" class="frost-btn frost-btn--enchanted">
+            <button type="submit" id="priceguess-submit" class="frost-btn frost-btn--enchanted">
                 Submit Guess
             </button>
             <p id="priceguess-status" class="frost-status"></p>
-        </div>
+        </form>
     </div>
 </ViewContainer>

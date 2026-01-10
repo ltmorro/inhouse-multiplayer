@@ -271,99 +271,99 @@
     },
     {
       "id": 2,
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/snowsuit.png",
       "answer": "Snowsuit",
       "hint": "A sleeping bag with legs"
     },
     {
       "id": 3,
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/humid.png",
       "answer": "Humidifier",
       "hint": "Makes steam for dry winter air"
     },
     {
       "id": 4,
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/monitor.webp",
       "answer": "Baby Monitor",
       "hint": "Big Brother is watching..."
     },
     {
       "id": 5,
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/gaston.webp",
       "answer": "Onesie",
       "hint": "The standard uniform..."
     },
     {
       "id": 6,
-      "image_url": "/images/shower/paci.webp",
-      "answer": "Pacifier",
-      "hint": "Baby soother"
+      "image_url": "/images/shower/playgym.gif",
+      "answer": "Play Gym",
+      "hint": "Everything a baby could ever need"
     },
     {
       "id": 7,
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/diaper.png",
       "answer": "Diapers",
       "hint": "Essential supply"
     },
     {
       "id": 8,
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/boopy.webp",
       "answer": "Boppy Pillow",
       "hint": "Nursing helper"
     },
     {
       "id": 9,
-      "image_url": "/images/shower/paci.webp",
-      "answer": "Baby Bottles",
-      "hint": "Feeding time"
+      "image_url": "/images/shower/sound_machine.webp",
+      "answer": "Sound Machine",
+      "hint": "White noise not just for Mary"
     },
     {
       "id": 10,
-      "image_url": "/images/shower/paci.webp",
-      "answer": "Sound Machine",
-      "hint": "White noise"
+      "image_url": "/images/shower/emilio.png",
+      "answer": "Emilio Toro",
+      "hint": "Toro"
     }
   ],
   "price_products": [
     {
       "id": 1,
       "name": "Arctic Fleece Snowsuit",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/snowsuit.png",
       "actual_price": 45.00,
       "hint": "Keeps baby warm in 0 degrees"
     },
     {
       "id": 2,
       "name": "Philips Avent Baby Bottle Set",
-      "image_url": "/images/shower/paci.webp",
-      "actual_price": 29.99,
+      "image_url": "/images/shower/avent.avif",
+      "actual_price": 39.99,
       "hint": "4-pack with natural nipples"
     },
     {
       "id": 3,
       "name": "Desitin Diaper Cream",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/desitin.png",
       "actual_price": 8.99,
       "hint": "Classic purple tub for rashes"
     },
     {
       "id": 4,
       "name": "Hatch Rest Baby Sound Machine",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/sound_machine.webp",
       "actual_price": 69.99,
       "hint": "Night light + white noise (Modern)"
     },
     {
       "id": 5,
       "name": "Infant Optics Baby Monitor",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/infant_optics.png",
       "actual_price": 165.99,
       "hint": "Video monitor"
     },
     {
       "id": 6,
       "name": "Ergobaby Omni 360 Carrier",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/carrier.webp",
       "actual_price": 180.00,
       "hint": "Wear the baby"
     },
@@ -377,56 +377,56 @@
     {
       "id": 8,
       "name": "FridaBaby Humidifier",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/humid.png",
       "actual_price": 44.99,
       "hint": "Breathe easy in dry air"
     },
     {
       "id": 9,
       "name": "Boppy Nursing Pillow",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/boppy.webp",
       "actual_price": 44.99,
       "hint": "Feeding support pillow"
     },
     {
       "id": 10,
       "name": "Snoo Smart Sleeper Bassinet",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/snoo.webp",
       "actual_price": 1695.00,
       "hint": "The Tesla of bassinets"
     },
     {
       "id": 11,
       "name": "Medela Pump in Style",
-      "image_url": "/images/shower/paci.webp",
-      "actual_price": 249.99,
+      "image_url": "/images/shower/medela.png",
+      "actual_price": 149.99,
       "hint": "Double electric breast pump"
     },
     {
       "id": 12,
       "name": "UPPAbaby Vista V2 Stroller",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/uppa.webp",
       "actual_price": 1099.99,
       "hint": "Luxury convertible stroller"
     },
     {
       "id": 13,
       "name": "Owlet Dream Sock",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/owlet.png",
       "actual_price": 299.00,
       "hint": "Smart baby health monitor"
     },
     {
       "id": 14,
       "name": "Aquaphor Baby Healing Ointment",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/aquaphor.webp",
       "actual_price": 12.99,
       "hint": "14 oz tub, diaper rash essential"
     },
     {
       "id": 15,
       "name": "Fisher-Price Jumperoo",
-      "image_url": "/images/shower/paci.webp",
+      "image_url": "/images/shower/jump.webp",
       "actual_price": 89.99,
       "hint": "Baby's first bounce house"
     }

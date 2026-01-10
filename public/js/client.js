@@ -368,6 +368,12 @@ const UI = {
         const statusBar = document.querySelector('.status-bar');
         el.textContent = name || '---';
 
+        // Update the header team code display
+        const headerCodeEl = document.getElementById('header-team-code');
+        if (headerCodeEl && AppState.joinCode) {
+            headerCodeEl.textContent = AppState.joinCode;
+        }
+
         // Apply team color to the status bar
         if (colorId && statusBar) {
             // Remove any existing team color classes
@@ -562,25 +568,25 @@ const UI = {
         }
 
         // Remove all state classes
-        btn.classList.remove('buzzer-btn--active', 'buzzer-btn--locked-self', 'buzzer-btn--locked-other', 'buzzer-btn--frozen');
+        btn.classList.remove('frost-buzzer--active', 'frost-buzzer--locked-self', 'frost-buzzer--locked-other', 'frost-buzzer--frozen');
         btn.disabled = false;
 
         switch (state) {
             case 'active':
-                btn.classList.add('buzzer-btn--active');
+                btn.classList.add('frost-buzzer--active');
                 text.textContent = 'BUZZ!';
                 status.textContent = '';
                 AppState.buzzerLocked = false;
                 break;
             case 'locked-self':
-                btn.classList.add('buzzer-btn--locked-self');
+                btn.classList.add('frost-buzzer--locked-self');
                 text.textContent = 'BUZZING!';
                 status.textContent = 'Waiting for judgment...';
                 btn.disabled = true;
                 AppState.buzzerLocked = true;
                 break;
             case 'locked-other':
-                btn.classList.add('buzzer-btn--locked-other');
+                btn.classList.add('frost-buzzer--locked-other');
                 text.textContent = 'LOCKED';
                 status.textContent = lockedByName ? `${lockedByName} buzzed in` : 'Another team buzzed first';
                 btn.disabled = true;
@@ -604,8 +610,8 @@ const UI = {
         }
 
         // Set frozen state
-        btn.classList.remove('buzzer-btn--active', 'buzzer-btn--locked-self', 'buzzer-btn--locked-other');
-        btn.classList.add('buzzer-btn--frozen');
+        btn.classList.remove('frost-buzzer--active', 'frost-buzzer--locked-self', 'frost-buzzer--locked-other');
+        btn.classList.add('frost-buzzer--frozen');
         btn.disabled = true;
         AppState.buzzerLocked = true;
 
@@ -646,25 +652,25 @@ const UI = {
         }
 
         // Remove all state classes
-        btn.classList.remove('buzzer-btn--active', 'buzzer-btn--locked-self', 'buzzer-btn--locked-other', 'buzzer-btn--frozen');
+        btn.classList.remove('frost-buzzer--active', 'frost-buzzer--locked-self', 'frost-buzzer--locked-other', 'frost-buzzer--frozen');
         btn.disabled = false;
 
         switch (state) {
             case 'active':
-                btn.classList.add('buzzer-btn--active');
+                btn.classList.add('frost-buzzer--active');
                 text.textContent = 'BUZZ IN!';
                 if (status) status.textContent = '';
                 AppState.pixelperfectLocked = false;
                 break;
             case 'locked-self':
-                btn.classList.add('buzzer-btn--locked-self');
+                btn.classList.add('frost-buzzer--locked-self');
                 text.textContent = 'BUZZING!';
                 if (status) status.textContent = 'Waiting for judgment...';
                 btn.disabled = true;
                 AppState.pixelperfectLocked = true;
                 break;
             case 'locked-other':
-                btn.classList.add('buzzer-btn--locked-other');
+                btn.classList.add('frost-buzzer--locked-other');
                 text.textContent = 'LOCKED';
                 if (status) status.textContent = lockedByName ? `${lockedByName} is answering` : 'Another team buzzed first';
                 btn.disabled = true;
@@ -690,8 +696,8 @@ const UI = {
         }
 
         // Set frozen state
-        btn.classList.remove('buzzer-btn--active', 'buzzer-btn--locked-self', 'buzzer-btn--locked-other');
-        btn.classList.add('buzzer-btn--frozen');
+        btn.classList.remove('frost-buzzer--active', 'frost-buzzer--locked-self', 'frost-buzzer--locked-other');
+        btn.classList.add('frost-buzzer--frozen');
         btn.disabled = true;
         AppState.pixelperfectLocked = true;
 
@@ -844,18 +850,31 @@ const UI = {
     },
 
     /**
-     * Update survival team status (alive/eliminated)
-     * @param {boolean} eliminated
+     * Update survival team status after reveal
+     * @param {boolean} eliminated - Legacy param for elimination-based mode
+     * @param {number|null} pointsAwarded - Points earned this round (null = not revealed yet)
      */
-    updateSurvivalTeamStatus(eliminated) {
+    updateSurvivalTeamStatus(eliminated, pointsAwarded = null) {
         const el = document.getElementById('survival-team-status');
         if (!el) return;
-        if (eliminated) {
-            el.textContent = 'ELIMINATED - You have been snowed out!';
-            el.className = 'survival-team-status eliminated';
+
+        // Points-based mode
+        if (pointsAwarded !== null && pointsAwarded !== undefined) {
+            if (pointsAwarded > 0) {
+                el.textContent = `+${pointsAwarded} points this round!`;
+                el.className = 'survival-team-status awarded';
+            } else {
+                el.textContent = 'No points this round';
+                el.className = 'survival-team-status not-awarded';
+            }
+        } else if (eliminated) {
+            // Legacy elimination mode
+            el.textContent = 'ELIMINATED';
+            el.className = 'survival-team-status not-awarded';
         } else {
-            el.textContent = 'ALIVE - Stay with the herd!';
-            el.className = 'survival-team-status alive';
+            // Waiting state
+            el.textContent = '';
+            el.className = 'survival-team-status';
         }
     },
 
@@ -1359,21 +1378,29 @@ const SocketHandlers = {
         });
 
         AppState.socket.on('survival_reveal', (data) => {
-            const myVote = AppState.survivalVote;
-            const wasEliminated = data.newly_eliminated?.includes(AppState.teamId);
+            // Check if our team was awarded points
+            const teamAwarded = data.teams_awarded?.find(t => t.team_id === AppState.teamId);
+            const teamNotAwarded = data.teams_not_awarded?.find(t => t.team_id === AppState.teamId);
 
             if (data.is_tie) {
-                UI.updateSurvivalStatus('TIE! No one eliminated this round.');
+                UI.updateSurvivalStatus("It's a tie! No points this round.");
+                UI.updateSurvivalTeamStatus(false, null);
                 Haptics.success();
-            } else if (wasEliminated) {
-                AppState.survivalEliminated = true;
-                UI.updateSurvivalTeamStatus(true);
-                UI.updateSurvivalStatus('You voted with the minority! ELIMINATED!');
-                BSOD.show(AppState.teamName, 3000);
+            } else if (teamAwarded) {
+                UI.updateSurvivalStatus(`Your team aligned with the village! +${teamAwarded.points_awarded} points!`);
+                UI.updateSurvivalTeamStatus(false, teamAwarded.points_awarded);
+                Haptics.success();
+            } else if (teamNotAwarded) {
+                const reason = teamNotAwarded.reason;
+                let msg = 'Your team missed the majority path.';
+                if (reason === 'team_tie') {
+                    msg = 'Your team was split - no points earned.';
+                } else if (reason === 'no_votes') {
+                    msg = 'Your team didn\'t vote!';
+                }
+                UI.updateSurvivalStatus(msg);
+                UI.updateSurvivalTeamStatus(false, 0);
                 Haptics.impact();
-            } else {
-                UI.updateSurvivalStatus(`Safe! You stayed with the herd. ${data.remaining_count} teams remain.`);
-                Haptics.success();
             }
         });
 

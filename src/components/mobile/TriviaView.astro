@@ -17,7 +17,7 @@ import StoryPageFrame from './storybook/StoryPageFrame.astro';
             </p>
         </StoryPageFrame>
 
-        <div class="frost-actions">
+        <form id="trivia-form" class="frost-actions">
             <input
                 type="text"
                 id="trivia-answer"
@@ -26,11 +26,11 @@ import StoryPageFrame from './storybook/StoryPageFrame.astro';
                 autocomplete="off"
                 autocapitalize="off"
             >
-            <button type="button" id="trivia-submit" class="enchanted-btn enchanted-btn--primary enchanted-btn--glow">
+            <button type="submit" id="trivia-submit" class="enchanted-btn enchanted-btn--primary enchanted-btn--glow">
                 Submit Answer
             </button>
             <p id="trivia-status" class="frost-status"></p>
-        </div>
+        </form>
     </div>
 </ViewContainer>
 

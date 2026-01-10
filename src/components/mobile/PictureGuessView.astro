@@ -17,7 +17,7 @@ import ChapterHeader from './storybook/ChapterHeader.astro';
             </p>
         </div>
 
-        <div class="frost-actions">
+        <form id="pictureguess-form" class="frost-actions">
             <input
                 type="text"
                 id="pictureguess-answer"
@@ -26,10 +26,10 @@ import ChapterHeader from './storybook/ChapterHeader.astro';
                 autocomplete="off"
                 autocapitalize="off"
             >
-            <button type="button" id="pictureguess-submit" class="frost-btn frost-btn--enchanted">
+            <button type="submit" id="pictureguess-submit" class="frost-btn frost-btn--enchanted">
                 Submit Guess
             </button>
             <p id="pictureguess-status" class="frost-status"></p>
-        </div>
+        </form>
     </div>
 </ViewContainer>
