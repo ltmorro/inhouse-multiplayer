@@ -1,0 +1,9 @@
+{
+  "phase": "lobby",
+  "current_dish_index": 0,
+  "dishes": [],
+  "wifi": {
+    "ssid": "",
+    "password": ""
+  }
+}

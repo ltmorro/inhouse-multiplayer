@@ -22,6 +22,8 @@ from server.core.event_router import EventRouter
 from server.games.game_registry import GameRegistry
 from server.games import ALL_GAMES
 from events import register_events
+from server.friends_table.state import FriendsTableState
+from server.friends_table.routes import ft_bp, init as init_ft
 
 # Configure logging
 logging.basicConfig(
@@ -50,6 +52,12 @@ event_router = EventRouter(socketio, session_manager, game_registry)
 
 # Register Socket.IO event handlers
 register_events(socketio, session_manager, event_router, game_registry)
+
+# Friends Table app
+ft_state = FriendsTableState(data_dir='data')
+init_ft(ft_state, socketio)
+app.register_blueprint(ft_bp)
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50 MB for photo uploads
 
 # Initialize LOBBY if no state (or restore state)
 if session_manager.current_state:
@@ -111,6 +119,19 @@ def tv():
 def admin():
     """Admin dashboard for host control."""
     return send_from_directory('dist', 'admin.html')
+
+
+@app.route('/friends-table')
+@app.route('/friends-table/vote')
+def friends_table_vote():
+    """Friends Table guest/host app."""
+    return send_from_directory('dist', 'friends-table/vote.html')
+
+
+@app.route('/friends-table/tv')
+def friends_table_tv():
+    """Friends Table TV display."""
+    return send_from_directory('dist', 'friends-table/tv.html')
 
 
 @app.route('/health')
