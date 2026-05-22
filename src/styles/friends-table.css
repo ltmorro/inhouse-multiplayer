@@ -511,16 +511,6 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   border-color: var(--border);
 }
 .ft-btn-ghost[data-hovered] { border-color: var(--muted); color: var(--ink); }
-.ft-btn-gold {
-  background: var(--ink);
-  color: var(--white);
-  border-color: var(--ink);
-}
-.ft-btn-crimson {
-  background: var(--ink);
-  color: var(--white);
-  border-color: var(--ink);
-}
 .ft-btn-sm { padding: 10px 20px; font-size: 9px; }
 .ft-btn[data-hovered]:not(.ft-btn-primary):not(.ft-btn-ghost) { background: var(--charcoal); color: var(--white); }
 .ft-btn[data-pressed] { opacity: 0.7; }
@@ -934,7 +924,6 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   padding: 48px 24px;
   color: var(--muted);
 }
-.ft-empty-icon { font-size: 32px; margin-bottom: 16px; opacity: 0.4; }
 .ft-empty-text {
   font-family: var(--serif);
   font-style: italic;

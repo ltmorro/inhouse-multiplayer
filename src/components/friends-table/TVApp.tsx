@@ -38,10 +38,10 @@ function LobbyTV({ state, voteUrl, wifiQr }: { state: FTState; voteUrl: string; 
         <div className="ft-tv-hero-subtitle">Scan to join the table</div>
       </div>
 
-      <div className="ft-tv-qr-row" style={{ position: 'relative', zIndex: 1 }}>
+      <div className="ft-tv-qr-row">
         <div className="ft-tv-qr-block">
           <div className="ft-tv-qr-frame">
-            <QRCodeSVG value={voteUrl} size={180} bgColor="#fdf9f2" fgColor="#192540" />
+            <QRCodeSVG value={voteUrl} size={180} bgColor="#ffffff" fgColor="#0C0B09" />
           </div>
           <div className="ft-tv-qr-label">Scan to Join</div>
           <div className="ft-tv-qr-url">{voteUrl.replace('http://', '')}</div>
@@ -50,7 +50,7 @@ function LobbyTV({ state, voteUrl, wifiQr }: { state: FTState; voteUrl: string; 
         {wifiQr && (
           <div className="ft-tv-qr-block">
             <div className="ft-tv-qr-frame">
-              <QRCodeSVG value={wifiQr} size={180} bgColor="#fdf9f2" fgColor="#192540" />
+              <QRCodeSVG value={wifiQr} size={180} bgColor="#ffffff" fgColor="#0C0B09" />
             </div>
             <div className="ft-tv-qr-label">Join WiFi</div>
             <div className="ft-tv-qr-url">{state.wifi.ssid}</div>
@@ -59,7 +59,7 @@ function LobbyTV({ state, voteUrl, wifiQr }: { state: FTState; voteUrl: string; 
       </div>
 
       {state.dishes.length > 0 && (
-        <div className="ft-tv-menu" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="ft-tv-menu">
           <div className="ft-tv-menu-title">Tonight's Menu</div>
           <ul className="ft-tv-menu-list">
             {state.dishes.map(d => (
@@ -70,7 +70,7 @@ function LobbyTV({ state, voteUrl, wifiQr }: { state: FTState; voteUrl: string; 
       )}
 
       {state.dishes.length === 0 && (
-        <div style={{ textAlign: 'center', color: 'rgba(244,233,211,0.5)', fontStyle: 'italic', fontSize: 20, position: 'relative', zIndex: 1 }}>
+        <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.25)', fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 20 }}>
           Guests are adding their dishes…
         </div>
       )}
@@ -203,7 +203,7 @@ function ResultsTV({ state }: { state: FTState }) {
           ))}
         </div>
 
-        <div style={{ fontSize: 16, color: 'rgba(244,233,211,0.45)' }}>
+        <div style={{ fontFamily: 'var(--sans)', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>
           {state.voter_count} voters total
         </div>
       </div>

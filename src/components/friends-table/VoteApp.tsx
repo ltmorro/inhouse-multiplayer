@@ -126,7 +126,7 @@ function AddDishForm({ onDone, onCancel }: { onDone: () => void; onCancel: () =>
       </div>
 
       <div className="ft-field">
-        <label className="ft-label" htmlFor="dish-secret">🤫 Secret Ingredient</label>
+        <label className="ft-label" htmlFor="dish-secret">Secret Ingredient</label>
         <input id="dish-secret" className="ft-input" value={secret} onChange={e => setSecret(e.target.value)}
           placeholder="Revealed at the table…" />
       </div>
@@ -148,6 +148,8 @@ function LobbyPhase({ state, isHost }: { state: FTState; isHost: boolean }) {
   const [wifiSsid, setWifiSsid] = useState(state.wifi.ssid);
   const [wifiPwd, setWifiPwd] = useState(state.wifi.password);
   const [wifiSaving, setWifiSaving] = useState(false);
+  const [confirmingStart, setConfirmingStart] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
   async function moveUp(i: number) {
     if (i === 0) return;
@@ -164,14 +166,13 @@ function LobbyPhase({ state, isHost }: { state: FTState; isHost: boolean }) {
   }
 
   async function deleteDish(id: string) {
-    if (!confirm('Remove this dish?')) return;
     await hostFetch(`/api/ft/dishes/${id}?key=${getHostKey()}`, {}, 'DELETE');
+    setPendingDelete(null);
   }
 
   async function startTasting() {
-    if (state.dishes.length === 0) { alert('Add at least one dish first!'); return; }
-    if (!confirm(`Start tasting with ${state.dishes.length} dish${state.dishes.length > 1 ? 'es' : ''}?`)) return;
     await hostFetch('/api/ft/phase', { phase: 'tasting' });
+    setConfirmingStart(false);
   }
 
   async function saveWifi() {
@@ -202,9 +203,23 @@ function LobbyPhase({ state, isHost }: { state: FTState; isHost: boolean }) {
           </div>
 
           <div className="ft-host-row">
-            <button className="ft-host-btn ft-host-btn-start" onClick={startTasting}>
-              ▶ Start Tasting
-            </button>
+            {confirmingStart ? (
+              <>
+                <button className="ft-host-btn ft-host-btn-start" onClick={startTasting}
+                  disabled={state.dishes.length === 0}>
+                  Confirm — Begin Tasting
+                </button>
+                <button className="ft-host-btn ft-host-btn-vote" onClick={() => setConfirmingStart(false)}>
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button className="ft-host-btn ft-host-btn-start" onClick={() => setConfirmingStart(true)}
+                disabled={state.dishes.length === 0}
+                style={{ opacity: state.dishes.length === 0 ? 0.4 : 1, cursor: state.dishes.length === 0 ? 'not-allowed' : 'pointer' }}>
+                Start Tasting
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -220,8 +235,8 @@ function LobbyPhase({ state, isHost }: { state: FTState; isHost: boolean }) {
         {showForm ? (
           <AddDishForm onDone={() => setShowForm(false)} onCancel={() => setShowForm(false)} />
         ) : (
-          <Button className="ft-btn ft-btn-gold ft-btn-full" style={{ marginBottom: 20 }} onPress={() => setShowForm(true)}>
-            + Add a Dish
+          <Button className="ft-btn ft-btn-primary ft-btn-full" style={{ marginBottom: 20 }} onPress={() => setShowForm(true)}>
+            Add a Dish
           </Button>
         )}
 
@@ -242,8 +257,18 @@ function LobbyPhase({ state, isHost }: { state: FTState; isHost: boolean }) {
                 </div>
               )}
               {isHost && (
-                <Button className="ft-order-btn" onPress={() => deleteDish(dish.id)}
-                  style={{ color: '#c0392b', borderColor: '#f8d7da', marginLeft: 4 }}>✕</Button>
+                pendingDelete === dish.id ? (
+                  <div style={{ display: 'flex', gap: 4, marginLeft: 4 }}>
+                    <Button className="ft-order-btn" onPress={() => deleteDish(dish.id)}
+                      style={{ width: 'auto', padding: '0 8px', fontFamily: 'var(--sans)', fontSize: 9, letterSpacing: '0.1em', color: '#8B2020', borderColor: '#e0b0b0' }}>
+                      Remove
+                    </Button>
+                    <Button className="ft-order-btn" onPress={() => setPendingDelete(null)}>✕</Button>
+                  </div>
+                ) : (
+                  <Button className="ft-order-btn" onPress={() => setPendingDelete(dish.id)}
+                    style={{ color: 'var(--muted)', borderColor: 'var(--border)', marginLeft: 4 }}>—</Button>
+                )
               )}
             </div>
           ))}
@@ -251,8 +276,7 @@ function LobbyPhase({ state, isHost }: { state: FTState; isHost: boolean }) {
 
         {state.dishes.length === 0 && !showForm && (
           <div className="ft-empty-state">
-            <div className="ft-empty-icon">🍽</div>
-            <div className="ft-empty-text">Be the first to add a dish!<br />Everyone can contribute to tonight's menu.</div>
+            <div className="ft-empty-text">Be the first to add a dish.<br />Everyone contributes to tonight's menu.</div>
           </div>
         )}
 
@@ -333,13 +357,13 @@ function TastingPhase({ state, sessionId }: { state: FTState; sessionId: string 
               <div className="ft-tasting-dish-desc">{dish.description}</div>
             )}
             {dish.secret_ingredient && (
-              <div className="ft-tasting-secret">🤫 {dish.secret_ingredient}</div>
+              <div className="ft-tasting-secret">Secret — {dish.secret_ingredient}</div>
             )}
           </div>
 
           <div className="ft-tasting-body">
             <div>
-              <div className="ft-section-label">📸 Photos ({dish.photos.length})</div>
+              <div className="ft-section-label">Photos{dish.photos.length > 0 ? ` — ${dish.photos.length}` : ''}</div>
               {dish.photos.length > 0 && (
                 <div className="ft-photo-row" style={{ marginBottom: 12 }}>
                   {dish.photos.slice(-6).map((f, i) => (
@@ -347,18 +371,18 @@ function TastingPhase({ state, sessionId }: { state: FTState; sessionId: string 
                       <img src={`/ft-uploads/${f}`} alt="" loading="lazy" />
                     </div>
                   ))}
-                  {uploading && <div className="ft-uploading-thumb">📤</div>}
+                  {uploading && <div className="ft-uploading-thumb" />}
                 </div>
               )}
               <FileTrigger acceptedFileTypes={['image/*']} onSelect={handlePhoto}>
                 <Button className="ft-upload-btn" isDisabled={uploading}>
-                  {uploading ? '⏳ Uploading…' : '📷 Add Your Photo'}
+                  {uploading ? 'Uploading…' : 'Add a Photo'}
                 </Button>
               </FileTrigger>
             </div>
 
             <div>
-              <div className="ft-section-label">💬 Comments ({dish.comments.length})</div>
+              <div className="ft-section-label">Notes{dish.comments.length > 0 ? ` — ${dish.comments.length}` : ''}</div>
               {dish.comments.length > 0 && (
                 <div className="ft-comments-list">
                   {dish.comments.map(c => (
@@ -426,7 +450,7 @@ function VotingPhase({ state, sessionId, myVotes }: { state: FTState; sessionId:
     <div className="ft-vote-body" style={{ paddingTop: 24 }}>
       <div className="ft-lobby-section-title">Cast Your Votes</div>
       <div className="ft-voting-instr">
-        {submitted ? '✅ Your votes are in! Waiting for everyone else…' : 'Choose up to 2 of your favorites.'}
+        {submitted ? 'Your votes are in. Waiting for everyone else.' : 'Choose up to 2 of your favorites.'}
       </div>
 
       {!submitted && (
@@ -569,24 +593,23 @@ function HostAuthGate({ onAuth }: { onAuth: (key: string) => void }) {
 }
 
 function HostControls({ state, isHost }: { state: FTState; isHost: boolean }) {
+  const [confirmReset, setConfirmReset] = useState(false);
   if (!isHost) return null;
 
-  const dish = state.dishes[state.current_dish_index];
   const isLastDish = state.current_dish_index >= state.dishes.length - 1;
 
   async function doPhase(phase: string) { await hostFetch('/api/ft/phase', { phase }); }
   async function doNextDish() { await hostFetch('/api/ft/next-dish', {}); }
+  async function doReset() { await hostFetch('/api/ft/reset', {}); setConfirmReset(false); }
 
   return (
     <div className="ft-host-controls">
       <div className="ft-host-controls-label">Host Controls — {state.phase}</div>
       <div className="ft-host-row">
         {state.phase === 'tasting' && (
-          <>
-            <button className="ft-host-btn ft-host-btn-next" onClick={doNextDish}>
-              {isLastDish ? '→ Go to Voting' : `→ Next Dish`}
-            </button>
-          </>
+          <button className="ft-host-btn ft-host-btn-next" onClick={doNextDish}>
+            {isLastDish ? 'Go to Voting' : 'Next Dish'}
+          </button>
         )}
         {state.phase === 'voting' && (
           <button className="ft-host-btn ft-host-btn-result" onClick={() => doPhase('results')}>
@@ -594,10 +617,20 @@ function HostControls({ state, isHost }: { state: FTState; isHost: boolean }) {
           </button>
         )}
         {state.phase === 'results' && (
-          <button className="ft-host-btn ft-host-btn-vote"
-            onClick={() => { if (confirm('Reset the whole evening?')) hostFetch('/api/ft/reset', {}); }}>
-            Reset Evening
-          </button>
+          confirmReset ? (
+            <>
+              <button className="ft-host-btn ft-host-btn-next" onClick={doReset}>
+                Confirm Reset
+              </button>
+              <button className="ft-host-btn ft-host-btn-vote" onClick={() => setConfirmReset(false)}>
+                Cancel
+              </button>
+            </>
+          ) : (
+            <button className="ft-host-btn ft-host-btn-vote" onClick={() => setConfirmReset(true)}>
+              Reset Evening
+            </button>
+          )
         )}
       </div>
     </div>
@@ -660,7 +693,7 @@ export default function VoteApp() {
           {!isHost && (
             <div style={{ padding: '0 24px 24px', maxWidth: 540, margin: '0 auto' }}>
               <Button className="ft-btn ft-btn-ghost ft-btn-sm" onPress={() => setShowHostAuth(true)}>
-                🔑 Host? Enter code
+                Host mode
               </Button>
             </div>
           )}
