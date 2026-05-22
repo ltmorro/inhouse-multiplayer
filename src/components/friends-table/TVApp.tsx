@@ -26,36 +26,16 @@ interface LocalIPData {
   port: number;
 }
 
-// ─── Star decoration ─────────────────────────────────────────────────────────
-
-const STARS = Array.from({ length: 24 }, (_, i) => ({
-  top: `${Math.round((i * 37 + 11) % 95)}%`,
-  left: `${Math.round((i * 53 + 7) % 97)}%`,
-  size: `${4 + (i % 4)}px`,
-  opacity: 0.12 + (i % 5) * 0.06,
-}));
-
-function StarField() {
-  return (
-    <div className="ft-stars" aria-hidden="true">
-      {STARS.map((s, i) => (
-        <div key={i} className="ft-star" style={{ top: s.top, left: s.left, width: s.size, height: s.size, opacity: s.opacity }} />
-      ))}
-    </div>
-  );
-}
-
 // ─── Phases ──────────────────────────────────────────────────────────────────
 
 function LobbyTV({ state, voteUrl, wifiQr }: { state: FTState; voteUrl: string; wifiQr: string }) {
   return (
-    <div className="ft-tv-lobby" style={{ position: 'relative' }}>
-      <StarField />
-      <div className="ft-tv-hero" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="ft-tv-hero-eyebrow">★ ★ ★ &nbsp; America's 250th Anniversary &nbsp; ★ ★ ★</div>
+    <div className="ft-tv-lobby">
+      <div className="ft-tv-hero">
+        <div className="ft-tv-hero-eyebrow">An Evening of Fine Food &amp; Friendly Competition</div>
         <div className="ft-tv-hero-title">Friends Table</div>
         <div className="ft-tv-divider" />
-        <div className="ft-tv-hero-subtitle">An Evening of Food, Friends & Friendly Competition</div>
+        <div className="ft-tv-hero-subtitle">Scan to join the table</div>
       </div>
 
       <div className="ft-tv-qr-row" style={{ position: 'relative', zIndex: 1 }}>
@@ -119,13 +99,13 @@ function TastingTV({ state }: { state: FTState }) {
             </div>
           )}
         </div>
-        <div style={{ textAlign: 'right', color: 'rgba(244,233,211,0.5)', fontSize: 14 }}>
+        <div style={{ textAlign: 'right', fontFamily: 'var(--sans)', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>
           {dish.photos.length} photo{dish.photos.length !== 1 ? 's' : ''}<br />
-          {dish.comments.length} comment{dish.comments.length !== 1 ? 's' : ''}
+          {dish.comments.length} note{dish.comments.length !== 1 ? 's' : ''}
         </div>
       </div>
 
-      <div style={{ flex: 1, display: 'flex', gap: 32, overflow: 'hidden', minHeight: 0 }}>
+      <div style={{ flex: 1, display: 'flex', gap: 40, overflow: 'hidden', minHeight: 0 }}>
         {dish.photos.length > 0 ? (
           <div className="ft-tv-photos-grid" style={{ flex: 2 }}>
             {dish.photos.slice(-12).map((f, i) => (
@@ -136,17 +116,17 @@ function TastingTV({ state }: { state: FTState }) {
           </div>
         ) : (
           <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: 'rgba(244,233,211,0.3)', fontStyle: 'italic', fontSize: 22 }}>
-            Snap your photos on your phone!
+            fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'rgba(255,255,255,0.15)', fontSize: 24 }}>
+            Photographs will appear here
           </div>
         )}
 
         {dish.comments.length > 0 && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, overflow: 'hidden' }}>
-            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)' }}>
-              Comments
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16, overflow: 'hidden' }}>
+            <div style={{ fontFamily: 'var(--sans)', fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>
+              Notes
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
               {dish.comments.slice(-8).map(c => (
                 <div key={c.id} className="ft-tv-comment-bubble">"{c.text}"</div>
               ))}
@@ -161,10 +141,9 @@ function TastingTV({ state }: { state: FTState }) {
 function VotingTV({ state }: { state: FTState }) {
   return (
     <div className="ft-tv-voting">
-      <StarField />
-      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32, width: '100%', maxWidth: 1100 }}>
-        <div className="ft-tv-phase-title">Time to Vote!</div>
-        <div className="ft-tv-voter-count">{state.voter_count} {state.voter_count === 1 ? 'person has' : 'people have'} voted · 2 votes each</div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32, width: '100%', maxWidth: 1100 }}>
+        <div className="ft-tv-phase-title">Cast Your Vote</div>
+        <div className="ft-tv-voter-count">{state.voter_count} {state.voter_count === 1 ? 'ballot' : 'ballots'} received · two votes per guest</div>
 
         <div className="ft-tv-dish-grid">
           {state.dishes.map(dish => (
@@ -172,8 +151,8 @@ function VotingTV({ state }: { state: FTState }) {
               <div className="ft-tv-dish-card-img">
                 {dish.photos[0] && <img src={`/ft-uploads/${dish.photos[0]}`} alt="" />}
                 {!dish.photos[0] && (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'rgba(255,255,255,0.2)', fontSize: 36 }}>
-                    🍽
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'rgba(255,255,255,0.08)', fontFamily: 'var(--sans)', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+                    No photo
                   </div>
                 )}
               </div>
@@ -191,25 +170,23 @@ function VotingTV({ state }: { state: FTState }) {
 function ResultsTV({ state }: { state: FTState }) {
   const sorted = [...state.dishes].sort((a, b) => b.vote_count - a.vote_count);
   const winner = sorted[0];
-  const maxVotes = winner?.vote_count || 1;
 
   return (
     <div className="ft-tv-results">
-      <StarField />
-      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 40, width: '100%', maxWidth: 900 }}>
-        <div className="ft-tv-phase-title">The Verdict Is In</div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 48, width: '100%', maxWidth: 900 }}>
+        <div className="ft-tv-phase-title">The Verdict</div>
 
         {winner && (
           <div className="ft-tv-winner-block">
-            <div className="ft-tv-winner-crown">🏆</div>
+            <div className="ft-tv-winner-crown">Winner</div>
             <div className="ft-tv-winner-name">{winner.name}</div>
             <div className="ft-tv-winner-votes">{winner.vote_count} vote{winner.vote_count !== 1 ? 's' : ''}</div>
             {winner.secret_ingredient && (
-              <div style={{ marginTop: 12, fontSize: 16, color: 'rgba(244,233,211,0.6)', fontStyle: 'italic' }}>
-                🤫 {winner.secret_ingredient}
+              <div style={{ marginTop: 16, fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18, color: 'rgba(255,255,255,0.35)' }}>
+                Secret: {winner.secret_ingredient}
               </div>
             )}
-            <div className="ft-tv-prize">Prize: A Stained Glass Cheeseburger 🍔</div>
+            <div className="ft-tv-prize">The prize: a stained glass cheeseburger</div>
           </div>
         )}
 

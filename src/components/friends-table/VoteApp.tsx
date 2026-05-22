@@ -72,7 +72,7 @@ function Header({ isHost, onHostLogout }: { isHost: boolean; onHostLogout: () =>
     <header className="ft-vote-header">
       <div>
         <div className="ft-vote-header-title">Friends Table</div>
-        <div className="ft-vote-header-subtitle">America's 250th Dinner</div>
+        <div className="ft-vote-header-subtitle">Tonight's Tasting</div>
       </div>
       {isHost && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -210,10 +210,10 @@ function LobbyPhase({ state, isHost }: { state: FTState; isHost: boolean }) {
       )}
 
       <div className="ft-vote-body">
-        <div className="ft-lobby-section-title">Tonight's Tasting Menu</div>
+        <div className="ft-lobby-section-title">Tonight's Menu</div>
         <div className="ft-lobby-section-sub">
           {state.dishes.length === 0
-            ? 'Add the dishes you\'re bringing tonight'
+            ? "Add the dishes you're bringing"
             : `${state.dishes.length} dish${state.dishes.length !== 1 ? 'es' : ''} on the menu`}
         </div>
 
@@ -515,7 +515,7 @@ function ResultsPhase({ state }: { state: FTState }) {
       </div>
 
       <div className="ft-result-prize">
-        The prize: a <span>Stained Glass Cheeseburger 🍔</span>
+        The prize: a stained glass cheeseburger 🍔
       </div>
     </div>
   );
